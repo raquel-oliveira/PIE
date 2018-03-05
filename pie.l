@@ -1,6 +1,6 @@
   int value;
   char* word;
-  enum {ENDOFFILE, NUMBER, ID};
+  enum {ENDOFFILE = 128, NUMBER, ID, ENDTOKEN};
 
 DIGIT [0-9]
 NATURAL {DIGIT}+
@@ -15,7 +15,7 @@ LABEL "@"{ID}
 PROGRAM program
 PROC proc
 BEGIN begin
-AFF end
+ENDTOKEN end
 FUNC func
 CONST const
 TYPE type
@@ -48,17 +48,22 @@ ENUM enum
 SUBRANGE subrange
 SET set
 BOOLLITERAL (true)|(false)|(nil)
+
 %%
+
+{ENDTOKEN} {return ENDTOKEN;}
+; {return ';';}
 {NUMBER} {value = atoi(yytext); return NUMBER;}
 {ID} {word = yytext; return ID;}
 <<EOF>>  {return EOF;}
+
 %%
 int main () {
 	int x;
 	while((x = yylex()) && x != ENDOFFILE) {
 		printf ("%d \n", x);
 		if(x == NUMBER)
-			printf("%d", value);
+			printf("%d\n", value);
 		else if(x == ID)
 			printf("%s\n", word);
 	}
