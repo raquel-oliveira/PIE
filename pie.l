@@ -11,12 +11,13 @@ REAL_LITERAL (("-"|"+")?{R})
 NEW_LINE     (\n)
 TAB          [ \t]+
 STRING      \"[^"\n]*\"
-EXPONENT    ((E|e)("+"|"-")?({DIGIT}+))
+LINECOMMENT "#"((.)*)\n
+EXPONENT    ([Ee]("+"|"-")?({DIGIT}+))
+CHARACTER 	\'[^']*\'
 ID  ({LETTER}|"_")({LETTER}|{DIGIT}|"_")*   
 
 %%
-"//"((.)*)\n                            printf("LineComment\n");
-"/*"(([^*]|(("*"+)[^*/]))*)("*"+)"/"\n  printf("MultilineComment\n");
+                            
 
 
 program    		{ printf("%s ", yytext); }
@@ -75,12 +76,14 @@ true|false|nil  { printf("boolconstant ");}
 "{"         	{ printf("leftbrace "); }
 "}"         	{ printf("rightbrace "); }
 
+{CHARACTER}		{ printf("char: %s ", yytext); }
+{LINECOMMENT}	{ printf("LineComment\n"); }
 {NEW_LINE}      { printf("\n"); }
 {NATURAL}       { printf("natural "); }
-{INTEGER}       { printf("integer "); }
-{REAL_LITERAL}  { printf("real "); }
-{STRING}        { printf("string "); }
-{ID}            { printf("id "); }
+{INTEGER}       { printf("integer: %s", yytext); }
+{REAL_LITERAL}  { printf("real: %s", yytext); }
+{STRING}		{ printf("string: %s ", yytext); }
+{ID}            { printf("id: %s ", yytext); }
 
 .               {; }
 
