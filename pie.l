@@ -14,7 +14,13 @@ STRING      \"[^"\n]*\"
 LINECOMMENT "#"((.)*)\n
 EXPONENT    ([Ee]("+"|"-")?({DIGIT}+))
 CHARACTER 	\'[^']*\'
+<<<<<<< HEAD
 ID  ({LETTER}|"_")({LETTER}|{DIGIT}|"_")*   
+=======
+ID  {LETTER}({LETTER}|{DIGIT}|"_")*
+LABEL @({LETTER}|{DIGIT}|"_")*  
+UNACCEPTABLE .+
+>>>>>>> ef4a6ea3d1ff1d3872e3a2a18b6493e04bb08fc3
 
 %%
                             
@@ -60,13 +66,18 @@ true|false|nil  { printf("boolconstant ");}
 "-"         	{ printf("minus "); }
 "*"         	{ printf("multiplication "); }
 "/"        		{ printf("division "); }
+"%"        		{ printf("mod "); }
 "<="        	{ printf("lessequal "); }
 "<"         	{ printf("less "); }
 ">"         	{ printf("greater "); }
 ">="        	{ printf("greaterequal "); }
 "=="        	{ printf("equal "); }
 "!="        	{ printf("notequal "); }
+"&&"        	{ printf("and "); }
+"||"        	{ printf("or "); }
+"!"        		{ printf("not "); }
 "="         	{ printf("assignop "); }
+":="         	{ printf("attributionop "); }
 ";"         	{ printf("semicolon "); }
 ","         	{ printf("comma "); }
 "("         	{ printf("leftparen "); }
@@ -76,6 +87,10 @@ true|false|nil  { printf("boolconstant ");}
 "{"         	{ printf("leftbrace "); }
 "}"         	{ printf("rightbrace "); }
 
+<<<<<<< HEAD
+=======
+{LABEL}			{ printf("label: %s ", yytext); }
+>>>>>>> ef4a6ea3d1ff1d3872e3a2a18b6493e04bb08fc3
 {CHARACTER}		{ printf("char: %s ", yytext); }
 {LINECOMMENT}	{ printf("LineComment\n"); }
 {NEW_LINE}      { printf("\n"); }
@@ -84,8 +99,12 @@ true|false|nil  { printf("boolconstant ");}
 {REAL_LITERAL}  { printf("real: %s", yytext); }
 {STRING}		{ printf("string: %s ", yytext); }
 {ID}            { printf("id: %s ", yytext); }
+<<<<<<< HEAD
 
 .               {; }
+=======
+{UNACCEPTABLE}	{ printf("error: %s ", yytext); }
+>>>>>>> ef4a6ea3d1ff1d3872e3a2a18b6493e04bb08fc3
 
 %%
 
@@ -93,7 +112,10 @@ int yywrap(void) {
     return 1;
 }
 
-int main(void) {
+FILE *yyin;
+
+int main(int argc, char *argv[]) {
+    yyin = fopen(argv[1], "r");
     yylex();
     return 0;
 }
