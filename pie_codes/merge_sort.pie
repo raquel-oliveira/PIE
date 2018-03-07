@@ -1,0 +1,87 @@
+##
+# PIE Merge Sort 
+# Pascal version: http://rextester.com/GHRH16649.
+##
+program merge_sort;
+
+# Constants
+const
+    FIRST = 1;
+    LAST = 10;
+
+# Usertypes
+type
+    TRange = FIRST..LAST;
+    TVector = array [TRange] of int;
+
+# Variable declaration
+var
+    TVector vector;
+    TRange index;
+
+# 
+proc fusion(TVector v; int iz, de, ce; TVector w);
+    var
+        int i, j, k;
+    begin # fusion #
+        i := iz; 
+        j := succ(ce); 
+        k := iz;
+
+        loop
+        begin # loop
+            exitwhen (i <= ce) AND (j <= de);
+            if v[i] < v[j] begin
+               w[k] := v[i];
+               i := succ(i)
+            end else begin
+               w[k] := v[j];
+               j := succ(j)
+            end;
+            k = succ(k)
+        end; # loop
+
+        for k := j to de do
+            w[k] := v[k];
+        
+        for k := i to ce do
+            w[k + de - ce] := v[k]
+      
+    end; # fusion #
+
+proc merge_sort(TVector v; TRange izq, der);
+    var
+        TRange center;
+    begin # merge_sort #
+    
+        center := (izq + der) / 2;
+        if izq < center
+            merge_sort(v, izq, center);
+        if center + 1 < der
+            merge_sort(v, center + 1, der);
+
+        fusion(v, izq, der, center, v)
+    end;   # merge_sort #
+
+begin # Programa principal
+    # Import
+    randomize;
+    
+    for index := FIRST to LAST stop 1 do
+    begin
+       vector[index] := random(99) * 5;
+       write(vector[index], ' ')
+    end;
+    
+    merge_sort(vector, FIRST, LAST);
+    
+    writeln;
+    writeln;
+    writeln('Sorted vector: ');
+    writeln;
+    
+    for index := FIRST to LAST step 1 do
+    begin
+       write(vector[index], ' ')
+    end
+end.

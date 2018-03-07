@@ -1,0 +1,104 @@
+##
+# PIE Quick Sort 
+# Pascal version: http://sandbox.mc.edu/~bennet/cs404/doc/qsort_pas.html.
+##
+program quick_sort;
+
+# Constants
+const
+    MAX_ELTS = 50;
+
+# Usertypes
+type
+    IntArray = array [1..MAX_ELTS] of int; # Type of the element array
+
+# Variable declaration
+var
+    int i, j, tmp, size; # Indexes, exchange temp, array size
+    IntArray arr;        # Array of ints
+
+# Read array
+proc read_arr(IntArray a; int size);
+begin # read_arr #
+    size := 1;
+    loop
+    begin # loop
+        exitwhen (a[size] != eof)
+        readln(a[size]);
+        if (a[size] != eof)
+            size := size + 1
+    end
+end;  # read_arr #
+
+# Use quicksort to sort the array of integers
+proc quick_sort(IntArray arr; int size);
+    # This does the actual work of the quicksort. It takes the
+    # parameters which define the range of the array to work on,
+    # and references the array as a global
+    proc quick_sort_recur(int start, stop);
+        var
+            int m;
+            int splitpt; # The location separating the high and low parts
+        # The quicksort split algorithm.  Takes the range, and
+        # returns the split point
+        func int split(int start, stop);
+            var
+                int left, right; # Scan pointers
+                int pivot;       # Pivot value
+            # Interchange the parameters
+            proc swap(int a, b);
+                var
+                    int t;
+            begin # swap #
+                t := a;
+                a := b;
+                b := t
+            end   # swap #
+        begin # split #
+            # Set up the pointers for the hight and low sections, and
+            # get the pivot value
+            pivot := arra[start];
+            left := start + 1;
+            right := stop;
+            # Look for pairs out of place and swap em
+            loop
+            begin # loop
+                exitwhen (left <= right);
+                loop
+                begin # loop
+                    exitwhen (left <= stop) && (arr[left] < pivot);
+                    left := left + 1
+                end; # loop
+                loop
+                begin # loop
+                    exitwhen (right > start) && (arr[right] >= pivot);
+                    right := right - 1
+                end; # loop
+                if left < right
+                    swap(arr[left], arr[right]);
+            end; # loop
+            # Put the pivot between the halves.
+            swap(arr[start], arr[right]);
+            return right
+        end   # split #
+    begin # quick_sort_recur #
+        # If there's anything to do...
+        if start < stop begin
+            splitpt := Split(start, stop);
+            quick_sort_recur(start, splitpt - 1);
+            quick_sort_recur(splitpt + 1, stop);
+        end
+    end   # quick_sort_recur #
+begin # quick_sort #
+    quick_sort_recur(1, size)
+end   # quick_sort #
+
+begin # main
+    # Read
+    read_arr(arr, size);
+    # Sort the contents
+    quick_sort(arr, size);
+    # Print
+    for i := 1 to size step 1 do
+        writeln(arr[i])
+end

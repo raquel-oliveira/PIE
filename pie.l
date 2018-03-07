@@ -16,7 +16,7 @@ EXPONENT    ([Ee]("+"|"-")?({DIGIT}+))
 CHARACTER 	\'[^']*\'
 ID  {LETTER}({LETTER}|{DIGIT}|"_")*
 LABEL @({LETTER}|{DIGIT}|"_")*  
-UNACCEPTABLE .+
+UNACCEPTABLE [^" "]+
 
 %%
                             
