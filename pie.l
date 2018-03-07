@@ -14,7 +14,9 @@ STRING      \"[^"\n]*\"
 LINECOMMENT "#"((.)*)\n
 EXPONENT    ([Ee]("+"|"-")?({DIGIT}+))
 CHARACTER 	\'[^']*\'
-ID  ({LETTER}|"_")({LETTER}|{DIGIT}|"_")*   
+ID  {LETTER}({LETTER}|{DIGIT}|"_")*
+LABEL @({LETTER}|{DIGIT}|"_")*  
+UNACCEPTABLE .+
 
 %%
                             
@@ -60,13 +62,18 @@ true|false|nil  { printf("boolconstant ");}
 "-"         	{ printf("minus "); }
 "*"         	{ printf("multiplication "); }
 "/"        		{ printf("division "); }
+"%"        		{ printf("mod "); }
 "<="        	{ printf("lessequal "); }
 "<"         	{ printf("less "); }
 ">"         	{ printf("greater "); }
 ">="        	{ printf("greaterequal "); }
 "=="        	{ printf("equal "); }
 "!="        	{ printf("notequal "); }
+"&&"        	{ printf("and "); }
+"||"        	{ printf("or "); }
+"!"        		{ printf("not "); }
 "="         	{ printf("assignop "); }
+":="         	{ printf("attributionop "); }
 ";"         	{ printf("semicolon "); }
 ","         	{ printf("comma "); }
 "("         	{ printf("leftparen "); }
@@ -76,6 +83,7 @@ true|false|nil  { printf("boolconstant ");}
 "{"         	{ printf("leftbrace "); }
 "}"         	{ printf("rightbrace "); }
 
+{LABEL}			{ printf("label: %s ", yytext); }
 {CHARACTER}		{ printf("char: %s ", yytext); }
 {LINECOMMENT}	{ printf("LineComment\n"); }
 {NEW_LINE}      { printf("\n"); }
@@ -84,8 +92,7 @@ true|false|nil  { printf("boolconstant ");}
 {REAL_LITERAL}  { printf("real: %s", yytext); }
 {STRING}		{ printf("string: %s ", yytext); }
 {ID}            { printf("id: %s ", yytext); }
-
-.               {; }
+{UNACCEPTABLE}	{ printf("error: %s ", yytext); }
 
 %%
 
