@@ -7,6 +7,10 @@ int num_line = 0, num_column = 0;
 void printInfo() {
 	printf("{%d, %d} ", num_line, num_column);
 }
+
+void updateColumn(int yyleng){
+	num_column += yyleng;
+}
 %}
 
 LETTER      [a-zA-Z]
@@ -14,7 +18,7 @@ DIGIT       [0-9]
 NATURAL {DIGIT}+
 INTEGER ("-"|"+")?{NATURAL}+
 R  ([0-9]*[.])?[0-9]+
-REAL_LITERAL (("-"|"+")?{R})
+REALLITERAL (("-"|"+")?{R})
 NEW_LINE     (\n)
 TAB          [ \t]+
 STRING      \"[^"\n]*\"
@@ -23,82 +27,84 @@ EXPONENT    ([Ee]("+"|"-")?({DIGIT}+))
 CHARACTER 	\'[^']*\'
 ID  {LETTER}({LETTER}|{DIGIT}|"_")*
 LABEL @({LETTER}|{DIGIT}|"_")*
-UNACCEPTABLE .+
+WHITESPACE    [ \t\v\n\f]*
+UNACCEPTABLE .
 
 %%
 
-program    		{ printInfo(); printf("PROGRAM "); num_column += 7; }
-proc       		{ printInfo(); printf("PROC "); num_column += 4; }
-begin      		{ printInfo(); printf("BEGIN "); num_column += 5; }
-end        		{ printInfo(); printf("END "); num_column += 3; }
-func       		{ printInfo(); printf("FUNC "); num_column += 4; }
-const      		{ printInfo(); printf("CONST "); num_column += 5; }
-type       		{ printInfo(); printf("TYPE "); num_column += 4; }
-var        		{ printInfo(); printf("VAR "); num_column += 3; }
-if         		{ printInfo(); printf("IF "); num_column += 2; }
-else       		{ printInfo(); printf("ELSE "); num_column += 4; }
-goto       		{ printInfo(); printf("GOTO "); num_column += 4; }
-for        		{ printInfo(); printf("FOR "); num_column += 3; }
-to         		{ printInfo(); printf("TO "); num_column += 2; }
-do         		{ printInfo(); printf("DO "); num_column += 2; }
-step       		{ printInfo(); printf("STEP "); num_column += 4; }
-in         		{ printInfo(); printf("IN "); num_column += 2; }
-of         		{ printInfo(); printf("OF "); num_column += 2; }
-loop       		{ printInfo(); printf("LOOP "); num_column += 4; }
-exitwhen   		{ printInfo(); printf("EXITWHEN "); num_column += 8; }
-case       		{ printInfo(); printf("CASE "); num_column += 4; }
-write      		{ printInfo(); printf("WRITE "); num_column += 5; }
-writeln    		{ printInfo(); printf("WRITELN "); num_column += 7; }
-read       		{ printInfo(); printf("READ "); num_column += 4; }
-readln     		{ printInfo(); printf("READLN "); num_column += 6; }
-return     		{ printInfo(); printf("RETURN "); num_column += 6; }
-int        		{ printInfo(); printf("INT "); num_column += 3; }
-bool       		{ printInfo(); printf("BOOL "); num_column += 4; }
-real       		{ printInfo(); printf("REAL "); num_column += 4; }
-char       		{ printInfo(); printf("CHAR "); num_column += 4; }
-string     		{ printInfo(); printf("STRING "); num_column += 6; }
-array      		{ printInfo(); printf("ARRAY "); num_column += 5; }
-record     		{ printInfo(); printf("RECORD "); num_column += 6; }
-enum       		{ printInfo(); printf("ENUM "); num_column += 4; }
-subrange   		{ printInfo(); printf("SUBRANGE "); num_column += 8; }
-set        		{ printInfo(); printf("SET "); num_column += 3; }
-true			    { printInfo(); printf("TRUE "); num_column += 4; }
-false			    { printInfo(); printf("FALSE "); num_column += 5; }
-nil  			    { printInfo(); printf("NIL "); num_column += 3; }
-"+"           { printInfo(); printf("PLUS "); num_column += 1; }
-"-"         	{ printInfo(); printf("MINUS "); num_column += 1; }
-"*"         	{ printInfo(); printf("MULTIPLICATION "); num_column += 1; }
-"/"        		{ printInfo(); printf("DIVISION "); num_column += 1; }
-"%"        		{ printInfo(); printf("MOD "); num_column += 1; }
-"<="        	{ printInfo(); printf("LESSEQUALl "); num_column += 2; }
-"<"         	{ printInfo(); printf("LESS "); num_column += 1; }
-">"         	{ printInfo(); printf("GREATER "); num_column += 1; }
-">="        	{ printInfo(); printf("GREATEREQUAL "); num_column += 2; }
-"=="        	{ printInfo(); printf("EQUAL "); num_column += 2; }
-"!="        	{ printInfo(); printf("NOTEQUAL "); num_column += 2; }
-"&&"        	{ printInfo(); printf("AND "); num_column += 2; }
-"||"        	{ printInfo(); printf("OR "); num_column += 2; }
-"!"        		{ printInfo(); printf("NOT "); num_column += 1; }
-"="         	{ printInfo(); printInfo(); printf("ASSIGN "); num_column += 1; }
-":="         	{ printInfo(); printf("ATTRIBUTION "); num_column += 2; }
-";"         	{ printInfo(); printf("SEMICOLON "); num_column += 1; }
-","         	{ printInfo(); printf("COMMA "); num_column += 1; }
-"("         	{ printInfo(); printf("LEFTPAREN "); num_column += 1; }
-")"         	{ printInfo(); printf("RIGHTPAREN "); num_column += 1; }
-"["         	{ printInfo(); printf("LEFTBRACKET "); num_column += 1; }
-"]"         	{ printInfo(); printf("RIGHTBRACKET "); num_column += 1; }
-"{"         	{ printInfo(); printf("LEFTBRACE "); num_column += 1; }
-"}"         	{ printInfo(); printf("RIGHTBRACE "); num_column += 1; }
+program    		{ printInfo(); printf("PROGRAM "); updateColumn(yyleng); }
+proc       		{ printInfo(); printf("PROC "); updateColumn(yyleng); }
+begin      		{ printInfo(); printf("BEGIN "); updateColumn(yyleng); }
+end        		{ printInfo(); printf("END "); updateColumn(yyleng); }
+func       		{ printInfo(); printf("FUNC "); updateColumn(yyleng); }
+const      		{ printInfo(); printf("CONST "); updateColumn(yyleng); }
+type       		{ printInfo(); printf("TYPE "); updateColumn(yyleng); }
+var        		{ printInfo(); printf("VAR "); updateColumn(yyleng); }
+if         		{ printInfo(); printf("IF "); updateColumn(yyleng); }
+else       		{ printInfo(); printf("ELSE "); updateColumn(yyleng); }
+goto       		{ printInfo(); printf("GOTO "); updateColumn(yyleng); }
+for        		{ printInfo(); printf("FOR "); updateColumn(yyleng); }
+to         		{ printInfo(); printf("TO "); updateColumn(yyleng); }
+do         		{ printInfo(); printf("DO "); updateColumn(yyleng); }
+step       		{ printInfo(); printf("STEP "); updateColumn(yyleng); }
+in         		{ printInfo(); printf("IN "); updateColumn(yyleng); }
+of         		{ printInfo(); printf("OF "); updateColumn(yyleng); }
+loop       		{ printInfo(); printf("LOOP "); updateColumn(yyleng); }
+exitwhen   		{ printInfo(); printf("EXITWHEN "); updateColumn(yyleng); }
+case       		{ printInfo(); printf("CASE "); updateColumn(yyleng); }
+write      		{ printInfo(); printf("WRITE "); updateColumn(yyleng); }
+writeln    		{ printInfo(); printf("WRITELN "); updateColumn(yyleng); }
+read       		{ printInfo(); printf("READ "); updateColumn(yyleng); }
+readln     		{ printInfo(); printf("READLN "); updateColumn(yyleng); }
+return     		{ printInfo(); printf("RETURN "); updateColumn(yyleng); }
+int        		{ printInfo(); printf("INT "); updateColumn(yyleng); }
+bool       		{ printInfo(); printf("BOOL "); updateColumn(yyleng); }
+real       		{ printInfo(); printf("REAL "); updateColumn(yyleng); }
+char       		{ printInfo(); printf("CHAR "); updateColumn(yyleng); }
+string     		{ printInfo(); printf("STRING "); updateColumn(yyleng); }
+array      		{ printInfo(); printf("ARRAY "); updateColumn(yyleng); }
+record     		{ printInfo(); printf("RECORD "); updateColumn(yyleng); }
+enum       		{ printInfo(); printf("ENUM "); updateColumn(yyleng); }
+subrange   		{ printInfo(); printf("SUBRANGE "); updateColumn(yyleng); }
+set        		{ printInfo(); printf("SET "); updateColumn(yyleng); }
+true			    { printInfo(); printf("TRUE "); updateColumn(yyleng); }
+false			    { printInfo(); printf("FALSE "); updateColumn(yyleng); }
+nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
+"+"           { printInfo(); printf("PLUS "); updateColumn(yyleng); }
+"-"         	{ printInfo(); printf("MINUS "); updateColumn(yyleng); }
+"*"         	{ printInfo(); printf("MULTIPLICATION "); updateColumn(yyleng); }
+"/"        		{ printInfo(); printf("DIVISION "); updateColumn(yyleng); }
+"%"        		{ printInfo(); printf("MOD "); updateColumn(yyleng); }
+"<="        	{ printInfo(); printf("LESSEQUALl "); updateColumn(yyleng); }
+"<"         	{ printInfo(); printf("LESS "); updateColumn(yyleng); }
+">"         	{ printInfo(); printf("GREATER "); updateColumn(yyleng); }
+">="        	{ printInfo(); printf("GREATEREQUAL "); updateColumn(yyleng); }
+"=="        	{ printInfo(); printf("EQUAL "); updateColumn(yyleng); }
+"!="        	{ printInfo(); printf("NOTEQUAL "); updateColumn(yyleng); }
+"&&"        	{ printInfo(); printf("AND "); updateColumn(yyleng); }
+"||"        	{ printInfo(); printf("OR "); updateColumn(yyleng); }
+"!"        		{ printInfo(); printf("NOT "); updateColumn(yyleng); }
+"="         	{ printInfo(); printInfo(); printf("ASSIGN "); updateColumn(yyleng); }
+":="         	{ printInfo(); printf("ATTRIBUTION "); updateColumn(yyleng); }
+";"         	{ printInfo(); printf("SEMICOLON "); updateColumn(yyleng); }
+","         	{ printInfo(); printf("COMMA "); updateColumn(yyleng); }
+"("         	{ printInfo(); printf("LEFTPAREN "); updateColumn(yyleng); }
+")"         	{ printInfo(); printf("RIGHTPAREN "); updateColumn(yyleng); }
+"["         	{ printInfo(); printf("LEFTBRACKET "); updateColumn(yyleng); }
+"]"         	{ printInfo(); printf("RIGHTBRACKET "); updateColumn(yyleng); }
+"{"         	{ printInfo(); printf("LEFTBRACE "); updateColumn(yyleng); }
+"}"         	{ printInfo(); printf("RIGHTBRACE "); updateColumn(yyleng); }
 
-{LABEL}			    { printInfo(); printf("LABEL: %s ", yytext); }
-{CHARACTER}		  { printInfo(); printf("CHAR: %s ", yytext); num_column++; }
+{LABEL}			    { printInfo(); printf("LABEL: %s ", yytext); num_column+=yyleng;}
+{CHARACTER}		  { printInfo(); printf("CHAR: %s ", yytext); num_column+=yyleng; }
 {LINECOMMENT}	  { printInfo(); printf("LINECOMMENT\n"); num_line++; num_column = 0; }
 {NEW_LINE}      { printf("NEWLINE\n"); num_line++; num_column = 0; }
-{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); }
-{INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); }
-{REAL_LITERAL}  { printInfo(); printf("REAL: %s ", yytext); }
-{STRING}		    { printInfo(); printf("STRING: %s ", yytext); }
-{ID}            { printInfo(); printf("ID: %s ", yytext); }
+{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); num_column+=yyleng;}
+{INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); num_column+=yyleng;}
+{REAL_LITERAL}  { printInfo(); printf("REAL_TYPE: %s ", yytext); num_column+=yyleng;}
+{STRING}		    { printInfo(); printf("STRING: %s ", yytext); num_column+=yyleng;}
+{ID}            { printInfo(); printf("ID: %s ", yytext); num_column+=yyleng; }
+{WHITESPACE}       	    {num_column+=yyleng;}
 {UNACCEPTABLE}	{ printInfo(); printf("ERROR: %s ", yytext); }
 
 %%
