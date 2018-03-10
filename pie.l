@@ -13,21 +13,21 @@ void updateColumn(int yyleng){
 }
 %}
 
-LETTER      [a-zA-Z]
-DIGIT       [0-9]
-NATURAL {DIGIT}+
-INTEGER ("-"|"+")?{NATURAL}+
-R  ([0-9]*[.])?[0-9]+
-REALLITERAL (("-"|"+")?{R})
+LETTER       [a-zA-Z]
+DIGIT        [0-9]
+NATURAL      {DIGIT}+
+INTEGER      ("-"|"+")?{NATURAL}+
+R            ([0-9]*[.])?[0-9]+
+REAL_LITERAL (("-"|"+")?{R})
 NEW_LINE     (\n)
 TAB          [ \t]+
-STRING      \"[^"\n]*\"
-LINECOMMENT "#"((.)*)\n
-EXPONENT    ([Ee]("+"|"-")?({DIGIT}+))
-CHARACTER 	\'[^']*\'
-ID  {LETTER}({LETTER}|{DIGIT}|"_")*
-LABEL @({LETTER}|{DIGIT}|"_")*
-WHITESPACE    [ \t\v\n\f]*
+STRING       \"[^"\n]*\"
+LINECOMMENT  "#"((.)*)\n
+EXPONENT     ([Ee]("+"|"-")?({DIGIT}+))
+CHARACTER 	 \'[^']*\'
+ID           {LETTER}({LETTER}|{DIGIT}|"_")*
+LABEL        @({LETTER}|{DIGIT}|"_")*
+WHITESPACE   [ \t\v\n\f]*
 UNACCEPTABLE .
 
 %%
@@ -104,7 +104,7 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 {REAL_LITERAL}  { printInfo(); printf("REAL_TYPE: %s ", yytext); num_column+=yyleng;}
 {STRING}		    { printInfo(); printf("STRING: %s ", yytext); num_column+=yyleng;}
 {ID}            { printInfo(); printf("ID: %s ", yytext); num_column+=yyleng; }
-{WHITESPACE}       	    {num_column+=yyleng;}
+{WHITESPACE}    {num_column+=yyleng;}
 {UNACCEPTABLE}	{ printInfo(); printf("ERROR: %s ", yytext); }
 
 %%
