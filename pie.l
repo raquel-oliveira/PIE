@@ -18,7 +18,7 @@ DIGIT        [0-9]
 NATURAL      {DIGIT}+
 INTEGER      ("-"|"+")?{NATURAL}+
 R            ([0-9]*[.])?[0-9]+
-REAL_LITERAL (("-"|"+")?{R})
+REAL (("-"|"+")?{R})
 NEW_LINE     (\n)
 TAB          [ \t]+
 STRING       \"[^"\n]*\"
@@ -88,6 +88,7 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 ":="         	{ printInfo(); printf("ATTRIBUTION "); updateColumn(yyleng); }
 ";"         	{ printInfo(); printf("SEMICOLON "); updateColumn(yyleng); }
 ","         	{ printInfo(); printf("COMMA "); updateColumn(yyleng); }
+"."         	{ printInfo(); printf("DOT "); updateColumn(yyleng); }
 "("         	{ printInfo(); printf("LEFTPAREN "); updateColumn(yyleng); }
 ")"         	{ printInfo(); printf("RIGHTPAREN "); updateColumn(yyleng); }
 "["         	{ printInfo(); printf("LEFTBRACKET "); updateColumn(yyleng); }
@@ -101,7 +102,7 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 {NEW_LINE}      { printf("NEWLINE\n"); num_line++; num_column = 0; }
 {NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); num_column+=yyleng;}
 {INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); num_column+=yyleng;}
-{REAL_LITERAL}  { printInfo(); printf("REAL_TYPE: %s ", yytext); num_column+=yyleng;}
+{REAL}  { printInfo(); printf("REAL: %s ", yytext); num_column+=yyleng;}
 {STRING}		    { printInfo(); printf("STRING: %s ", yytext); num_column+=yyleng;}
 {ID}            { printInfo(); printf("ID: %s ", yytext); num_column+=yyleng; }
 {WHITESPACE}    {num_column+=yyleng;}
