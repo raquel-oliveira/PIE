@@ -12,12 +12,12 @@ begin # main
     # Print message
     writeln('Please Input an Integer');
     # Read integer
-    readln(num)
+    readln(num);
     # Initialize adder
     sum := 1;
     # Adder loop
     for i := 1 to sum do
-        sum := sum*i;
+        sum := sum * i;
     # Print result
     write('Result: ');
     write(sum)
