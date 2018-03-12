@@ -2,14 +2,28 @@
 
 PIE is a Pascal-like programming language.
 
-## How to compile
+## How to compile and run
 
-### Lex
+### Compiling
 
 ```bash
 lex pie.l
 cc lex.yy.c -o name -ll
+```
+### Running
+
+```bash
 ./name
+```
+or
+```bash
+./name < pathtofile.pie
+```
+### Example
+```bash
+lex pie.l
+cc lex.yy.c -o pie -ll
+./pie < codesamples/merge_sort.pie
 ```
 
 ## Team
