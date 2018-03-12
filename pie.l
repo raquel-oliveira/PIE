@@ -15,16 +15,15 @@ void updateColumn(int yyleng){
 
 LETTER       [a-zA-Z]
 DIGIT        [0-9]
-NATURAL      {DIGIT}+
-INTEGER      ("-"|"+")?{NATURAL}+
+INTLITERAL      ("-"|"+")?{DIGIT}+
 R            ([0-9]*[.])?[0-9]+
-REAL (("-"|"+")?{R})
+REALLITERAL (("-"|"+")?{R})
 NEW_LINE     (\n)
 TAB          [ \t]+
-STRING       \"[^"\n]*\"
+STRINGLITERAL       \"[^"\n]*\"
 LINECOMMENT  "#"((.)*)\n
 EXPONENT     ([Ee]("+"|"-")?({DIGIT}+))
-CHARACTER 	 \'[^']*\'
+CHARLITERAL 	 \'[^']*\'
 ID           {LETTER}({LETTER}|{DIGIT}|"_")*
 LABEL        @({LETTER}|{DIGIT}|"_")*
 WHITESPACE   [ \t\v\n\f]*
@@ -97,12 +96,12 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 "}"         	{ printInfo(); printf("RIGHTBRACE "); updateColumn(yyleng); }
 
 {LABEL}			    { printInfo(); printf("LABEL: %s ", yytext); updateColumn(yyleng); }
-{CHARACTER}		  { printInfo(); printf("CHAR: %s ", yytext); updateColumn(yyleng); }
+{CHARLITERAL}		  { printInfo(); printf("CHAR: %s ", yytext); updateColumn(yyleng); }
 {LINECOMMENT}	  { printInfo(); printf("LINECOMMENT\n"); num_line++; num_column = 0; }
 {NEW_LINE}      { printf("\n"); num_line++; num_column = 0; }
-{INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); updateColumn(yyleng);}
-{REAL}  { printInfo(); printf("REAL: %s ", yytext); updateColumn(yyleng);}
-{STRING}		    { printInfo(); printf("STRING: %s ", yytext); updateColumn(yyleng);}
+{INTLITERAL}       { printInfo(); printf("INTEGER: %s ", yytext); updateColumn(yyleng);}
+{REALLITERAL}  { printInfo(); printf("REAL: %s ", yytext); updateColumn(yyleng);}
+{STRINGLITERAL}		    { printInfo(); printf("STRING: %s ", yytext); updateColumn(yyleng);}
 {ID}            { printInfo(); printf("ID: %s ", yytext); updateColumn(yyleng); }
 {WHITESPACE}    {updateColumn(yyleng);}
 {UNACCEPTABLE}	{ printInfo(); printf("ERROR: %s ", yytext); }
