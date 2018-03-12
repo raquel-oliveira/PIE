@@ -100,7 +100,6 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 {CHARACTER}		  { printInfo(); printf("CHAR: %s ", yytext); updateColumn(yyleng); }
 {LINECOMMENT}	  { printInfo(); printf("LINECOMMENT\n"); num_line++; num_column = 0; }
 {NEW_LINE}      { printf("\n"); num_line++; num_column = 0; }
-{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); updateColumn(yyleng);}
 {INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); updateColumn(yyleng);}
 {REAL}  { printInfo(); printf("REAL: %s ", yytext); updateColumn(yyleng);}
 {STRING}		    { printInfo(); printf("STRING: %s ", yytext); updateColumn(yyleng);}
