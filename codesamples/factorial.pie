@@ -2,7 +2,7 @@
 # PIE Factorial 
 # Pascal version: http://rextester.com/UXP1971.
 ##
-program Factorial;
+program factorial;
 
 # Variable declaration
 var 
@@ -20,5 +20,5 @@ begin # main
         sum := sum*i;
     # Print result
     write('Result: ');
-    write(sum);
-end
+    write(sum)
+end.
