@@ -2,23 +2,18 @@
 # PIE Factorial 
 # Pascal version: http://rextester.com/UXP1971.
 ##
+
 program factorial;
 
-# Variable declaration
 var 
-    int num, sum, i; # Received integer, adder, index
+    int num, sum, i;
 
-begin # main
-    # Print message
-    writeln('Please Input an Integer');
-    # Read integer
+begin
+    writeln("Please Input an Integer");
     readln(num);
-    # Initialize adder
     sum := 1;
-    # Adder loop
-    for i := 1 to sum do
+    for i := 1 to num step 1 do
         sum := sum * i;
-    # Print result
     write('Result: ');
     write(sum)
 end.

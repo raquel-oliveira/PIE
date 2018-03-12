@@ -4,91 +4,76 @@
 ##
 program merge_sort;
 
-# Constants
 const
-    FIRST = 1;
-    LAST = 10;
+    FIRST = 0;
+    LAST = 9;
 
-# Usertypes
 type
     TRange = FIRST..LAST;
     TVector = array [TRange] of int;
 
-# Variable declaration
 var
     TVector vector;
     TRange index;
 
-# Read array
-proc read_arr(IntArray a; int size);
-begin # read_arr #
-    size := 1;
-    loop
-    begin # loop
-        exitwhen (a[size] != eof)
-        readln(a[size]);
-        if (a[size] != eof)
-            size := size + 1
-    end
-end;  # read_arr #
+proc read_arr(IntArray a);
+    var
+        int i;
+    begin
+        for i := FIRST to LAST step 1 do
+            read(a[i])
+    end;
 
-# 
-proc fusion(TVector v; int iz, de, ce; TVector w);
+proc merge(TVector helper; ref TVector vec; int first, last, center);
     var
         int i, j, k;
-    begin # fusion #
-        i := iz; 
-        j := succ(ce); 
-        k := iz;
+    begin 
+        i := first; 
+        j := center + 1; 
+        k := first;
 
         loop
-        begin # loop
-            exitwhen (i <= ce) AND (j <= de);
-            if v[i] < v[j] begin
-               w[k] := v[i];
-               i := succ(i)
-            end else begin
-               w[k] := v[j];
-               j := succ(j)
+            begin
+                exitwhen (i > center) || (j > last);
+                if helper[i] < helper[j] 
+                    begin
+                       vec[k] := helper[i];
+                       i := i + 1
+                    end 
+                else 
+                    begin
+                       vec[k] := helper[j];
+                       j := j + 1
+                    end;
+                k := k + 1
             end;
-            k = succ(k)
-        end; # loop
 
-        for k := j to de do
-            w[k] := v[k];
-        
-        for k := i to ce do
-            w[k + de - ce] := v[k]
-      
-    end; # fusion #
+        for j := i to center step 1 do
+            begin
+              vec[k] := helper[j];
+              k := k + 1
+            end
+    end;
 
-proc merge_sort(TVector v; TRange izq, der);
+proc split_merge(TVector vec; int first, last);
     var
-        TRange center;
-    begin # merge_sort #
-    
-        center := (izq + der) / 2;
-        if izq < center
-            merge_sort(v, izq, center);
-        if center + 1 < der
-            merge_sort(v, center + 1, der);
-
-        fusion(v, izq, der, center, v)
-    end;   # merge_sort #
-
-begin # Programa principal
-    # Read
-    read_arr(vector, size);
-    #
-    merge_sort(vector, FIRST, LAST);
-    #
-    writeln;
-    writeln;
-    writeln('Sorted vector: ');
-    writeln;
-    #
-    for index := FIRST to LAST step 1 do
+        int center;
     begin
-       write(vector[index], ' ')
-    end
+        if last > first
+            begin
+                center := (first + last) / 2;
+                split_merge(vec, first, center);
+                split_merge(vec, center + 1, last);
+                merge(vec, vec, first, last, center)
+            end
+    end;
+
+begin
+    read_arr(vector);
+    split_merge(vector, FIRST, LAST);
+    writeln('Sorted vector: ');
+    for index := FIRST to LAST step 1 do
+        begin
+           write(vector[index], ' ')
+        end
 end.
