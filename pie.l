@@ -14,23 +14,23 @@ void updateColumn(int yyleng){
 }
 %}
 
-LETTER       [a-zA-Z]
-DIGIT        [0-9]
-NATURAL      {DIGIT}+
-INTLITERAL      ("-"|"+")?{NATURAL}+
-EXPONENT     ([E|e]("+"|"-")?({DIGIT}+))
-R            ([0-9]*[.])?[0-9]+
-R2 	 		 ([0-9]*[.])?[0-9]+{EXPONENT}?
-REALLITERAL 		 (("-"|"+")?{R}|("-"|"+")?{R2})
-NEW_LINE     (\n)
-TAB          [ \t]+
-STRINGLITERAL       \"[^"\n]*\"
-LINECOMMENT  "#"((.)*)\n
-CHARLITERAL 	 \'[^']*\'
-ID           {LETTER}({LETTER}|{DIGIT}|"_")*
-LABEL        @({LETTER}|{DIGIT}|"_")*
-WHITESPACE   [ \t\v\n\f]*
-UNACCEPTABLE .
+LETTER        [a-zA-Z]
+DIGIT         [0-9]
+NATURAL       {DIGIT}+
+INTLITERAL    ("-"|"+")?{NATURAL}+
+EXPONENT      ([E|e]("+"|"-")?({DIGIT}+))
+R             ([0-9]*[.])?[0-9]+
+R2 	 		  ([0-9]*[.])?[0-9]+{EXPONENT}?
+REALLITERAL   (("-"|"+")?{R}|("-"|"+")?{R2})
+NEW_LINE      (\n)
+TAB           [ \t]+
+STRINGLITERAL \"[^"\n]*\"
+LINECOMMENT   "#"((.)*)\n
+CHARLITERAL   \'[^']*\'
+ID            {LETTER}({LETTER}|{DIGIT}|"_")*
+LABEL         @({LETTER}|{DIGIT}|"_")*
+WHITESPACE    [ \t\v\n\f]*
+UNACCEPTABLE  .
 
 %%
 
@@ -71,10 +71,10 @@ record     		{ printInfo(); printf("RECORD "); updateColumn(yyleng); }
 enum       		{ printInfo(); printf("ENUM "); updateColumn(yyleng); }
 subrange   		{ printInfo(); printf("SUBRANGE "); updateColumn(yyleng); }
 set        		{ printInfo(); printf("SET "); updateColumn(yyleng); }
-true			    { printInfo(); printf("TRUE "); updateColumn(yyleng); }
-false			    { printInfo(); printf("FALSE "); updateColumn(yyleng); }
-nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
-"+"           { printInfo(); printf("PLUS "); updateColumn(yyleng); }
+true			{ printInfo(); printf("TRUE "); updateColumn(yyleng); }
+false			{ printInfo(); printf("FALSE "); updateColumn(yyleng); }
+nil  			{ printInfo(); printf("NIL "); updateColumn(yyleng); }
+"+"             { printInfo(); printf("PLUS "); updateColumn(yyleng); }
 "-"         	{ printInfo(); printf("MINUS "); updateColumn(yyleng); }
 "*"         	{ printInfo(); printf("MULTIPLICATION "); updateColumn(yyleng); }
 "/"        		{ printInfo(); printf("DIVISION "); updateColumn(yyleng); }
@@ -100,16 +100,16 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 "{"         	{ printInfo(); printf("LEFTBRACE "); updateColumn(yyleng); }
 "}"         	{ printInfo(); printf("RIGHTBRACE "); updateColumn(yyleng); }
 
-{LABEL}			    { printInfo(); printf("LABEL: %s ", yytext); updateColumn(yyleng); }
-{CHARLITERAL}		  { printInfo(); printf("CHAR: %s ", yytext); updateColumn(yyleng); }
-{LINECOMMENT}	  { printInfo(); printf("LINECOMMENT\n"); num_line++; num_column = 0; }
+{LABEL}			{ printInfo(); printf("LABEL: %s ", yytext); updateColumn(yyleng); }
+{CHARLITERAL}	{ printInfo(); printf("CHAR: %s ", yytext); updateColumn(yyleng); }
+{LINECOMMENT}	{ printf("\n"); num_line++; num_column = 0; }
 {NEW_LINE}      { printf("\n"); num_line++; num_column = 0; }
-{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); updateColumn(yyleng);}
-{INTLITERAL}       { printInfo(); printf("INTEGER: %s ", yytext); updateColumn(yyleng);}
-{REALLITERAL}  { printInfo(); printf("REAL: %s ", yytext); updateColumn(yyleng);}
-{STRINGLITERAL}		    { printInfo(); printf("STRING: %s ", yytext); updateColumn(yyleng);}
+{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); updateColumn(yyleng); }
+{INTLITERAL}    { printInfo(); printf("INTEGER: %s ", yytext); updateColumn(yyleng); }
+{REALLITERAL}   { printInfo(); printf("REAL: %s ", yytext); updateColumn(yyleng); }
+{STRINGLITERAL} { printInfo(); printf("STRING: %s ", yytext); updateColumn(yyleng); }
 {ID}            { printInfo(); printf("ID: %s ", yytext); updateColumn(yyleng); }
-{WHITESPACE}    {updateColumn(yyleng);}
+{WHITESPACE}    { updateColumn(yyleng); }
 {UNACCEPTABLE}	{ printInfo(); printf("ERROR: %s ", yytext); }
 
 %%
