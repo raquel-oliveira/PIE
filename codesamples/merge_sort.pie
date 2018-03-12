@@ -16,12 +16,13 @@ var
     TVector vector;
     TRange index;
 
-proc read_arr(IntArray a);
+proc read_arr(TVector vec);
     var
         int i;
     begin
+        writeln("Please give 10 integers as input for the array");
         for i := FIRST to LAST step 1 do
-            read(a[i])
+            read(vec[i])
     end;
 
 proc merge(TVector helper; ref TVector vec; int first, last, center);
