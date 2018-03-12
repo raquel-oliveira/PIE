@@ -101,4 +101,4 @@ begin # main
     # Print
     for i := 1 to size step 1 do
         writeln(arr[i])
-end
+end.
