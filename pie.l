@@ -96,16 +96,16 @@ nil  			    { printInfo(); printf("NIL "); updateColumn(yyleng); }
 "{"         	{ printInfo(); printf("LEFTBRACE "); updateColumn(yyleng); }
 "}"         	{ printInfo(); printf("RIGHTBRACE "); updateColumn(yyleng); }
 
-{LABEL}			    { printInfo(); printf("LABEL: %s ", yytext); num_column+=yyleng;}
-{CHARACTER}		  { printInfo(); printf("CHAR: %s ", yytext); num_column+=yyleng; }
+{LABEL}			    { printInfo(); printf("LABEL: %s ", yytext); updateColumn(yyleng); }
+{CHARACTER}		  { printInfo(); printf("CHAR: %s ", yytext); updateColumn(yyleng); }
 {LINECOMMENT}	  { printInfo(); printf("LINECOMMENT\n"); num_line++; num_column = 0; }
-{NEW_LINE}      { printf("NEWLINE\n"); num_line++; num_column = 0; }
-{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); num_column+=yyleng;}
-{INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); num_column+=yyleng;}
-{REAL}  { printInfo(); printf("REAL: %s ", yytext); num_column+=yyleng;}
-{STRING}		    { printInfo(); printf("STRING: %s ", yytext); num_column+=yyleng;}
-{ID}            { printInfo(); printf("ID: %s ", yytext); num_column+=yyleng; }
-{WHITESPACE}    {num_column+=yyleng;}
+{NEW_LINE}      { printf("\n"); num_line++; num_column = 0; }
+{NATURAL}       { printInfo(); printf("NATURAL %s ", yytext); updateColumn(yyleng);}
+{INTEGER}       { printInfo(); printf("INTEGER: %s ", yytext); updateColumn(yyleng);}
+{REAL}  { printInfo(); printf("REAL: %s ", yytext); updateColumn(yyleng);}
+{STRING}		    { printInfo(); printf("STRING: %s ", yytext); updateColumn(yyleng);}
+{ID}            { printInfo(); printf("ID: %s ", yytext); updateColumn(yyleng); }
+{WHITESPACE}    {updateColumn(yyleng);}
 {UNACCEPTABLE}	{ printInfo(); printf("ERROR: %s ", yytext); }
 
 %%
