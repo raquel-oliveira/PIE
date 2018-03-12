@@ -19,6 +19,19 @@ var
     TVector vector;
     TRange index;
 
+# Read array
+proc read_arr(IntArray a; int size);
+begin # read_arr #
+    size := 1;
+    loop
+    begin # loop
+        exitwhen (a[size] != eof)
+        readln(a[size]);
+        if (a[size] != eof)
+            size := size + 1
+    end
+end;  # read_arr #
+
 # 
 proc fusion(TVector v; int iz, de, ce; TVector w);
     var
@@ -64,22 +77,16 @@ proc merge_sort(TVector v; TRange izq, der);
     end;   # merge_sort #
 
 begin # Programa principal
-    # Import
-    randomize;
-    
-    for index := FIRST to LAST stop 1 do
-    begin
-       vector[index] := random(99) * 5;
-       write(vector[index], ' ')
-    end;
-    
+    # Read
+    read_arr(vector, size);
+    #
     merge_sort(vector, FIRST, LAST);
-    
+    #
     writeln;
     writeln;
     writeln('Sorted vector: ');
     writeln;
-    
+    #
     for index := FIRST to LAST step 1 do
     begin
        write(vector[index], ' ')
