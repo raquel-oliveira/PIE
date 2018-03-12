@@ -28,7 +28,7 @@ LINECOMMENT   "#"((.)*)\n
 CHARLITERAL   \'[^']*\'
 ID            {LETTER}({LETTER}|{DIGIT}|"_")*
 LABEL         @({LETTER}|{DIGIT}|"_")*
-WHITESPACE    [ \t\v\n\f]*
+WHITESPACE    [ \t\v\f]*
 UNACCEPTABLE  .
 
 %%
