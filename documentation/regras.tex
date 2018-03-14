@@ -1,0 +1,78 @@
+Meta-operadores para definir as expressões regulares:
+\begin{verbatim}
+    [ ] : para enumerações associadas à -
+    *   : repetição
+    +   : para repetições de um vez ou mais
+    ?   : de zero a uma vez
+    .   : como um caractere ``joker'' exceto \n
+    ^   : para o complementar de um  [ ]
+    |   : para representar uma alternativa
+\end{verbatim}
+
+\section{id}
+Identificadores podem começar apenas com letras, podem ter números e underline (``\_'') em sua estrutura. 
+A expressão regular que gera um identificador correto é:
+ \begin{verbatim}
+   id :  [a-zA-Z][a-zA-Z0-9_]*
+\end{verbatim}
+
+\section{label}
+ \begin{verbatim}
+   label : "@"[a-zA-Z0-9_]*
+\end{verbatim}
+
+\section{char}
+\begin{verbatim}
+   charliteral : \`[^']*\'
+\end{verbatim}
+
+\section{string}
+\begin{verbatim}
+   stringliteral : \"[^"\n]*\"
+\end{verbatim}
+
+\section{int}
+\begin{verbatim}
+   intliteral :  (("-"|"+")?[0-9]+)
+\end{verbatim}
+
+\section{real}
+\begin{verbatim}
+   exponent : ([E|e]("+"|"-")?({DIGIT}+))
+   real : ([0-9]*[.])?[0-9]+
+   realexponent : ([0-9]*[.])?[0-9]+{exponent}?
+   realliteral :  (("-"|"+")?{real}|("-"|"+")?{realexponent})
+\end{verbatim}
+
+\section{Precedência}
+A ordem de precedência deve valer para os seguintes operadores (), [], \{\}, $*$, $/$, \%, !, +, -, $<$, $<=$, $>$, $>=$, $:=$, $=$, $==$, $!=$, $\&\&$, $||$. A ordem de precedência pode ser visualizada na Tabela \ref{table:ordem_precedencia}.
+
+\begin{table*}[h]
+\renewcommand{\arraystretch}{1.34}
+\centering
+\begin{tabular}{| c | c | c | c | c | c |}
+\hline
+\bfseries Operador & \bfseries Precedência  \\
+\hline
+() & maior \\ \hline
+[] &  \\ \hline
+\{\} &  \\ \hline
+ *, /, \% & \\ \hline
+  ! & \\ \hline
+ +, - & \\ \hline
+$<$, $<=$, $>$, $>=$ & \\ \hline
+$==$, $!=$ & \\ \hline
+\&\& & \\ \hline
+$||$ & \\ \hline
+$:=$, = & menor\\ \hline
+\end{tabular}
+\caption{Ordem de precedência para os operadores.}
+\label{table:ordem_precedencia}
+\end{table*}
+
+% Pascal tem funções matemáticas na própria linguagem (vamos abortar ou trataremos como se fosse de uma biblioteca?)
+\section{Regra para comentários}
+    Comentários iniciam por ``\#'' e são eliminados no pré-processamento.
+\begin{verbatim}
+   linecomment : "#"((.)*)\n
+\end{verbatim}

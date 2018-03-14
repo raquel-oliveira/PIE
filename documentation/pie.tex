@@ -1,0 +1,85 @@
+\lstdefinelanguage{pie}
+{
+    morekeywords={[1]
+        program,
+        proc,
+        begin,
+        end,
+        func,
+        const,
+        type, 
+        var
+    },
+    morekeywords={[2]
+        if,
+        else,
+        goto,
+        of, %array, set, subrange
+        for,
+        to, %for
+        do, %for
+        step, %for
+        in, %subrange, set
+        loop,
+        exitwhen, %loop
+        case,
+        write,
+        writeln,
+        read,
+        readln,
+        return
+    },
+    morekeywords={[3]
+        int,
+        bool,
+        real,
+        char,
+        string,
+        array,
+        set,
+        record,
+        enum,
+        subrange
+    },
+    morekeywords={[4]
+        true, false, nil
+    },
+    morekeywords={[5]
+        id,
+        label,
+        intliteral,
+        realiteral,
+        charliteral,
+        stringliteral
+    },
+    sensitive=true,
+    morecomment=[l]{\#},
+    morestring=[b]",
+}
+
+
+\definecolor{keywordcolor}{RGB}{0,0,0}
+\definecolor{commentcolor}{RGB}{50,50,50}
+\definecolor{opcolor}{RGB}{0,0,150}
+\definecolor{literalcolor}{RGB}{0,0,150}
+\definecolor{todefine}{RGB}{205,92,150}
+\definecolor{typecolor}{RGB}{0,150,0}
+
+\lstdefinestyle{pie}
+{
+    language=pie,
+    basicstyle=\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    keywordstyle=[1]\bfseries\color{keywordcolor},
+    keywordstyle=[2]\bfseries\color{keywordcolor},
+    keywordstyle=[3]\bfseries\color{keywordcolor},
+    keywordstyle=[4]\bfseries\color{literalcolor},
+    keywordstyle=[5]\bfseries\color{todefine},
+    commentstyle=\color{commentcolor},
+    showstringspaces=false
+}
+
+\lstset{style=pie}
+
+%

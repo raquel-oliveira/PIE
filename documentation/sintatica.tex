@@ -1,0 +1,284 @@
+As regras sintáticas da linguagem foram construídas utilizando uma gramática livre de contexto que utiliza o formalismo de Backus-Naur (BNF).
+
+
+\section{Gramática}
+
+\begin{footnotesize}
+\begin{lstlisting}[frame=single, label={prog}, language=pie]
+<prog> ::= program id `;' <decl> <block> `.'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={decl}, language=pie]
+<decl> ::= <consts> <usertypes> <vars> <subprograms>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={consts}, language=pie]
+<consts> ::= `'                    | 
+             const <listconst> `;'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={listconst}, language=pie]
+<listconst> ::= <constdecl>                 |
+                <constdecl> `;' <listconst>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={constdecl}, language=pie]
+<constdecl> ::= id `=' <expr>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={types}, language=pie]
+<types> ::= id        |
+           <primtype>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={primtypes}, language=pie]
+<primtypes> ::= int            |
+                real           | 
+                bool           |
+                char           |
+                string         |
+                <arraytype>    |
+                <settype>      |
+                <enumtype>     |
+                <subrangetype> |
+                <recordtype>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={arraytype}, language=pie]
+<arraytype> ::= array `[' <subrangelist> `]' of <types>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangelist}, language=pie]
+<subrangelist> ::= <subrangetype>                    |
+                   <subrangetype> `,' <subrangelist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangetype}, language=pie]
+<subrangetype> ::= id `..' id     |
+                   int `..' int   | 
+                   char `..' char
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={settype}, language=pie]
+<settype> ::= set of <types>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={enumtype}, language=pie]
+<enumtype> ::= `(' <idlist> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={recordtype}, language=pie]
+<recordtype> ::= record <varlistlist> end
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={usertypes}]
+<usertypes> ::= `'                       |
+                type <listusertypes> `;'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={listusertypes}]
+<listusertypes> ::= <usertype> | <usertype> `;' <listusertypes>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={listusertypes}]
+<usertype> ::= id `=` <types>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={vars}, language=pie]
+<vars> ::= `'                |
+           var <varlistlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={varlistlist}, language=pie]
+<varlistlist> ::= <varlist>               |
+                  <varlist> <varlistlist>
+\end{lstlisting}
+
+%mudar
+\begin{lstlisting}[frame=single, label={varlist}, language=pie]
+<varlist> ::= <types> <idlist> `;' |  <types> <idattrlist> `;'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={idlist}, language=pie]
+<idattrlist> ::= id = <expr>                  | 
+                 id = <expr> `,' <idattrlist> 
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={idlist}, language=pie]
+<idlist> ::= id              | 
+             id `,' <idlist> 
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={variable}, language=pie]
+<variable> ::= id                     | 
+               <variable> `->' id     |
+               id `[' <exprlist+> `]'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<block> ::= begin <stmts> end
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<stmts> ::= `'         | 
+            <stmtlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<stmtlist> ::= <stmt>                | 
+               <stmt> `;' <stmtlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<stmt> ::= `'             | 
+           label <stmt>   |
+           <block>        |
+           <writeblock>   |
+           <writelnblock> |
+           <readblock>    |
+           <readlnblock>  |
+           <loopblock>    |
+           <ifblock>      |
+           <forblock>     |
+           <caseblock>    |
+           <gotostmt>     |
+           <attrstmt>     |
+           <exitstmt>     |
+           <returnstmt>   |
+           <subprogcall>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<subprogcall> ::= id `(' <exprlist> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<exitstmt> ::= exitwhen `(' <boolexpr> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<returnstmt> ::= return <expr>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<attrstmt> ::= <variable> `:=' <expr>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<ifblock> ::= if `(' <boolexpr> `)' <stmt> <elseblock> 
+\end{lstlisting}
+
+
+\begin{lstlisting}[frame=single]
+<elseblock> ::= `'          |
+                else <stmt>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<loopblock> ::= loop <stmt>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<caseblock> ::= case <expr> of <caselist> end             |
+                case <expr> of <caselist> else <stmt> end
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<caselist> ::= <discretevalue> `:' <stmt> `;'      |
+               <discretevalueslist> `:' <stmt> `;'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<discreetvalueslist> ::= <discretevalue>                          |
+                         <discretevalue> `,' <discretevalueslist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<discretevalue> ::= % TODO
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<gotostmt> ::= goto label
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<forblock> ::= for <variable> `:=' <expr> to <expr>
+    step <expr> do <stmt>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<expr> ::= <variable>         |
+           literal            |
+           <subprogcall>      |
+           `(' <expr> `)'     |
+           `!'<expr>          |
+           `+'<expr>          |
+           `-'<expr>          |
+           <expr> `+' <expr>  |
+           <expr> `-' <expr>  |
+           <expr> `*' <expr>  |
+           <expr> `/' <expr>  |
+           <expr> `%' <expr>  |
+           <expr> `&&' <expr> |
+           <expr> `||' <expr> |
+           <expr> `>' <expr>  |
+           <expr> `<' <expr>  |
+           <expr> `>=' <expr> |
+           <expr> `<=' <expr> |
+           <expr> `==' <expr> |
+           <expr> `!=' <expr>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<literal> ::= intliteral        | 
+              realiteral        | 
+              charliteral       |
+              stringliteral     |
+              <subrangetype>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<exprlist> ::= `' | <exprlist+>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<exprlist+> ::= <expr> | <expr> `,' <exprlist+>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<subprograms> ::= `'                            |
+                  <procedure>                   |
+                  <function>                    |
+                  <procedure> `;' <subprograms> |
+                  <function> `;' <subprograms>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<procedure> ::= proc id `(' <param> `)' `;' <decl> <block> 
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<function> ::= func <types> id `(' <param> `)' `;' <decl> <block>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<param> ::= `'            |
+            <varlistlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<writeblock> ::= write `(' <expr> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<writelnblock> ::= writeln `(' <expr> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<readblock> ::= read `(' id `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single]
+<readlnblock> ::= readln `(' id `)'
+\end{lstlisting}
+\end{footnotesize}

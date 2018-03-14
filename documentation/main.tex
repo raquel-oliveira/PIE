@@ -1,0 +1,111 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage[protrusion=true,expansion=true]{microtype} % S2  %
+\usepackage{listings}
+\usepackage{fullpage} % changes the margin
+\usepackage{pxfonts} % to bold in listings
+\usepackage{xcolor}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage{comment}
+
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
+\let\endchangemargin=\endlist
+
+%definition of language PIE
+\input{pie.tex} 
+\lstset{language=pie}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    linktoc=all
+}
+
+\usepackage{titlesec}
+
+\titleformat{\chapter}
+  {\Large\bfseries} % format
+  {}                % label
+  {0pt}             % sep
+  {\huge}           % before-code
+
+
+
+\title{DIM0661-PB1}
+%\subtitle{Definição da linguagem e análise léxica}
+\author{Grupo 3}
+\date{12 de março de 2018}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introdução}
+Este relatório apresenta o manual da linguagem de programação que está sendo desenvolvida na disciplina de Compiladores (DIM0661). A linguagem deve obedecer as seguintes restrições:
+
+\begin{changemargin}{1cm}{1cm}
+\begin{itemize}
+    \item deve ser parecida com Pascal (Pascal-like);
+    \item deve ser em inglês;
+    \item não deve possuir \texttt{while} e nem \texttt{repeat until};
+    \item deve possuir um loop geral e permitir uma saída do loop (\texttt{exitwhen});
+    \item deve ter tipagem fraca.
+\end{itemize}
+\end{changemargin}
+
+O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textbf{P}ascal-l\textbf{I}k\textbf{E}).
+
+\chapter{Regras sintáticas}
+\input{sintatica.tex}
+
+\newpage
+\chapter{Termos léxicos}
+\input{lexico-termos.tex}
+
+\newpage
+\chapter{Regras}
+\input{regras.tex}
+
+\newpage
+\chapter{Forma de uso}
+O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
+\section{Compilação}
+\begin{verbatim}
+    lex pie.l
+    cc lex.yy.c -o name -ll
+\end{verbatim}
+
+\section{Execução}
+\begin{verbatim}
+    ./name
+\end{verbatim}
+
+ou
+
+\begin{verbatim}
+    ./name < pathtofile.pie
+\end{verbatim}
+
+\chapter{Exemplos}
+
+\begin{verbatim}
+    lex pie.l
+    cc lex.yy.c -o pie -ll
+    ./pie < codesamples/merge_sort.pie
+\end{verbatim}
+
+\newpage
+\input{exemplos.tex}
+
+\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{bibpie}
+
+
+\end{document}
