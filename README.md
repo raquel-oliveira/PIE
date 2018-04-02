@@ -8,14 +8,10 @@ PIE is a Pascal-like programming language.
 
 ```bash
 lex pie.l
-cc lex.yy.c -o name -ll
+g++ -std=c++11 -o name src/recursive_parser.cpp -ll
 ```
 ### Running
 
-```bash
-./name
-```
-or
 ```bash
 ./name < pathtofile.pie
 ```
