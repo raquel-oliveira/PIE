@@ -18,7 +18,7 @@ g++ -std=c++11 -o name src/recursive_parser.cpp -ll
 ### Example
 ```bash
 lex pie.l
-cc lex.yy.c -o pie -ll
+g++ -std=c++11 -o pie src/recursive_parser.cpp -ll
 ./pie < codesamples/merge_sort.pie
 ```
 
