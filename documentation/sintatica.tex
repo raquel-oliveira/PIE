@@ -1,6 +1,5 @@
 As regras sintáticas da linguagem foram construídas utilizando uma gramática livre de contexto que utiliza o formalismo de Backus-Naur (BNF).
 
-
 \section{Gramática}
 
 \begin{footnotesize}
@@ -18,12 +17,16 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={listconst}, language=pie]
-<listconst> ::= <constdecl>                 |
-                <constdecl> `;' <listconst>
+<listconst> ::=  <constdecl> <listconstprime]>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={listconstprime}, language=pie]
+<listconstprime> ::=  `'  | 
+		    <listconst>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={constdecl}, language=pie]
-<constdecl> ::= id `=' <expr>
+<constdecl> ::= id `=' <expr> `; '
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={types}, language=pie]
@@ -32,31 +35,40 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={primtypes}, language=pie]
-<primtypes> ::= int            |
-                real           | 
-                bool           |
-                char           |
-                string         |
-                <arraytype>    |
-                <settype>      |
-                <enumtype>     |
-                <subrangetype> |
+<primtypes> ::= int <primtypesprime>    |
+                real                    | 
+                bool                    |
+                char   <primtypesprime> |
+                string                  |
+                <arraytype>             |
+                <settype>               |
+                <enumtype>              |
+                id `..' <subrangetype>  |
                 <recordtype>
 \end{lstlisting}
 
+\begin{lstlisting}[frame=single, label={primtypesprime}, language=pie]
+	<primtypesprime> ::= `'  |
+	                    `..' <subrangetype>
+\end{lstlisting}
 \begin{lstlisting}[frame=single, label={arraytype}, language=pie]
 <arraytype> ::= array `[' <subrangelist> `]' of <types>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangelist}, language=pie]
-<subrangelist> ::= <subrangetype>                    |
-                   <subrangetype> `,' <subrangelist>
+<subrangelist> ::= id `..' <subrangetype> <subrangelistprime>  |
+                   int `..' <subrangetype> <subrangelistprime> |
+                   char `..' <subrangetype> <subrangelistprime>
 \end{lstlisting}
 
+\begin{lstlisting}[frame=single, label={subrangelistprime}, language=pie]
+<subrangelistprime> ::=  `' |
+	                 `,' <subrangelist>          
+\end{lstlisting}
 \begin{lstlisting}[frame=single, label={subrangetype}, language=pie]
-<subrangetype> ::= id `..' id     |
-                   int `..' int   | 
-                   char `..' char
+<subrangetype> ::= id     |
+                   int    | 
+                   char
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={settype}, language=pie]
@@ -72,16 +84,21 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={usertypes}]
-<usertypes> ::= `'                       |
-                type <listusertypes> `;'
+<usertypes> ::= `'                     |
+                type <listusertypes>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={listusertypes}]
-<listusertypes> ::= <usertype> | <usertype> `;' <listusertypes>
+<listusertypes> ::= <usertype> <listusertypesprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={listusertypes}]
-<usertype> ::= id `=` <types>
+\begin{lstlisting}[frame=single, label={listusertypesprime}]
+<listusertypesprime> ::= `'               |
+                         <listusertypes>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={usertypes}]
+<usertype> ::= id `=` <types> `;'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={vars}, language=pie]
@@ -90,195 +107,301 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={varlistlist}, language=pie]
-<varlistlist> ::= <varlist>               |
-                  <varlist> <varlistlist>
+<varlistlist> ::= <varlist> <varlistlistprime>
 \end{lstlisting}
 
-%mudar
+\begin{lstlisting}[frame=single, label={varlistlistprime}, language=pie]
+<varlistlistprime> ::= `'            |
+                      <varlistlist>
+\end{lstlisting}
+
 \begin{lstlisting}[frame=single, label={varlist}, language=pie]
-<varlist> ::= <types> <idlist> `;' |  <types> <idattrlist> `;'
+<varlist> ::= <types> <idlist> `;'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={idlist}, language=pie]
-<idattrlist> ::= id = <expr>                  | 
-                 id = <expr> `,' <idattrlist> 
+<idlist> ::= id <idattr> <idlistprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={idlist}, language=pie]
-<idlist> ::= id              | 
-             id `,' <idlist> 
+\begin{lstlisting}[frame=single, label={idlistprime}, language=pie]
+<idlistprime> ::= `'          |
+                  `,' <idlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={idattr}, language=pie]
+<idattr> ::= `'         | 
+             `=' <expr> 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={variable}, language=pie]
-<variable> ::= id                     | 
-               <variable> `->' id     |
-               id `[' <exprlist+> `]'
+<variable> ::= `->' id  <variableprime>                 | 
+               `[' <exprlist+> `]' < variableprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={variableprime}, language=pie]
+<variableprime> ::= `'         |
+                    <variable> 
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={block}, language=pie]
 <block> ::= begin <stmts> end
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<stmts> ::= `'         | 
-            <stmtlist>
+\begin{lstlisting}[frame=single, label={stmts}, language=pie]
+<stmts> ::=  <stmt> <stmtlistprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<stmtlist> ::= <stmt>                | 
-               <stmt> `;' <stmtlist>
+\begin{lstlisting}[frame=single, label={stmtlistprime}, language=pie]
+<stmtlistprime> ::= `' |
+                    `;' <stmts>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={stmt}, language=pie]
 <stmt> ::= `'             | 
            label <stmt>   |
            <block>        |
-           <writeblock>   |
-           <writelnblock> |
-           <readblock>    |
-           <readlnblock>  |
+           <writestmt>    |
+           <writelnstmt>  |
+           <readstmt>     |
+           <readlnstmt>   |
            <loopblock>    |
            <ifblock>      |
            <forblock>     |
            <caseblock>    |
            <gotostmt>     |
-           <attrstmt>     |
            <exitstmt>     |
            <returnstmt>   |
-           <subprogcall>
+           id <stmtprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<subprogcall> ::= id `(' <exprlist> `)'
+\begin{lstlisting}[frame=single, label={stmtprime}, language=pie]
+<stmtprime> ::= <attrstmt> |
+                <subprogcall>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={subprogcall}, language=pie]
+<subprogcall> ::= `(' <exprlist> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={exitstmt}, language=pie]
 <exitstmt> ::= exitwhen `(' <boolexpr> `)'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={returnstmt}, language=pie]
 <returnstmt> ::= return <expr>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<attrstmt> ::= <variable> `:=' <expr>
+\begin{lstlisting}[frame=single, label={attrstmt}, language=pie]
+<attrstmt> ::= id <attrstmtprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={attrstmt}, language=pie]
+<attrstmt> ::= <variable> `:=' <expr> |
+               `:=' <expr>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={ifblock}, language=pie]
 <ifblock> ::= if `(' <boolexpr> `)' <stmt> <elseblock> 
 \end{lstlisting}
 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={elseblock}, language=pie]
 <elseblock> ::= `'          |
                 else <stmt>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={loopblock}, language=pie]
 <loopblock> ::= loop <stmt>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<caseblock> ::= case <expr> of <caselist> end             |
-                case <expr> of <caselist> else <stmt> end
+\begin{lstlisting}[frame=single, label={caseblock}, language=pie]
+<caseblock> ::= case <expr> of <caselist> <caseblockprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<caselist> ::= <discretevalue> `:' <stmt> `;'      |
-               <discretevalueslist> `:' <stmt> `;'
+\begin{lstlisting}[frame=single, label={caseblockprime}, language=pie]
+<caseblockprime> ::= end |
+                     else <stmt> end
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<discreetvalueslist> ::= <discretevalue>                          |
-                         <discretevalue> `,' <discretevalueslist>
+\begin{lstlisting}[frame=single, label={caselist}, language=pie]
+<caselist> ::= <literallist> `:' <stmt> `;'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<discretevalue> ::= % TODO
+\begin{lstlisting}[frame=single, label={literallist}, language=pie]
+<literallist> ::= <literal> <literallistprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={literallistprime}, language=pie]
+<literallistprime> ::= `' |
+                       `,' <literallist> 
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={gotostmt}, language=pie]
 <gotostmt> ::= goto label
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<forblock> ::= for <variable> `:=' <expr> to <expr>
-    step <expr> do <stmt>
+\begin{lstlisting}[frame=single, label={forblock}, language=pie]
+<forblock> ::= for id <forblockprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<expr> ::= <variable>         |
-           literal            |
-           <subprogcall>      |
-           `(' <expr> `)'     |
-           `!'<expr>          |
-           `+'<expr>          |
-           `-'<expr>          |
-           <expr> `+' <expr>  |
-           <expr> `-' <expr>  |
-           <expr> `*' <expr>  |
-           <expr> `/' <expr>  |
-           <expr> `%' <expr>  |
-           <expr> `&&' <expr> |
-           <expr> `||' <expr> |
-           <expr> `>' <expr>  |
-           <expr> `<' <expr>  |
-           <expr> `>=' <expr> |
-           <expr> `<=' <expr> |
-           <expr> `==' <expr> |
-           <expr> `!=' <expr>
+\begin{lstlisting}[frame=single, label={forblockprime}, language=pie]
+<forblockprime> ::= <variable> `:=' <expr> to <expr> step <expr> do <stmt> |
+                   `:=' <expr> to <expr> step <expr> do <stmt>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={expr}, language=pie]
+<expr> ::= <conj>  <disj>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={disj}, language=pie]
+<disj> ::= `' |
+           `||' <conj>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={conj}, language=pie]
+<conj> ::= <comp> <conjprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={conjprime}, language=pie]
+<conjprime> ::=  `'           | 
+                 `&&' <comp>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={comp}, language=pie]
+<comp> ::= <relational> <comprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={relational}, language=pie]
+<relational> ::= <sum> <relationalprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={sum}, language=pie]
+<sum> ::= <neg> <sumprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={sumprime}, language=pie]
+<sumprime> ::= `'                       | 
+              <add-op> <neg> <sumprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={neg}, language=pie]
+<neg> ::= <mul>         | 
+          `!' <mul>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={mul}, language=pie]
+<mul> ::= <final-term> <mulprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={mulprime}, language=pie]
+<mulprime> ::= `'                              | 
+                <mul-op> <final-term> <mulprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={relationalprime}, language=pie]
+<relationalprime> ::= `'                    | 
+                      <relational-op> <sum>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={comprime}, language=pie]
+<comprime> ::= `' |
+              <equality-op> <relational>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={final-term}, language=pie]
+<final-term> ::= id <final-termprime> | 
+                <literal>             | 
+                `(' <expr> `)'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={final-termprime}, language=pie]
+<final-termprime> ::= `'         | 
+                    <variable>   | 
+                    <subprogcall>  
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={add-op}, language=pie]
+<add-op> ::= `+' | 
+             `-'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={mul-op}, language=pie]
+<mul-op> ::= `*' | 
+             `/' |
+             `%'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={equality-op}, language=pie]
+<equality-op> ::= `==' | 
+                  `!='
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={relational-op}, language=pie]
+<relational-op> ::= `<' | 
+	   	    `<=' |
+		    `>'  |
+		    `>='
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={literal}, language=pie]
 <literal> ::= intliteral        | 
               realiteral        | 
               charliteral       |
               stringliteral     |
-              <subrangetype>
+              <subrangeliteral>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<exprlist> ::= `' | <exprlist+>
+\begin{lstlisting}[frame=single, label={exprlist}, language=pie]
+<exprlist> ::= `' | 
+               <exprlist+>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<exprlist+> ::= <expr> | <expr> `,' <exprlist+>
+\begin{lstlisting}[frame=single, label={exprlist+}, language=pie]
+<exprlist+> ::= <expr> <exprlist+prime> 
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<subprograms> ::= `'                            |
-                  <procedure>                   |
-                  <function>                    |
-                  <procedure> `;' <subprograms> |
-                  <function> `;' <subprograms>
+\begin{lstlisting}[frame=single, label={exprlist+prime}, language=pie]
+<exprlist+prime> ::= `'              |
+                     `,' < exprlist+> 
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={subprograms}, language=pie]
+<subprograms> ::= `'                               |
+                  <procedure> <subprogramsprime>   |
+                  <function>  <subprogramsprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subprogramsprime}, language=pie]
+<subprogramsprime> ::= `'                |
+                       `;' <subprograms>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={procedure}, language=pie]
 <procedure> ::= proc id `(' <param> `)' `;' <decl> <block> 
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={function}, language=pie]
 <function> ::= func <types> id `(' <param> `)' `;' <decl> <block>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, label={param}, language=pie]
 <param> ::= `'            |
             <varlistlist>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<writeblock> ::= write `(' <expr> `)'
+\begin{lstlisting}[frame=single, label={writestmt}, language=pie]
+<writestmt> ::= write `(' <expr> `)'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<writelnblock> ::= writeln `(' <expr> `)'
+\begin{lstlisting}[frame=single, label={writelnstmt}, language=pie]
+<writelnstmt> ::= writeln `(' <expr> `)'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<readblock> ::= read `(' id `)'
+\begin{lstlisting}[frame=single, label={readstmt}, language=pie]
+<readstmt> ::= read `(' id `)'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-<readlnblock> ::= readln `(' id `)'
+\begin{lstlisting}[frame=single, label={readlnstmt}, language=pie]
+<readlnstmt> ::= readln `(' id `)'
 \end{lstlisting}
 \end{footnotesize}
