@@ -93,6 +93,7 @@ nil  			{ updateToken(NIL_TOKEN, num_line, num_column, NULL); updateColumn(yylen
 "!"        		{ updateToken('!', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 "="         	{ updateToken('=', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 ":="         	{ updateToken(ATTR_TOKEN, num_line, num_column, NULL); updateColumn(yyleng); return 0; }
+"->"         	{ updateToken(ACCESS_TOKEN, num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 ";"         	{ updateToken(';', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 ","         	{ updateToken(',', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 "."         	{ updateToken('.', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
