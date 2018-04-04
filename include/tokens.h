@@ -1,16 +1,24 @@
 #ifndef _TOKENS_H_
 #define _TOKENS_H_
 
+<<<<<<< HEAD
 enum Tokens{
 	ENDOFFILE_TOKEN = 128, 
 	PROGRAM_TOKEN, 
 	PROC_TOKEN, 
 	BEGIN_TOKEN, 
+=======
+enum {
+	ENDOFFILE_TOKEN = 128,
+	PROGRAM_TOKEN,
+	PROC_TOKEN,
+	BEGIN_TOKEN,
+>>>>>>> f1f49a011a37eaf3af8cfd90eb75ca534b225803
 	END_TOKEN,
-    FUNC_TOKEN, 
-    CONST_TOKEN, 
-    TYPE_TOKEN, 
-    VAR_TOKEN, 
+    FUNC_TOKEN,
+    CONST_TOKEN,
+    TYPE_TOKEN,
+    VAR_TOKEN,
     IF_TOKEN,
     ELSE_TOKEN,
     GOTO_TOKEN,
@@ -54,11 +62,12 @@ enum Tokens{
     REALLITERAL_TOKEN,
     STRINGLITERAL_TOKEN,
     ID_TOKEN,
-    ERROR_TOKEN
+    ERROR_TOKEN,
+		RANGE_TOKEN //..
  };
 
 struct Token {
-	int token;
+	int id;
 	int row, col;
 	char* lexeme;
 };
