@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	initLexer(argv[1]);
 	nextToken();
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
-		PROG();
+		prog();
 	}
 	if(t.id == ERROR_TOKEN) {
 		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
@@ -44,74 +44,205 @@ bool prog() {
 }
 
 bool decl() {
-	switch(t.token) {
-		case CONSTS_TOKEN: consts();
-		case USERTYPES_TOKEN: usertypes();
-		case VARS_TOKEN: vars();
-		case SUBPROGRAMS_TOKEN: subprograms();
+	switch(t.id) {
+		case CONST_TOKEN: consts();
+		case USERTYPE_TOKEN: usertypes();
+		case VAR_TOKEN: vars();
+		case SUBPROGRAM_TOKEN: subprograms();
 		break;
 	}
 	return true;
 }
 
-bool consts() {
-	return true;
+void consts() {
+	switch(t.id) {
+		case CONST_TOKEN: eat(CONST_TOKEN);
+						  listconst();
+						  break;
+		case VAR_TOKEN: break;
+		case PROC_TOKEN: break;
+		case FUNC_TOKEN: break;
+		case TYPE_TOKEN: break;
+		case BEGIN_TOKEN: break;
+	}
 }
 
-bool listconst() {
-	return true;
+void listconst() {
+	switch(t.id) {
+		case ID_TOKEN: constdecl();
+					   listconstprime();
+					   break;
+	}
 }
 
-bool listconstprime() {
-	return true;
+void listconstprime() {
+	switch(t.id) {
+		case ID_TOKEN: listconstprime();
+					   break;
+		case VAR_TOKEN: break;
+		case PROC_TOKEN: break;
+		case FUNC_TOKEN: break;
+		case TYPE_TOKEN: break;
+		case BEGIN_TOKEN: break;
+	}
 }
 
-bool constdecl() {
-	return true;
+void constdecl() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   eat('=');
+					   expr();
+					   eat(';');
+					   break;
+	}
 }
 
-bool types() {
-	return true;
+void types() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   typesprime();
+					   break;
+		case INT_TOKEN: primtypes();
+		case REAL_TOKEN: primtypes();
+		case BOOL_TOKEN: primtypes();
+		case CHAR_TOKEN: primtypes();
+		case STRING_TOKEN: primtypes();
+		case ARRAY_TOKEN: primtypes();
+		case RECORD_TOKEN: primtypes();
+		case SET_TOKEN: primtypes();
+		case ENUM_TOKEN: primtypes();
+		break;
+	}
 }
 
-bool primtypes() {
-	return true;
+void typesprime() {
+	switch(t.id) {
+		case RANGE_TOKEN: eat(RANGE_TOKEN);
+						  subrangetype();
+						  break;
+		case ID_TOKEN: break;
+		case ';': break;
+	}
 }
 
-bool primtypesprime() {
-	return true;
+void primtypes() {
+	switch(t.id) {
+		case INT_TOKEN: eat(INT_TOKEN);
+						primtypesprime();
+						break;
+		case REAL_TOKEN: eat(REAL_TOKEN);
+						 break;
+		case BOOL_TOKEN: eat(BOOL_TOKEN);
+						 break;
+		case CHAR_TOKEN: eat(CHAR_TOKEN);
+						 primtypesprime();
+		case STRING_TOKEN: eat(STRING_TOKEN);
+						   break;
+		case ARRAY_TOKEN: arraytype();
+						  break;
+		case RECORD_TOKEN: recordtype();
+						   break;
+		case SET_TOKEN: settype();
+						break;
+		case ENUM_TOKEN: enumtype();
+						 break;
+	}
 }
 
-bool arraytype() {
-	return true;
+void primtypesprime() {
+	switch(t.id) {
+		case RANGE_TOKEN: eat(RANGE_TOKEN);
+						  subrangetype();
+						  break;
+		case ID_TOKEN: break;
+		case ';': break;
+	}
 }
 
-bool subrangelist() {
-	return true;
+void arraytype() {
+	switch(t.id) {
+		case ARRAY_TOKEN: eat(ARRAY_TOKEN);
+						  eat('[');
+						  subrangelist();
+						  eat(']');
+						  eat(OF_TOKEN);
+						  types();
+						  break;
+	}
 }
 
-bool subrangelistprime() {
-	return true;
+void subrangelist() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   eat(RANGE_TOKEN);
+					   subrangetype();
+					   subrangelistprime();
+					   break;
+		case INT_TOKEN: eat(INT_TOKEN);
+					    eat(RANGE_TOKEN);
+					    subrangetype();
+					    subrangelistprime();
+						break;
+		case CHAR_TOKEN: eat(CHAR_TOKEN);
+					     eat(RANGE_TOKEN);
+					     subrangetype();
+					     subrangelistprime();
+					     break;
+	}
 }
 
-bool subrangetype() {
-	return true;
+void subrangelistprime() {
+	switch(t.id) {
+		case ',': eat(',');
+		          subrangelist();
+		case ']': break;
+	}
 }
 
-bool settype() {
-	return true;
+void subrangetype() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   break;
+		case INT_TOKEN: eat(INT_TOKEN);
+						break;
+		case CHAR_TOKEN: eat(CHAR_TOKEN);
+					     break;
+	}
 }
 
-bool enumtype() {
-	return true;
+void settype() {
+	switch(t.id) {
+		case SET_TOKEN: eat(SET_TOKEN);
+						eat(OF_TOKEN);
+						types();
+	}
 }
 
-bool recordtype() {
-	return true;
+void enumtype() {
+	switch(t.id) {
+		case '(': eat('(');
+				  idlist();
+				  eat(')');
+	}
 }
 
-bool usertypes() {
-	return true;
+void recordtype() {
+	switch(t.id) {
+		case RECORD_TOKEN: eat(RECORD_TOKEN);
+						   varlistlist();
+						   eat(END_TOKEN);
+	}
+}
+
+void usertypes() {
+	switch(t.id) {
+		case TYPE_TOKEN: eat(TYPE_TOKEN);
+						 listusertypes();
+		case VAR_TOKEN: break;
+		case PROC_TOKEN: break;
+		case FUNC_TOKEN: break;
+		case BEGIN_TOKEN: break;
+	}
 }
 
 bool listusertypes() {
