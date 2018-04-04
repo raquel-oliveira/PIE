@@ -436,8 +436,17 @@ void elseblock() {
 	}
 }
 
-bool loopblock() {
-	return true;
+//LOOPBLOCK -> 'loop' STMT
+void loopblock() {
+	switch(t.id){
+		case LOOP_TOKEN:
+			eat(LOOP_TOKEN);
+			stmt();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool caseblock() {
