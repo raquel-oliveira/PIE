@@ -178,6 +178,8 @@ bool stmt() {
 	return true;
 }
 
+//STMTPRIME -> ATTRSTMT
+//STMTPRIME -> SUBPROGCALL
 void stmtprime() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -192,6 +194,7 @@ void stmtprime() {
 	}
 }
 
+//SUBPROGCALL -> '(' EXPRLIST ')'
 void subprogcall() {
 	switch(t.id){
 		case '(':
@@ -205,6 +208,7 @@ void subprogcall() {
 	}
 }
 
+//EXISTSTMT -> 'exitwhen' '(' EXPR ')'
 void exitstmt() {
 	switch (t.id) {
 		case EXITWHEN_TOKEN:
@@ -219,6 +223,7 @@ void exitstmt() {
 	}
 }
 
+//RETURNSTMT -> 'return' EXPR
 void returnstmt() {
 	switch (t.id) {
 		case RETURN_TOKEN:
@@ -231,6 +236,7 @@ void returnstmt() {
 	}
 }
 
+//ATTRSTMT -> 'id' ATTRSTMTPRIME
 void attrstmt() {
 	switch (t.id) {
 		case ID_TOKEN:
@@ -243,6 +249,8 @@ void attrstmt() {
 	}
 }
 
+//ATTRSTMTPRIME -> VARIABLE ':=' EXPR
+//ATTRSTMTPRIME -> ':=' EXPR
 void attrstmtprime() {
 	switch (t.id) {
 		case '[':
@@ -261,8 +269,22 @@ void attrstmtprime() {
 	}
 }
 
-bool ifblock() {
-	return true;
+// IFBLOCK -> 'if' '(' EXPR ')' STMT ELSEBLOCK
+void ifblock() {
+	switch(t.id){
+		case IF_TOKEN:
+			eat(IF_TOKEN);
+			eat('(');
+			expr();
+			eat(')');
+			stmt();
+			elseblock();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+
+	}
 }
 
 bool elseblock() {
