@@ -29,22 +29,342 @@ void eat(int expected) {
 	}
 }
 
-void PROG() {
+bool prog() {
 	switch(t.token) {
 		case PROGRAM_TOKEN: eat(PROGRAM_TOKEN);
 							eat(ID_TOKEN);
 							eat(';');
-							DECL();
-							BLOCK();
+							decl();
+							block();
 							eat('.');
 							break;
 	}
+	return true;
 }
 
-void DECL() {
-
+bool decl() {
+	switch(t.token) {
+		case CONSTS_TOKEN: consts();
+		case USERTYPES_TOKEN: usertypes();
+		case VARS_TOKEN: vars();
+		case SUBPROGRAMS_TOKEN: subprograms();
+		break;
+	}
+	return true;
 }
 
-void BLOCK() {
+bool consts() {
+	return true;
+}
 
+bool listconst() {
+	return true;
+}
+
+bool listconstprime() {
+	return true;
+}
+
+bool constdecl() {
+	return true;
+}
+
+bool types() {
+	return true;
+}
+
+bool primtypes() {
+	return true;
+}
+
+bool primtypesprime() {
+	return true;
+}
+
+bool arraytype() {
+	return true;
+}
+
+bool subrangelist() {
+	return true;
+}
+
+bool subrangelistprime() {
+	return true;
+}
+
+bool subrangetype() {
+	return true;
+}
+
+bool settype() {
+	return true;
+}
+
+bool enumtype() {
+	return true;
+}
+
+bool recordtype() {
+	return true;
+}
+
+bool usertypes() {
+	return true;
+}
+
+bool listusertypes() {
+	return true;
+}
+
+bool listusertypesprime() {
+	return true;
+}
+
+bool usertype() {
+	return true;
+}
+
+bool vars() {
+	return true;
+}
+
+bool varlistlist() {
+	return true;
+}
+
+bool varlistlistprime() {
+	return true;
+}
+
+bool varlist() {
+	return true;
+}
+
+bool idlist() {
+	return true;
+}
+
+bool idlistprime() {
+	return true;
+}
+
+bool idattr() {
+	return true;
+}
+
+bool variable() {
+	return true;
+}
+
+bool variableprime() {
+	return true;
+}
+
+bool block() {
+	return true;
+}
+
+bool stmts() {
+	return true;
+}
+
+bool stmtsprime() {
+	return true;
+}
+
+bool stmt() {
+	return true;
+}
+
+bool stmtprime() {
+	return true;
+}
+
+bool subprogcall() {
+	return true;
+}
+
+bool existstmt() {
+	return true;
+}
+
+bool returnstmt() {
+	return true;
+}
+
+bool attrstmt() {
+	return true;
+}
+
+bool attrstmtprime() {
+	return true;
+}
+
+bool ifblock() {
+	return true;
+}
+
+bool elseblock() {
+	return true;
+}
+
+bool loopblock() {
+	return true;
+}
+
+bool caseblock() {
+	return true;
+}
+
+bool caseblockprime() {
+	return true;
+}
+
+bool caselist() {
+	return true;
+}
+
+bool literallist() {
+	return true;
+}
+
+bool listerallistprime() {
+	return true;
+}
+
+bool gotostmt() {
+	return true;
+}
+
+bool forblock() {
+	return true;
+}
+
+bool forblockprime() {
+	return true;
+}
+
+bool expr() {
+	return true;
+}
+
+bool disj() {
+	return true;
+}
+
+bool final_term() {
+	return true;
+}
+
+bool final_termprime() {
+	return true;
+}
+
+bool add_op() {
+	return true;
+}
+
+bool mul_op() {
+	return true;
+}
+
+bool equality_op() {
+	return true;
+}
+
+bool relational_op() {
+	return true;
+}
+
+bool conj() {
+	return true;
+}
+
+bool conjprime() {
+	return true;
+}
+
+bool comp() {
+	return true;
+}
+
+bool compprime() {
+	return true;
+}
+
+bool relational() {
+	return true;
+}
+
+bool relationalprime() {
+	return true;
+}
+
+bool sum() {
+	return true;
+}
+
+bool sumprime() {
+	return true;
+}
+
+bool neg() {
+	return true;
+}
+
+bool mul() {
+	return true;
+}
+
+bool literal() {
+	return true;
+}
+
+bool exprlist() {
+	return true;
+}
+
+bool exprlist_plus() {
+	return true;
+}
+
+bool exprlist_plusprime() {
+	return true;
+}
+
+bool subprograms() {
+	return true;
+}
+
+bool subprogramsprime() {
+	return true;
+}
+
+bool procedure() {
+	return true;
+}
+
+bool function() {
+	return true;
+}
+
+bool param() {
+	return true;
+}
+
+bool writestmt() {
+	return true;
+}
+
+bool writelnstmt() {
+	return true;
+}
+
+bool readstmt() {
+	return true;
+}
+
+bool readlnstmt() {
+	return true;
 }
