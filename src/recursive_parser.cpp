@@ -230,8 +230,16 @@ void returnstmt() {
 	}
 }
 
-bool attrstmt() {
-	return true;
+void attrstmt() {
+	switch (t.id) {
+		case ID_TOKEN:
+			eat(ID_TOKEN);
+			attrstmtprime();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool attrstmtprime() {
