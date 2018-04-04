@@ -114,52 +114,185 @@ bool usertypes() {
 	return true;
 }
 
-bool listusertypes() {
-	return true;
+void listusertypes() {
+	switch(t.id) {
+		case ID_TOKEN: 
+			usertype();
+			listusertypesprime();
+			break;
+	}
 }
 
-bool listusertypesprime() {
-	return true;
+void listusertypesprime() {
+	switch(t.id) {
+		case VAR_TOKEN:
+		case BEGIN_TOKEN: 
+			break;
+		case ID_TOKEN: 
+			listusertypes();
+			break;
+	}
 }
 
-bool usertype() {
-	return true;
+void usertype() {
+	switch(t.id) {
+		case ID_TOKEN: 
+			eat(ID_TOKEN);
+			eat('=');
+			types();
+			eat(';');
+			break;
+	}
 }
 
-bool vars() {
-	return true;
+void vars() {
+	switch(t.id) {
+		case PROC_TOKEN:
+		case FUNC_TOKEN:
+		case BEGIN_TOKEN: 
+			break;
+		case VAR_TOKEN: 
+			eat(VAR_TOKEN);
+			varlistlist();
+			break;
+	}
 }
 
-bool varlistlist() {
-	return true;
+void varlistlist() {
+	switch(t.id) {
+		case ID_TOKEN: 
+			varlist();
+			varlistlistprime();
+			break;
+	}
 }
 
-bool varlistlistprime() {
-	return true;
+void varlistlistprime() {
+	switch(t.id) {
+		case '(':
+		case ID_TOKEN:
+		case INT_TOKEN:
+		case REAL_TOKEN:
+		case BOOL_TOKEN:
+		case CHAR_TOKEN:
+		case STRING_TOKEN:
+		case ARRAY_TOKEN:
+		case SET_TOKEN:
+		case RECORD_TYPE: 
+			varlistlist();
+			break;
+		case ')':
+		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case PROC_TOKEN:
+		case FUNC_TOKEN: 
+			break;
+
+	}
 }
 
-bool varlist() {
-	return true;
+void varlist() {
+	switch(t.id) {
+		case '(':
+		case ID_TOKEN:
+		case INT_TOKEN:
+		case REAL_TOKEN:
+		case BOOL_TOKEN:
+		case CHAR_TOKEN:
+		case STRING_TOKEN:
+		case ARRAY_TOKEN:
+		case SET_TOKEN:
+		case RECORD_TYPE: 
+			types();
+			idlist();
+			eat(';');
+			break;
+	}
 }
 
-bool idlist() {
-	return true;
+void idlist() {
+	switch(t.id) {
+		case ID_TOKEN: 
+			eat(ID_TOKEN);
+			idattr();
+			idlistprime();
+			break;
+	}
 }
 
-bool idlistprime() {
-	return true;
+void idlistprime() {
+	switch(t.id) {
+		case ';':
+		case ')': 
+			break;
+		case ',': 
+			eat(',');
+			idlist();
+			break;
+	}
 }
 
-bool idattr() {
-	return true;
+void idattr() {
+	switch(t.id) {
+		case ';':
+		case ',':
+		case ')': 
+			break;
+		case '=': 
+			eat('=');
+			expr();
+			break;
+	}
 }
 
-bool variable() {
-	return true;
+void variable() {
+	switch(t.id) {
+		case '[': 
+			eat('[');
+			exprlist_plus();
+			eat(']');
+			variableprime();
+			break;
+		case ACCESS_TOKEN: 
+			eat(ACCESS_TOKEN);
+			eat(ID_TOKEN);
+			variableprime();
+			break;
+	}
 }
 
-bool variableprime() {
-	return true;
+void variableprime() {
+	switch(t.id) {
+		case ';':
+		case ']':
+		case ',':
+		case ')':
+		case '+':
+		case '-':
+		case '*':
+		case '/':
+		case '%':
+		case '<':
+		case '>':
+		case OF_TOKEN:
+		case END_TOKEN:
+		case ATTR_TOKEN:
+		case ELSE_TOKEN:
+		case TO_TOKEN:
+		case STEP_TOKEN:
+		case DO_TOKEN:
+		case OR_TOKEN:
+		case EQUAL_TOKEN:
+		case DIFF_TOKEN:
+		case LE_TOKEN:
+		case GE_TOKEN:
+		case AND_TOKEN: 
+			break;
+		case '[':
+		case ACCESS_TOKEN: 
+			variable();
+			break;
+	}
 }
 
 bool block() {
