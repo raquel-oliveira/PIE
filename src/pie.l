@@ -9,8 +9,8 @@ void updateColumn(int yyleng) {
 	num_column += yyleng;
 }
 
-void updateToken(int token, int row, int col, char* lexeme) {
-	t.token = token;
+void updateToken(int id, int row, int col, char* lexeme) {
+	t.id = id;
 	t.row = row;
 	t.col = col;
 	t.lexeme = lexeme;

@@ -58,7 +58,7 @@ enum {
  };
 
 struct Token {
-	int token;
+	int id;
 	int row, col;
 	char* lexeme;
 };

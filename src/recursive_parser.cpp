@@ -11,17 +11,18 @@ int main(int argc, char *argv[]) {
 	}
 	initLexer(argv[1]);
 	nextToken();
-	if(t.token != ENDOFFILE_TOKEN && t.token != ERROR_TOKEN) {
+	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
 		PROG();
 	}
-	if(t.token == ERROR_TOKEN) {
+	if(t.id == ERROR_TOKEN) {
 		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
 	}
 	return 0;
 }
 
 void eat(int expected) {
-	if(t.token == expected) {
+	std::cout << t.id << " " << expected << std::endl;
+	if(t.id == expected) {
 		nextToken();
 	}
 	else {
@@ -30,7 +31,7 @@ void eat(int expected) {
 }
 
 bool prog() {
-	switch(t.token) {
+	switch(t.id) {
 		case PROGRAM_TOKEN: eat(PROGRAM_TOKEN);
 							eat(ID_TOKEN);
 							eat(';');
