@@ -198,6 +198,7 @@ void subprogcall() {
 			eat('(');
 			exprlist();
 			eat(')');
+			break;
 		default:
 			std::cout << "error\n";
 			break;
@@ -242,8 +243,22 @@ void attrstmt() {
 	}
 }
 
-bool attrstmtprime() {
-	return true;
+void attrstmtprime() {
+	switch (t.id) {
+		case '[':
+		case '->':
+			variable();
+			eat(ATTR_TOKEN);
+			expr();
+			break;
+		case ATTR_TOKEN:
+			eat(ATTR_TOKEN);
+			expr();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool ifblock() {
