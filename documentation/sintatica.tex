@@ -184,7 +184,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={exitstmt}, language=pie]
-<exitstmt> ::= exitwhen `(' <boolexpr> `)'
+<exitstmt> ::= exitwhen `(' <expr> `)'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={returnstmt}, language=pie]
@@ -201,7 +201,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={ifblock}, language=pie]
-<ifblock> ::= if `(' <boolexpr> `)' <stmt> <elseblock> 
+<ifblock> ::= if `(' <expr> `)' <stmt> <elseblock> 
 \end{lstlisting}
 
 

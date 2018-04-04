@@ -204,12 +204,21 @@ void subprogcall() {
 	}
 }
 
-bool existstmt() {
-	return true;
+void exitstmt() {
+	switch (t.id) {
+		case EXITWHEN_TOKEN:
+			eat(EXITWHEN_TOKEN);
+			eat('(');
+			expr();
+			eat(')');
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool returnstmt() {
-	return true;
+
 }
 
 bool attrstmt() {
