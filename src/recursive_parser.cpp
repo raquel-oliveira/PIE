@@ -11,8 +11,6 @@ int main(int argc, char *argv[]) {
 	}
 	initLexer(argv[1]);
 	nextToken();
-	if(t.token != ENDOFFILE_TOKEN && t.token != ERROR_TOKEN) {
-		prog();
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
 		prog();
 	}
