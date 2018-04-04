@@ -6,13 +6,15 @@
 
 int main(int argc, char *argv[]) {
 	if(argc < 2) {
-		std::cout << "Not enough arguments." << std::endl;
+		std::cout << "Not enough arguments." << argc << std::endl;
 		return 0;
 	}
 	initLexer(argv[1]);
 	nextToken();
+	if(t.token != ENDOFFILE_TOKEN && t.token != ERROR_TOKEN) {
+		prog();
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
-		PROG();
+		prog();
 	}
 	if(t.id == ERROR_TOKEN) {
 		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
@@ -44,74 +46,205 @@ bool prog() {
 }
 
 bool decl() {
-	switch(t.token) {
-		case CONSTS_TOKEN: consts();
-		case USERTYPES_TOKEN: usertypes();
-		case VARS_TOKEN: vars();
-		case SUBPROGRAMS_TOKEN: subprograms();
+	switch(t.id) {
+		case CONST_TOKEN: consts();
+		case USERTYPE_TOKEN: usertypes();
+		case VAR_TOKEN: vars();
+		case SUBPROGRAM_TOKEN: subprograms();
 		break;
 	}
 	return true;
 }
 
-bool consts() {
-	return true;
+void consts() {
+	switch(t.id) {
+		case CONST_TOKEN: eat(CONST_TOKEN);
+						  listconst();
+						  break;
+		case VAR_TOKEN: break;
+		case PROC_TOKEN: break;
+		case FUNC_TOKEN: break;
+		case TYPE_TOKEN: break;
+		case BEGIN_TOKEN: break;
+	}
 }
 
-bool listconst() {
-	return true;
+void listconst() {
+	switch(t.id) {
+		case ID_TOKEN: constdecl();
+					   listconstprime();
+					   break;
+	}
 }
 
-bool listconstprime() {
-	return true;
+void listconstprime() {
+	switch(t.id) {
+		case ID_TOKEN: listconstprime();
+					   break;
+		case VAR_TOKEN: break;
+		case PROC_TOKEN: break;
+		case FUNC_TOKEN: break;
+		case TYPE_TOKEN: break;
+		case BEGIN_TOKEN: break;
+	}
 }
 
-bool constdecl() {
-	return true;
+void constdecl() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   eat('=');
+					   expr();
+					   eat(';');
+					   break;
+	}
 }
 
-bool types() {
-	return true;
+void types() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   typesprime();
+					   break;
+		case INT_TOKEN: primtypes();
+		case REAL_TOKEN: primtypes();
+		case BOOL_TOKEN: primtypes();
+		case CHAR_TOKEN: primtypes();
+		case STRING_TOKEN: primtypes();
+		case ARRAY_TOKEN: primtypes();
+		case RECORD_TOKEN: primtypes();
+		case SET_TOKEN: primtypes();
+		case ENUM_TOKEN: primtypes();
+		break;
+	}
 }
 
-bool primtypes() {
-	return true;
+void typesprime() {
+	switch(t.id) {
+		case RANGE_TOKEN: eat(RANGE_TOKEN);
+						  subrangetype();
+						  break;
+		case ID_TOKEN: break;
+		case ';': break;
+	}
 }
 
-bool primtypesprime() {
-	return true;
+void primtypes() {
+	switch(t.id) {
+		case INT_TOKEN: eat(INT_TOKEN);
+						primtypesprime();
+						break;
+		case REAL_TOKEN: eat(REAL_TOKEN);
+						 break;
+		case BOOL_TOKEN: eat(BOOL_TOKEN);
+						 break;
+		case CHAR_TOKEN: eat(CHAR_TOKEN);
+						 primtypesprime();
+		case STRING_TOKEN: eat(STRING_TOKEN);
+						   break;
+		case ARRAY_TOKEN: arraytype();
+						  break;
+		case RECORD_TOKEN: recordtype();
+						   break;
+		case SET_TOKEN: settype();
+						break;
+		case ENUM_TOKEN: enumtype();
+						 break;
+	}
 }
 
-bool arraytype() {
-	return true;
+void primtypesprime() {
+	switch(t.id) {
+		case RANGE_TOKEN: eat(RANGE_TOKEN);
+						  subrangetype();
+						  break;
+		case ID_TOKEN: break;
+		case ';': break;
+	}
 }
 
-bool subrangelist() {
-	return true;
+void arraytype() {
+	switch(t.id) {
+		case ARRAY_TOKEN: eat(ARRAY_TOKEN);
+						  eat('[');
+						  subrangelist();
+						  eat(']');
+						  eat(OF_TOKEN);
+						  types();
+						  break;
+	}
 }
 
-bool subrangelistprime() {
-	return true;
+void subrangelist() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   eat(RANGE_TOKEN);
+					   subrangetype();
+					   subrangelistprime();
+					   break;
+		case INT_TOKEN: eat(INT_TOKEN);
+					    eat(RANGE_TOKEN);
+					    subrangetype();
+					    subrangelistprime();
+						break;
+		case CHAR_TOKEN: eat(CHAR_TOKEN);
+					     eat(RANGE_TOKEN);
+					     subrangetype();
+					     subrangelistprime();
+					     break;
+	}
 }
 
-bool subrangetype() {
-	return true;
+void subrangelistprime() {
+	switch(t.id) {
+		case ',': eat(',');
+		          subrangelist();
+		case ']': break;
+	}
 }
 
-bool settype() {
-	return true;
+void subrangetype() {
+	switch(t.id) {
+		case ID_TOKEN: eat(ID_TOKEN);
+					   break;
+		case INT_TOKEN: eat(INT_TOKEN);
+						break;
+		case CHAR_TOKEN: eat(CHAR_TOKEN);
+					     break;
+	}
 }
 
-bool enumtype() {
-	return true;
+void settype() {
+	switch(t.id) {
+		case SET_TOKEN: eat(SET_TOKEN);
+						eat(OF_TOKEN);
+						types();
+	}
 }
 
-bool recordtype() {
-	return true;
+void enumtype() {
+	switch(t.id) {
+		case '(': eat('(');
+				  idlist();
+				  eat(')');
+	}
 }
 
-bool usertypes() {
-	return true;
+void recordtype() {
+	switch(t.id) {
+		case RECORD_TOKEN: eat(RECORD_TOKEN);
+						   varlistlist();
+						   eat(END_TOKEN);
+	}
+}
+
+void usertypes() {
+	switch(t.id) {
+		case TYPE_TOKEN: eat(TYPE_TOKEN);
+						 listusertypes();
+		case VAR_TOKEN: break;
+		case PROC_TOKEN: break;
+		case FUNC_TOKEN: break;
+		case BEGIN_TOKEN: break;
+	}
 }
 
 void listusertypes() {
@@ -311,48 +444,176 @@ bool stmt() {
 	return true;
 }
 
-bool stmtprime() {
-	return true;
+//STMTPRIME -> ATTRSTMT
+//STMTPRIME -> SUBPROGCALL
+void stmtprime() {
+	switch(t.id) {
+		case ID_TOKEN:
+			attrstmt();
+			break;
+		case '(':
+			subprogcall();
+			break;
+		default:
+			std::cout << "default\n"; // no error
+      break;
+	}
 }
 
-bool subprogcall() {
-	return true;
+//SUBPROGCALL -> '(' EXPRLIST ')'
+void subprogcall() {
+	switch(t.id){
+		case '(':
+			eat('(');
+			exprlist();
+			eat(')');
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool existstmt() {
-	return true;
+//EXISTSTMT -> 'exitwhen' '(' EXPR ')'
+void exitstmt() {
+	switch (t.id) {
+		case EXITWHEN_TOKEN:
+			eat(EXITWHEN_TOKEN);
+			eat('(');
+			expr();
+			eat(')');
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool returnstmt() {
-	return true;
+//RETURNSTMT -> 'return' EXPR
+void returnstmt() {
+	switch (t.id) {
+		case RETURN_TOKEN:
+			eat(RETURN_TOKEN);
+			expr();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool attrstmt() {
-	return true;
+//ATTRSTMT -> 'id' ATTRSTMTPRIME
+void attrstmt() {
+	switch (t.id) {
+		case ID_TOKEN:
+			eat(ID_TOKEN);
+			attrstmtprime();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool attrstmtprime() {
-	return true;
+//ATTRSTMTPRIME -> VARIABLE ':=' EXPR
+//ATTRSTMTPRIME -> ':=' EXPR
+void attrstmtprime() {
+	switch (t.id) {
+		case '[':
+		case '->':
+			variable();
+			eat(ATTR_TOKEN);
+			expr();
+			break;
+		case ATTR_TOKEN:
+			eat(ATTR_TOKEN);
+			expr();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool ifblock() {
-	return true;
+// IFBLOCK -> 'if' '(' EXPR ')' STMT ELSEBLOCK
+void ifblock() {
+	switch(t.id){
+		case IF_TOKEN:
+			eat(IF_TOKEN);
+			eat('(');
+			expr();
+			eat(')');
+			stmt();
+			elseblock();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+
+	}
 }
 
-bool elseblock() {
-	return true;
+//ELSEBLOCK -> LAMBDA
+//ELSEBLOCK -> 'else' STMT
+void elseblock() {
+	switch(t.id){
+		case ';':
+		case END_TOKEN:
+			break;
+		case ELSE_TOKEN:
+			eat(ELSE_TOKEN);
+			stmt();
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool loopblock() {
-	return true;
+//LOOPBLOCK -> 'loop' STMT
+void loopblock() {
+	switch(t.id){
+		case LOOP_TOKEN:
+			eat(LOOP_TOKEN);
+			stmt();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool caseblock() {
-	return true;
+//CASEBLOCK -> 'case' EXPR 'of' CASELIST CASEBLOCKPRIME
+void caseblock() {
+	switch(t.id){
+		case CASE_TOKEN:
+			eat(CASE_TOKEN);
+			expr();
+			eat(OF_TOKEN);
+			caselist();
+			caseblockprime();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
-bool caseblockprime() {
-	return true;
+//CASEBLOCKPRIME -> 'end'
+//CASEBLOCKPRIME -> 'else' STMT 'end'
+void caseblockprime() {
+	switch(t.id){
+		case END_TOKEN:
+			eat(END_TOKEN);
+			break;
+		case ELSE_TOKEN:
+			eat(ELSE_TOKEN);
+			stmt();
+			eat(END_TOKEN);
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool caselist() {
@@ -379,76 +640,147 @@ bool forblockprime() {
 	return true;
 }
 
-bool expr() {
-	return true;
+void expr() {
+	switch(t.id) {
+		case OR_TOKEN : disj(); break;
+		case '&'	  : conj(); break;
+		default		  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool disj() {
-	return true;
+void disj() {
+	switch(t.id) {
+		case OR_TOKEN	  : eat(OR_TOKEN); conj(); break;
+		case LAMBDA_TOKEN : break;
+		default		  	  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool final_term() {
-	return true;
+void final_term() {
+	switch(t.id) {
+		case OR_TOKEN : disj(); break;
+
+		case CHARLITERAL_TOKEN : literal(); break;
+		case CHARLITERAL_TOKEN : literal(); break;
+		case CHARLITERAL_TOKEN : literal(); break;
+		case CHARLITERAL_TOKEN : literal(); break;
+		case '(' 			   : eat('(');exprt();eat(')'); break;
+		default		  		   : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool final_termprime() {
-	return true;
+void final_termprime() {
+	switch(t.id) {
+		case VAR_TOKEN 		  : variable(); break;
+		case LAMBDA_TOKEN	  : break;
+		case '('			  : subprogcall(); break;
+		default		  		  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool add_op() {
-	return true;
+void add_op() {
+	switch(t.id) {
+		case '+' : eat('+'); break;
+		case '-' : eat('-'); break;
+		default  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool mul_op() {
-	return true;
+void mul_op() {
+	switch(t.id) {
+		case '*' : eat('*'); break;
+		case '/' : eat('/'); break;
+		case '%' : eat('%'); break;
+		default  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool equality_op() {
-	return true;
+void equality_op() {
+	switch(t.id) {
+		case EQUAL_TOKEN : eat(EQUAL_TOKEN); break;
+		case DIFF_TOKEN  : eat(DIFF_TOKEN); break;
+		default		  	 : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool relational_op() {
-	return true;
+void relational_op() {
+	switch(t.id) {
+		case '<' 	  : eat('<'); break;
+		case LE_TOKEN : eat(LE_TOKEN); break;
+		case '>' 	  : eat('>'); break;
+		case GE_TOKEN : eat(GE_TOKEN); break;
+		default		  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool conj() {
-	return true;
+void conj() {
+	switch(t.id) {
+		case '&'	  : eat('&'); comp(); conjprime(); break;
+		default		  : std::cout << "ERROR" << std::endl;
+	}
 }
 
-bool conjprime() {
-	return true;
+void conjprime() {
+	switch(t.id) {
+		case LAMBDA_TOKEN : break;
+		default	  		  : equality_op(); relational(); break;
+	}
 }
 
-bool comp() {
-	return true;
+void comp() {
+	relational(); compprime();
 }
 
-bool compprime() {
-	return true;
+void compprime() {
+	switch(t.id) {
+		case LAMBDA_TOKEN : break;
+		default		  	  : equality_op(); relational();
+	}
+}
+void relational() {
+	sum(); relationalprime();
 }
 
-bool relational() {
-	return true;
+void relationalprime() {
+	switch(t.id) {
+		case LAMBDA_TOKEN : break;
+		default 	      : relational_op(); sum(); 
+	}
+}
+void sum() {
+	neg(); sumprime();
 }
 
-bool relationalprime() {
-	return true;
+void sumprime() {
+	switch(t.id) {
+		case LAMBDA_TOKEN : break;
+		default		  	  : add_op(); neg(); sumprime();
+	}
 }
 
-bool sum() {
-	return true;
+void neg() {
+	switch (t.id) {
+		case ID_TOKEN:
+		case '(':
+		case INTLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
+			mul();
+			break;
+		case '!':
+			eat('!');
+			mul();
+			break;
+		default:
+            std::cout << "error\n";
+            break;
+	}
 }
 
-bool sumprime() {
-	return true;
-}
-
-bool neg() {
-	return true;
-}
-
-bool mul() {
-	return true;
+void mul() {
+	
 }
 
 bool literal() {
