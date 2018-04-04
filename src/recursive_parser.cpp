@@ -178,8 +178,18 @@ bool stmt() {
 	return true;
 }
 
-bool stmtprime() {
-	return true;
+void stmtprime() {
+	switch(t.id) {
+		case ID_TOKEN:
+			attrstmt();
+			break;
+		case '(':
+			subprogcall();
+			break;
+		default:
+			std::cout << "default\n"; // no error
+      break;
+	}
 }
 
 bool subprogcall() {
