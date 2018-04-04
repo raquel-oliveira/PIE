@@ -11,13 +11,10 @@ int main(int argc, char *argv[]) {
 	}
 	initLexer(argv[1]);
 	nextToken();
-<<<<<<< HEAD
 	if(t.token != ENDOFFILE_TOKEN && t.token != ERROR_TOKEN) {
 		prog();
-=======
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
 		PROG();
->>>>>>> f1f49a011a37eaf3af8cfd90eb75ca534b225803
 	}
 	if(t.id == ERROR_TOKEN) {
 		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
