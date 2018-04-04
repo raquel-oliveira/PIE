@@ -30,8 +30,14 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={types}, language=pie]
-<types> ::= id        |
-           <primtype>
+<types> ::= id <typesprime> |
+           <primtypes>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={typesprime}, language=pie]
+<typesprime> ::= `'                  |
+                 `..' <subrangetype>
+           
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={primtypes}, language=pie]
@@ -43,7 +49,6 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
                 <arraytype>             |
                 <settype>               |
                 <enumtype>              |
-                id `..' <subrangetype>  |
                 <recordtype>
 \end{lstlisting}
 
