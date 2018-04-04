@@ -192,8 +192,16 @@ void stmtprime() {
 	}
 }
 
-bool subprogcall() {
-	return true;
+void subprogcall() {
+	switch(t.id){
+		case '(':
+			eat('(');
+			exprlist();
+			eat(')');
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool existstmt() {
