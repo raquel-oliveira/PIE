@@ -2,6 +2,7 @@
 #define _RECURSIVE_PARSER_HPP_
 #include "../lex.yy.c"
 
+
 extern void nextToken();
 extern void initLexer(char* arg);
 
