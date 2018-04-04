@@ -289,8 +289,20 @@ void ifblock() {
 	}
 }
 
-bool elseblock() {
-	return true;
+//ELSEBLOCK -> LAMBDA
+//ELSEBLOCK -> 'else' STMT
+void elseblock() {
+	switch(t.id){
+		case ';':
+		case END_TOKEN:
+			break;
+		case ELSE_TOKEN:
+			eat(ELSE_TOKEN);
+			stmt();
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool loopblock() {
