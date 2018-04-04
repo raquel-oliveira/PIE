@@ -836,42 +836,81 @@ bool forblockprime() {
 
 void expr() {
 	switch(t.id) {
-		case OR_TOKEN : disj(); break;
-		case '&'	  : conj(); break;
-		default		  : std::cout << "ERROR" << std::endl;
+		case ID_TOKEN 			  	:
+		case '('	  			   	:
+		case '!'	  			   	:
+		case CHARLITERAL_TOKEN 	   	:   
+		case INTLITERAL_TOKEN  	   	:
+		case REALLITERAL_TOKEN	   	:
+		case STRINGLITERAL_TOKEN   	:
+		case SUBRANGELITERAL_TOKEN 	: conj(); disj(); break;
+		default		  			   	: std::cout << "ERROR" << std::endl;
 	}
 }
 
 void disj() {
 	switch(t.id) {
-		case OR_TOKEN	  : eat(OR_TOKEN); conj(); break;
-		case LAMBDA_TOKEN : break;
-		default		  	  : std::cout << "ERROR" << std::endl;
+		case ';' 		:
+		case ']' 		:
+		case OF_TOKEN 	:
+		case ','		:
+		case ')' 		:
+		case END_TOKEN 	:
+		case ELSE_TOKEN	:
+		case TO_TOKEN	:
+		case STEP_TOKEN	:
+		case DO_TOKEN	: break(); // LAMBDA
+		case OR_TOKEN	: eat(OR_TOKEN); break;
+		default		  	: std::cout << "ERROR" << std::endl;
 	}
 }
 
 void final_term() {
 	switch(t.id) {
-		case OR_TOKEN : disj(); break;
-
-		case CHARLITERAL_TOKEN : literal(); break;
-		case CHARLITERAL_TOKEN : literal(); break;
-		case CHARLITERAL_TOKEN : literal(); break;
-		case CHARLITERAL_TOKEN : literal(); break;
-		case '(' 			   : eat('(');exprt();eat(')'); break;
-		default		  		   : std::cout << "ERROR" << std::endl;
+		case ID_TOKEN 			   	: eat(ID_TOKEN); final_termprime(); break;
+		case INTLITERAL_TOKEN  	   	:
+		case REALLITERAL_TOKEN	   	:
+		case CHARLITERAL_TOKEN 	   	:  
+		case STRINGLITERAL_TOKEN  	:
+		case SUBRANGELITERAL_TOKEN 	: literal(); break();
+		case '(' 			   	   	: eat('('); expr(); eat(')'); break;
+		default		  		   	   	: std::cout << "ERROR" << std::endl;
 	}
 }
 
 void final_termprime() {
 	switch(t.id) {
-		case VAR_TOKEN 		  : variable(); break;
-		case LAMBDA_TOKEN	  : break;
-		case '('			  : subprogcall(); break;
-		default		  		  : std::cout << "ERROR" << std::endl;
+		case '[' 		  	: 
+		case  GE_TOKEN 		: variable(); break();
+		case ';' 			:
+		case ']' 			:
+		case OF_TOKEN 		:
+		case ',' 			:
+		case ')' 			:
+		case END_TOKEN 		:
+		case ELSE_TOKEN 	:
+		case TO_TOKEN 		:
+		case STEP_TOKEN 	:
+		case DO_TOKEN 		:
+		case OR_TOKEN 		:
+		case '+' 			:
+		case '-' 			:
+		case '*' 			:
+		case '/' 			:
+		case '%' 			:
+		case EQUAL_TOKEN 	:		
+		case DIFF_TOKEN 	:
+		case '>' 			:
+		case LE_TOKEN 		:
+		case '>' 			:
+		case GE_TOKEN 		:
+		case AND_TOKEN 		: break();
+		case '('			: subprogcall(); break;
+		default		  		: std::cout << "ERROR" << std::endl;
 	}
 }
 
+/** --------- GODEIRO --------- **/
 void add_op() {
 	switch(t.id) {
 		case '+' : eat('+'); break;
@@ -951,6 +990,8 @@ void sumprime() {
 		default		  	  : add_op(); neg(); sumprime();
 	}
 }
+
+/** --------- GODEIRO --------- **/
 
 void neg() {
 	switch (t.id) {
