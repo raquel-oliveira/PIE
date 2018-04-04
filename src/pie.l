@@ -102,7 +102,7 @@ nil  			{ updateToken(NIL_TOKEN, num_line, num_column, NULL); updateColumn(yylen
 "]"         	{ updateToken(']', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 "{"         	{ updateToken('{', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 "}"         	{ updateToken('}', num_line, num_column, NULL); updateColumn(yyleng); return 0; }
-
+".."         	{ updateToken(RANGE_TOKEN, num_line, num_column, NULL); updateColumn(yyleng); return 0; }
 
 {LABEL}			{ updateToken(LABEL_TOKEN, num_line, num_column, yytext); updateColumn(yyleng); return 0; }
 {CHARLITERAL}	{ updateToken(CHARLITERAL_TOKEN, num_line, num_column, yytext); updateColumn(yyleng); return 0; }
