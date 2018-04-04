@@ -211,14 +211,23 @@ void exitstmt() {
 			eat('(');
 			expr();
 			eat(')');
+			break;
 		default:
 			std::cout << "error\n";
 			break;
 	}
 }
 
-bool returnstmt() {
-
+void returnstmt() {
+	switch (t.id) {
+		case RETURN_TOKEN:
+			eat(RETURN_TOKEN);
+			expr();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool attrstmt() {
