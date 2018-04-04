@@ -426,20 +426,102 @@ void variableprime() {
 	}
 }
 
-bool block() {
-	return true;
+void block() {
+	switch(t.id) {
+		case BEGIN_TOKEN:
+			eat(BEGIN_TOKEN);
+			stmts();
+			eat(END_TOKEN);
+			break;
+	}
 }
 
-bool stmts() {
-	return true;
+void stmts() {
+	switch(t.id) {
+		case ID_TOKEN:
+		case ';':
+		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITSTMT_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case GOTO_TOKEN:
+		case FOR_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
+			stmt();
+			stmtlistprime();
+			break;
+	}
 }
 
-bool stmtsprime() {
-	return true;
+void stmtlistprime() {
+	switch(t.id) {
+		case END_TOKEN:
+			break;
+		case ';':
+			eat(';');
+			stmts();
+			break;
+	}
 }
 
-bool stmt() {
-	return true;
+void stmt() {
+	switch(t.id) {
+		case ';':
+		case END_TOKEN:
+		case ELSE_TOKEN:
+			break;
+		case LABEL_TOKEN:
+			eat(LABEL_TOKEN);
+			stmt();
+			break;
+		case BEGIN_TOKEN:
+			block();
+			break;
+		case WRITE_TOKEN:
+			writestmt();
+			break;
+		case WRITELN_TOKEN:
+			writelnstmt();
+			break;
+		case READ_TOKEN:
+			readstmt();
+			break;
+		case READLN_TOKEN:
+			readlnstmt();
+			break;
+		case LOOP_TOKEN:
+			loopblock();
+			break;
+		case IF_TOKEN:
+			ifblock();
+			break;
+		case FOR_TOKEN:
+			forblock();
+			break;
+		case CASE_TOKEN:
+			caseblock();
+			break;
+		case GOTO_TOKEN:
+			gotostmt();
+			break;
+		case ID_TOKEN:
+			eat(ID_TOKEN);
+			stmtprime();
+			break;
+		case EXITSTMT_TOKEN:
+			exitstmt();
+			break;
+		case RETURN_TOKEN:
+			returnstmt();
+			break;
+	}
 }
 
 //STMTPRIME -> ATTRSTMT
