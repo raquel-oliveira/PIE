@@ -465,8 +465,22 @@ void caseblock() {
 	}
 }
 
-bool caseblockprime() {
-	return true;
+//CASEBLOCKPRIME -> 'end'
+//CASEBLOCKPRIME -> 'else' STMT 'end'
+void caseblockprime() {
+	switch(t.id){
+		case END_TOKEN:
+			eat(END_TOKEN);
+			break;
+		case ELSE_TOKEN:
+			eat(ELSE_TOKEN);
+			stmt();
+			eat(END_TOKEN);
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool caselist() {
