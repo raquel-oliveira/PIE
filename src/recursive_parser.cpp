@@ -6,13 +6,13 @@
 
 int main(int argc, char *argv[]) {
 	if(argc < 2) {
-		std::cout << "Not enough arguments." << std::endl;
+		std::cout << "Not enough arguments." << argc << std::endl;
 		return 0;
 	}
 	initLexer(argv[1]);
 	nextToken();
 	if(t.token != ENDOFFILE_TOKEN && t.token != ERROR_TOKEN) {
-		PROG();
+		prog();
 	}
 	if(t.token == ERROR_TOKEN) {
 		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
