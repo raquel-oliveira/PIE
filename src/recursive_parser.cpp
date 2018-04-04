@@ -625,12 +625,29 @@ void sumprime() {
 	}
 }
 
-bool neg() {
-	return true;
+void neg() {
+	switch (t.id) {
+		case ID_TOKEN:
+		case '(':
+		case INTLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
+			mul();
+			break;
+		case '!':
+			eat('!');
+			mul();
+			break;
+		default:
+            std::cout << "error\n";
+            break;
+	}
 }
 
-bool mul() {
-	return true;
+void mul() {
+	
 }
 
 bool literal() {
