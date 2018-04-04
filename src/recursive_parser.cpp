@@ -449,8 +449,20 @@ void loopblock() {
 	}
 }
 
-bool caseblock() {
-	return true;
+//CASEBLOCK -> 'case' EXPR 'of' CASELIST CASEBLOCKPRIME
+void caseblock() {
+	switch(t.id){
+		case CASE_TOKEN:
+			eat(CASE_TOKEN);
+			expr();
+			eat(OF_TOKEN);
+			caselist();
+			caseblockprime();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool caseblockprime() {
