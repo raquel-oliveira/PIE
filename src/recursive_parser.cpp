@@ -844,8 +844,18 @@ void literallist() {
 	}
 }
 
-bool listerallistprime() {
-	return true;
+//LISTERALLISTPRIME -> LAMBDA
+//LISTERALLISTPRIME -> ',' LITERALLIST
+void listerallistprime() {
+	switch (t.id) {
+		case ',':
+			eat(',');
+			literallist();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool gotostmt() {
