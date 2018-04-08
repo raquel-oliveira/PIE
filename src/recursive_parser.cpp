@@ -871,8 +871,18 @@ void gotostmt() {
 	}
 }
 
-bool forblock() {
-	return true;
+//FORBLOCK -> 'for' 'id' FORBLOCKPRIME
+void forblock() {
+	switch (t.id) {
+		case FOR_TOKEN:
+			eat(FOR_TOKEN);
+			eat(ID_TOKEN);
+			forblockprime();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool forblockprime() {
