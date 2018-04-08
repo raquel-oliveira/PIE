@@ -828,8 +828,20 @@ void caselist() {
 	}
 }
 
-bool literallist() {
-	return true;
+//LITERALLIST -> LITERAL LITERALLISTPRIME
+void literallist() {
+	switch (t.id) {
+		case INTLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGE_TOKEN:
+		 	listerallistprime();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool listerallistprime() {
