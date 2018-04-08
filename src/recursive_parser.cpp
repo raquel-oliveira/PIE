@@ -858,8 +858,17 @@ void listerallistprime() {
 	}
 }
 
-bool gotostmt() {
-	return true;
+//GOTOSTMT -> 'goto' 'label'
+void gotostmt() {
+	switch (t.id) {
+		case GOTO_TOKEN:
+			eat(GOTO_TOKEN);
+			eat(LABEL_TOKEN);
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool forblock() {
