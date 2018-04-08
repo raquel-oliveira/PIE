@@ -810,8 +810,22 @@ void caseblockprime() {
 	}
 }
 
-bool caselist() {
-	return true;
+//CASELIST -> LITERALLIST ':' STMT ';'
+void caselist() {
+	switch(t.id){
+		case INTLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGE_TOKEN:
+			eat(':');
+			stmt();
+			eat(';');
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 bool literallist() {
