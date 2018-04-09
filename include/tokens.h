@@ -1,13 +1,7 @@
 #ifndef _TOKENS_H_
 #define _TOKENS_H_
 
-enum Tokens{
-	ENDOFFILE_TOKEN = 128, 
-	PROGRAM_TOKEN, 
-	PROC_TOKEN, 
-	BEGIN_TOKEN, 
-
-enum {
+enum Tokens {
 	ENDOFFILE_TOKEN = 128,
 	PROGRAM_TOKEN,
 	PROC_TOKEN,
