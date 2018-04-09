@@ -885,8 +885,28 @@ void forblock() {
 	}
 }
 
-bool forblockprime() {
-	return true;
+//FORBLOCKPRIME -> VARIABLE ':=' EXPR to EXPR 'step' EXPR 'do' STMT
+//FORBLOCKPRIME -> ':=' EXPR to EXPR 'step' EXPR 'do' STMT
+void forblockprime() {
+	switch (t.id) {
+		case '[':
+		case ACCESS_TOKEN:
+			variable();
+		case ATTR_TOKEN:
+			eat(ATTR_TOKEN);
+			eat(ATTR_TOKEN);
+			expr();
+			eat(TO_TOKEN);
+			expr();
+			eat(STEP_TOKEN);
+			expr();
+			eat(DO_TOKEN);
+			stmt();
+			break;
+		default:
+			std::cout << "error\n";
+			break;
+	}
 }
 
 void expr() {
