@@ -899,7 +899,7 @@ void expr() {
 		case REALLITERAL_TOKEN	   	:
 		case STRINGLITERAL_TOKEN   	:
 		case SUBRANGELITERAL_TOKEN 	: conj(); disj(); break;
-		default		  			   	: std::cout << "ERROR" << std::endl;
+		default		  			   	: error();
 	}
 }
 
@@ -914,9 +914,9 @@ void disj() {
 		case ELSE_TOKEN	:
 		case TO_TOKEN	:
 		case STEP_TOKEN	:
-		case DO_TOKEN	: break(); // LAMBDA
+		case DO_TOKEN	: break(); 
 		case OR_TOKEN	: eat(OR_TOKEN); break;
-		default		  	: std::cout << "ERROR" << std::endl;
+		default		  	: error();
 	}
 }
 
@@ -929,7 +929,7 @@ void final_term() {
 		case STRINGLITERAL_TOKEN  	:
 		case SUBRANGELITERAL_TOKEN 	: literal(); break();
 		case '(' 			   	   	: eat('('); expr(); eat(')'); break;
-		default		  		   	   	: std::cout << "ERROR" << std::endl;
+		default		  		   	   	: error();
 	}
 }
 
@@ -961,16 +961,15 @@ void final_termprime() {
 		case GE_TOKEN 		:
 		case AND_TOKEN 		: break();
 		case '('			: subprogcall(); break;
-		default		  		: std::cout << "ERROR" << std::endl;
+		default		  		: error();
 	}
 }
 
-/** --------- GODEIRO --------- **/
 void add_op() {
 	switch(t.id) {
 		case '+' : eat('+'); break;
 		case '-' : eat('-'); break;
-		default  : std::cout << "ERROR" << std::endl;
+		default  : error();
 	}
 }
 
@@ -979,7 +978,7 @@ void mul_op() {
 		case '*' : eat('*'); break;
 		case '/' : eat('/'); break;
 		case '%' : eat('%'); break;
-		default  : std::cout << "ERROR" << std::endl;
+		default  : error();
 	}
 }
 
@@ -987,7 +986,7 @@ void equality_op() {
 	switch(t.id) {
 		case EQUAL_TOKEN : eat(EQUAL_TOKEN); break;
 		case DIFF_TOKEN  : eat(DIFF_TOKEN); break;
-		default		  	 : std::cout << "ERROR" << std::endl;
+		default		  	 : error();
 	}
 }
 
@@ -997,56 +996,153 @@ void relational_op() {
 		case LE_TOKEN : eat(LE_TOKEN); break;
 		case '>' 	  : eat('>'); break;
 		case GE_TOKEN : eat(GE_TOKEN); break;
-		default		  : std::cout << "ERROR" << std::endl;
+		default		  : error();
 	}
 }
 
 void conj() {
 	switch(t.id) {
-		case '&'	  : eat('&'); comp(); conjprime(); break;
-		default		  : std::cout << "ERROR" << std::endl;
+		case ID_TOKEN 				:
+		case '('      				:
+		case '!'	  				:
+		case INTLITERAL_TOKEN 		:
+		case REALLITERAL_TOKEN 		:
+		case CHARLITERAL_TOKEN 		:
+		case STRINGLITERAL_TOKEN 	:
+		case SUBRANGELITERAL_TOKEN 	: comp(); conjprime(); break;
+		default		  				: error();
 	}
 }
 
 void conjprime() {
 	switch(t.id) {
-		case LAMBDA_TOKEN : break;
-		default	  		  : equality_op(); relational(); break;
+		case ';' 		:
+		case ']' 		:
+		case OF_TOKEN 	:
+		case ','	  	:
+		case ')'	 	:
+		case END_TOKEN 	:
+		case ELSE_TOKEN :
+		case TO_TOKEN 	:
+		case STEP_TOKEN :
+		case DO_TOKEN 	:
+		case OR_TOKEN 	: break;
+		case AND_TOKEN 	: eat(AND_TOKEN); comp(); break;
+		default	  		: error();
 	}
 }
 
 void comp() {
-	relational(); compprime();
+	switch(t.id){
+		case ID_TOKEN 				:
+		case '('      				:
+		case '!'	  				:
+		case INTLITERAL_TOKEN 		:
+		case REALLITERAL_TOKEN 		:
+		case CHARLITERAL_TOKEN 		:
+		case STRINGLITERAL_TOKEN 	: relational(); compprime(); break;
+		default	  					: error();
+	}
+	
 }
 
 void compprime() {
 	switch(t.id) {
-		case LAMBDA_TOKEN : break;
-		default		  	  : equality_op(); relational();
+		case ';' 			:
+		case ']' 			:
+		case OF_TOKEN 		:
+		case ','	  		:
+		case ')'	 		:
+		case END_TOKEN 		:
+		case ELSE_TOKEN 	:
+		case TO_TOKEN 		:
+		case STEP_TOKEN 	:
+		case DO_TOKEN 		:
+		case OR_TOKEN 		: 
+		case AND_TOKEN		: break;
+		case EQUAL_TOKEN 	: 
+		case DIFF_TOKEN		: equality_op(); relational(); break;
+		default	  			: error();
 	}
 }
+
 void relational() {
-	sum(); relationalprime();
+	switch(t.id){
+		case ID_TOKEN 				:
+		case '('      				:
+		case '!'	  				:
+		case INTLITERAL_TOKEN 		:
+		case REALLITERAL_TOKEN 		:
+		case CHARLITERAL_TOKEN 		:
+		case STRINGLITERAL_TOKEN 	:
+		case SUBRANGELITERAL_TOKEN	: sum(); relationalprime(); break;
+		default	  					: error();
+	}
 }
 
 void relationalprime() {
 	switch(t.id) {
-		case LAMBDA_TOKEN : break;
-		default 	      : relational_op(); sum(); 
+		case ';' 			:
+		case ']' 			:
+		case OF_TOKEN 		:
+		case ','	  		:
+		case ')'	 		:
+		case END_TOKEN 		:
+		case ELSE_TOKEN 	:
+		case TO_TOKEN 		:
+		case STEP_TOKEN 	:
+		case DO_TOKEN 		:
+		case OR_TOKEN 		: 
+		case EQUAL_TOKEN 	: 
+		case DIFF_TOKEN		:
+		case AND_TOKEN		: break;
+		case '<'			:
+		case LE_TOKEN 		:
+		case '>'			:
+		case GE_TOKEN		: relational_op(); sum(); break;
+		default	  			: error();
 	}
 }
+
 void sum() {
-	neg(); sumprime();
+	switch(t.id){
+		case ID_TOKEN 				:
+		case '('      				:
+		case '!'	  				:
+		case INTLITERAL_TOKEN 		:
+		case REALLITERAL_TOKEN 		:
+		case CHARLITERAL_TOKEN 		:
+		case STRINGLITERAL_TOKEN 	:
+		case SUBRANGELITERAL_TOKEN	: neg(); sumprime(); break;
+		default	  					: error();
+	}
 }
 
 void sumprime() {
 	switch(t.id) {
-		case LAMBDA_TOKEN : break;
-		default		  	  : add_op(); neg(); sumprime();
+		case ';' 			:
+		case ']' 			:
+		case OF_TOKEN 		:
+		case ','	  		:
+		case ')'	 		:
+		case END_TOKEN 		:
+		case ELSE_TOKEN 	:
+		case TO_TOKEN 		:
+		case STEP_TOKEN 	:
+		case DO_TOKEN 		:
+		case OR_TOKEN 		: 
+		case EQUAL_TOKEN 	: 
+		case DIFF_TOKEN		:
+		case '<'			:
+		case LE_TOKEN 		:
+		case '>'			:
+		case GE_TOKEN		:
+		case AND_TOKEN		: break;
+		case '+'			:
+		case '-'			: add_op(); neg(); sumprime(); break();
+		default	  			: error();
 	}
 }
-
-/** --------- GODEIRO --------- **/
 
 void neg() {
 	switch (t.id) {
