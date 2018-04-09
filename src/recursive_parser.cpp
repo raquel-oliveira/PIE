@@ -1174,6 +1174,10 @@ void mul() {
 	
 }
 
+void mulprime() {
+	
+}
+
 bool literal() {
 	return true;
 }
@@ -1182,11 +1186,11 @@ bool exprlist() {
 	return true;
 }
 
-bool exprlist_plus() {
+bool exprlistplus() {
 	return true;
 }
 
-bool exprlist_plusprime() {
+bool exprlistplusprime() {
 	return true;
 }
 
