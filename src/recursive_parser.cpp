@@ -9,8 +9,8 @@ int main(int argc, char *argv[]) {
 		std::cout << "Not enough arguments." << argc << std::endl;
 		return 0;
 	}
-	initLexer(argv[1]);
-	nextToken();
+	init_lexer(argv[1]);
+	next_token();
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
 		prog();
 	}
@@ -25,13 +25,13 @@ void eat(int expected) {
 		error();
 	}
 	else {
-		nextToken();
+		next_token();
 	}
 }
 
 void error() {
 	std::cout << "ERROR:Not expected symbol in line " << t.row << " column " << t.col << std::endl;
-	nextToken();
+	next_token();
 }
 
 void prog() {
@@ -53,11 +53,12 @@ void decl() {
 	switch(t.id) {
 		case CONST_TOKEN:
 			consts();
-		case USERTYPE_TOKEN:
+		case TYPE_TOKEN:
 			usertypes();
 		case VAR_TOKEN:
 			vars();
-		case SUBPROGRAM_TOKEN:
+		case PROC_TOKEN:
+		case FUNC_TOKEN:
 			subprograms();
 			break;
 		default:
@@ -401,7 +402,7 @@ void varlistlistprime() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
-		case RECORD_TYPE:
+		case RECORD_TOKEN:
 			varlistlist();
 			break;
 		case ')':
@@ -427,7 +428,7 @@ void varlist() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
-		case RECORD_TYPE:
+		case RECORD_TOKEN:
 			types();
 			idlist();
 			eat(';');
@@ -551,7 +552,7 @@ void stmts() {
 		case END_TOKEN:
 		case BEGIN_TOKEN:
 		case LABEL_TOKEN:
-		case EXITSTMT_TOKEN:
+		case EXITWHEN_TOKEN:
 		case RETURN_TOKEN:
 		case IF_TOKEN:
 		case LOOP_TOKEN:
@@ -627,7 +628,7 @@ void stmt() {
 			eat(ID_TOKEN);
 			stmtprime();
 			break;
-		case EXITSTMT_TOKEN:
+		case EXITWHEN_TOKEN:
 			exitstmt();
 			break;
 		case RETURN_TOKEN:
@@ -709,7 +710,7 @@ void attrstmt() {
 void attrstmtprime() {
 	switch (t.id) {
 		case '[':
-		case '->':
+		case ACCESS_TOKEN:
 			variable();
 			eat(ATTR_TOKEN);
 			expr();
@@ -957,7 +958,6 @@ void final_term() {
 void final_termprime() {
 	switch(t.id) {
 		case '[':
-		case  GE_TOKEN:
 			variable();
 			break;
 		case ';':
@@ -980,7 +980,7 @@ void final_termprime() {
 		case DIFF_TOKEN:
 		case '>':
 		case LE_TOKEN:
-		case '>':
+		case '<':
 		case GE_TOKEN:
 		case AND_TOKEN:
 			break;
@@ -1274,9 +1274,6 @@ void mul() {
 
 void mulprime() {
 	switch (t.id) {
-		case LAMBDA:
-			LAMBDA_TOKEN;
-			break;
 		case '*':
 		case '/':
 		case '%':
@@ -1395,8 +1392,8 @@ void subprogramsprime() {
 void procedure() {
 	switch (t.id) {
 		case PROC_TOKEN:
-			eat('proc');
-			eat('id');
+			eat(PROC_TOKEN);
+			eat(ID_TOKEN);
 			eat('(');
 			param();
 			eat(')');
@@ -1412,9 +1409,9 @@ void procedure() {
 void function() {
 	switch (t.id) {
 		case FUNC_TOKEN:
-			eat('func');
+			eat(FUNC_TOKEN);
 			types();
-			eat('id');
+			eat(ID_TOKEN);
 			eat('(');
 			param();
 			eat(')');
@@ -1451,7 +1448,7 @@ void param() {
 void writestmt() {
 	switch (t.id) {
 		case WRITE_TOKEN:
-			eat('write');
+			eat(WRITE_TOKEN);
 			eat('(');
 			expr();
 			eat(')');
@@ -1464,7 +1461,7 @@ void writestmt() {
 void writelnstmt() {
 	switch (t.id) {
 		case WRITELN_TOKEN:
-			eat('writeln');
+			eat(WRITELN_TOKEN);
 			eat('(');
 			expr();
 			eat(')');
@@ -1477,9 +1474,9 @@ void writelnstmt() {
 void readstmt() {
 	switch (t.id) {
 		case READ_TOKEN:
-			eat('read');
+			eat(READ_TOKEN);
 			eat('(');
-			eat('id');
+			eat(ID_TOKEN);
 			eat(')');
 			break;
 		default:
@@ -1490,9 +1487,9 @@ void readstmt() {
 void readlnstmt() {
 	switch (t.id) {
 		case READLN_TOKEN:
-			eat('readln');
+			eat(READLN_TOKEN);
 			eat('(');
-			eat('id');
+			eat(ID_TOKEN);
 			eat(')');
 			break;
 		default:

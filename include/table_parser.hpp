@@ -1,19 +1,17 @@
-#ifndef _TABLE_PARSER_H_
-#define _TABLE_PARSER_H_
+#ifndef _TABLE_PARSER_HPP_
+#define _TABLE_PARSER_HPP_
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <stack>
-#include "tokens.h"
 #include "table.h"
+#include "tokens.h"
 
-int main(int argc, char *argv[]);
 void eat(int expected);
 void error();
 void error_recovery(std::stack<int>& stack);
 void push_rule(int rule[], int size, std::stack<int>& stack);
 void table_parser(std::stack<int>& stack);
 
-
-#endif
+#endif /* _TABLE_PARSER_HPP_ */

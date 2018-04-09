@@ -94,7 +94,7 @@ enum NonTerminals {
 std::unordered_map<std::pair<int, int>, int[]> table;
 
 
-void initTable() {
+void init_table() {
 	table[{PROG,PROGRAM_TOKEN}] = {'.', BLOCK, ';', ID_TOKEN, PROGRAM_TOKEN};
 }
 
