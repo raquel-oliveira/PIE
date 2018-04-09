@@ -1,6 +1,7 @@
 #ifndef _TABLE_H_
 #define _TABLE_H_
 
+#include "tokens.h"
 #include <unordered_map>
 #include <utility>
 
@@ -58,12 +59,12 @@ enum NonTerminals {
     FORBLOCKPRIME,
     EXPR,
     DISJ,
-    FINAL-TERM,
-    FINAL-TERMPRIME,
-    ADD-OP,
-    MUL-OP,
-    EQUALITY-OP,
-    RELATIONAL-OP,
+    FINAL_TERM,
+    FINAL_TERMPRIME,
+    ADD_OP,
+    MUL_OP,
+    EQUALITY_OP,
+    RELATIONAL_OP,
     CONJ,
     CONJPRIME,
     COMP,
