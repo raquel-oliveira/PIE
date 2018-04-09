@@ -649,8 +649,7 @@ void stmtprime() {
 			subprogcall();
 			break;
 		default:
-			std::cout << "default\n"; // no error
-      break;
+			error();
 	}
 }
 
@@ -663,8 +662,7 @@ void subprogcall() {
 			eat(')');
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -678,8 +676,7 @@ void exitstmt() {
 			eat(')');
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -691,8 +688,7 @@ void returnstmt() {
 			expr();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -704,8 +700,7 @@ void attrstmt() {
 			attrstmtprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -724,8 +719,7 @@ void attrstmtprime() {
 			expr();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -741,8 +735,7 @@ void ifblock() {
 			elseblock();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 
 	}
 }
@@ -758,8 +751,7 @@ void elseblock() {
 			eat(ELSE_TOKEN);
 			stmt();
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -771,8 +763,7 @@ void loopblock() {
 			stmt();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -787,8 +778,7 @@ void caseblock() {
 			caseblockprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -805,8 +795,7 @@ void caseblockprime() {
 			eat(END_TOKEN);
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -823,8 +812,7 @@ void caselist() {
 			eat(';');
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -839,8 +827,7 @@ void literallist() {
 		 	listerallistprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -853,8 +840,7 @@ void listerallistprime() {
 			literallist();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -866,8 +852,7 @@ void gotostmt() {
 			eat(LABEL_TOKEN);
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -880,8 +865,7 @@ void forblock() {
 			forblockprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -904,8 +888,7 @@ void forblockprime() {
 			stmt();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -919,7 +902,7 @@ void expr() {
 		case REALLITERAL_TOKEN	   	:
 		case STRINGLITERAL_TOKEN   	:
 		case SUBRANGELITERAL_TOKEN 	: conj(); disj(); break;
-		default		  			   	: std::cout << "ERROR" << std::endl;
+		default		  			   	: error();
 	}
 }
 
@@ -936,7 +919,7 @@ void disj() {
 		case STEP_TOKEN	:
 		case DO_TOKEN	: break(); // LAMBDA
 		case OR_TOKEN	: eat(OR_TOKEN); break;
-		default		  	: std::cout << "ERROR" << std::endl;
+		default		  	: error();
 	}
 }
 
@@ -949,7 +932,7 @@ void final_term() {
 		case STRINGLITERAL_TOKEN  	:
 		case SUBRANGELITERAL_TOKEN 	: literal(); break();
 		case '(' 			   	   	: eat('('); expr(); eat(')'); break;
-		default		  		   	   	: std::cout << "ERROR" << std::endl;
+		default		  		   	   	: error();
 	}
 }
 
@@ -981,7 +964,7 @@ void final_termprime() {
 		case GE_TOKEN 		:
 		case AND_TOKEN 		: break();
 		case '('			: subprogcall(); break;
-		default		  		: std::cout << "ERROR" << std::endl;
+		default		  		: error();
 	}
 }
 
@@ -990,7 +973,7 @@ void add_op() {
 	switch(t.id) {
 		case '+' : eat('+'); break;
 		case '-' : eat('-'); break;
-		default  : std::cout << "ERROR" << std::endl;
+		default  : error();
 	}
 }
 
@@ -999,7 +982,7 @@ void mul_op() {
 		case '*' : eat('*'); break;
 		case '/' : eat('/'); break;
 		case '%' : eat('%'); break;
-		default  : std::cout << "ERROR" << std::endl;
+		default  : error();
 	}
 }
 
@@ -1007,7 +990,7 @@ void equality_op() {
 	switch(t.id) {
 		case EQUAL_TOKEN : eat(EQUAL_TOKEN); break;
 		case DIFF_TOKEN  : eat(DIFF_TOKEN); break;
-		default		  	 : std::cout << "ERROR" << std::endl;
+		default		  	 : error();
 	}
 }
 
@@ -1017,14 +1000,14 @@ void relational_op() {
 		case LE_TOKEN : eat(LE_TOKEN); break;
 		case '>' 	  : eat('>'); break;
 		case GE_TOKEN : eat(GE_TOKEN); break;
-		default		  : std::cout << "ERROR" << std::endl;
+		default		  : error();
 	}
 }
 
 void conj() {
 	switch(t.id) {
 		case '&'	  : eat('&'); comp(); conjprime(); break;
-		default		  : std::cout << "ERROR" << std::endl;
+		default		  : error();
 	}
 }
 
@@ -1084,7 +1067,7 @@ void neg() {
 			mul();
 			break;
 		default:
-            std::cout << "error\n";
+            error();
             break;
 	}
 }
