@@ -1149,6 +1149,14 @@ void sumprime() {
 	}
 }
 
+<<<<<<< Updated upstream
+=======
+/** --------- GODEIRO --------- **/
+
+/** --------- ARTHUR --------- **/
+//NEG -> MUL
+//NEG -> '!' MUL
+>>>>>>> Stashed changes
 void neg() {
 	switch (t.id) {
 		case ID_TOKEN:
@@ -1170,58 +1178,270 @@ void neg() {
 	}
 }
 
+//MUL -> FINAL-TERM MUL'
 void mul() {
-	
+	switch (t.id) {
+		case ID_TOKEN:
+		case '(':
+		case INTLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
+			mul();
+			final_term();
+			mulprime();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool literal() {
-	return true;
+//MUL' -> ''
+//MUL' -> MUL-OP FINAL-TERM MUL'
+void mulprime() {
+	switch (t.id) {
+		case LAMBDA:
+			LAMBDA_TOKEN;
+			break;
+		case '*':
+		case '/':
+		case '%':
+			mul_op();
+			final_term();
+			mulprime();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool exprlist() {
-	return true;
+//LITERAL -> 'intliteral'
+//LITERAL -> 'realliteral'
+//LITERAL -> 'charliteral'
+//LITERAL -> 'stringliteral'
+//LITERAL -> 'subrangeliteral'
+void literal() {
+	switch (t.id) {
+		case INTLITERAL_TOKEN:
+			eat('intliteral');
+			break;
+		case REALLITERAL_TOKEN:
+			eat('realliteral');
+			break;
+		case CHARLITERAL_TOKEN:
+			eat('charliteral');
+			break;
+		case STRINGLITERAL_TOKEN:
+			eat('stringliteral');
+			break;
+		case SUBRANGELITERAL_TOKEN:
+			eat('subrangeliteral');
+		default:
+			error();
+			break;
+	}
 }
 
-bool exprlist_plus() {
-	return true;
+//EXPRLIST -> ''
+//EXPRLIST -> EXPRLIST+
+void exprlist() {
+	switch (t.id) {
+		case ')':
+			break;
+		case ID_TOKEN:
+		case '(':
+		case '!':
+		case INTLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
+			exprlist_plus();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool exprlist_plusprime() {
-	return true;
+//EXPRLIST+ -> EXPR EXPRLIST+PRIME
+void exprlist_plus() {
+	switch (t.id) {
+		case ID_TOKEN:
+		case '(':
+		case '!':
+		case INTLITERAL_TOKEN:
+		case REALLITERAL_TOKEN:
+		case CHARLITERAL_TOKEN:
+		case STRINGLITERAL_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
+			expr();
+			exprlist_plusprime();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool subprograms() {
-	return true;
+//EXPRLIST+PRIME -> ''
+//EXPRLIST+PRIME -> ',' EXPRLIST+
+void exprlist_plusprime() {
+	switch (t.id) {
+		case ']':
+		case ')':
+			break;
+		case ',':
+			eat(',');
+			exprlist_plus();
+		default:
+			error();
+			break;
+	}
 }
 
-bool subprogramsprime() {
-	return true;
+//SUBPROGRAMS -> ''
+//SUBPROGRAMS -> PROCEDURE SUBPROGRAMSPRIME
+//SUBPROGRAMS -> FUNCTION SUBPROGRAMSPRIME
+void subprograms() {
+	switch (t.id) {
+		case BEGIN_TOKEN:
+			break;
+		case PROC_TOKEN:
+			procedure();
+			subprogramsprime();
+		case FUNC_TOKEN:
+			function();
+			subprogramsprime();
+		default:
+			error();
+			break;
+	}
 }
 
-bool procedure() {
-	return true;
+//SUBPROGRAMSPRIME -> ''
+//SUBPROGRAMSPRIME -> ';' SUBPROGRAMS
+void subprogramsprime() {
+	switch (t.id) {
+		case BEGIN_TOKEN:
+			break;
+		case ';':
+			eat(';');
+			subprograms();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool function() {
-	return true;
+//PROCEDURE -> 'proc' 'id' '(' PARAM ')' ';' DECL BLOCK
+void procedure() {
+	switch (t.id) {
+		case PROC_TOKEN:
+			eat('proc');
+			eat('id');
+			eat('(');
+			param();
+			eat(')');
+			eat(';');
+			decl();
+			block();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool param() {
-	return true;
+//FUNCTION -> 'func' TYPES 'id' '(' PARAM ')' ';' DECL BLOCK
+void function() {
+	switch (t.id) {
+		case FUNC_TOKEN:
+			eat('func');
+			types();
+			eat('id');
+			eat('(');
+			param();
+			eat(')');
+			eat(';');
+			decl();
+			block();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool writestmt() {
-	return true;
+//PARAM -> ''
+//PARAM -> VARLISTLIST
+void param() {
+	switch (t.id) {
+		case ')':
+			break;
+		case ID_TOKEN:
+		case INT_TOKEN:
+		case REAL_TOKEN:
+		case BOOL_TOKEN:
+		case CHAR_TOKEN:
+		case STRING_TOKEN:
+		case ARRAY_TOKEN:
+		case SET_TOKEN:
+		case '(':
+		case RECORD_TOKEN:
+			varlistlist();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool writelnstmt() {
-	return true;
+void writestmt() {
+	switch (t.id) {
+		case algo:
+			algo();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool readstmt() {
-	return true;
+void writelnstmt() {
+	switch (t.id) {
+		case algo:
+			algo();
+			break;
+		default:
+			error();
+			break;
+	}
 }
 
-bool readlnstmt() {
-	return true;
+void readstmt() {
+	switch (t.id) {
+		case algo:
+			algo();
+			break;
+		default:
+			error();
+			break;
+	}
 }
+
+void readlnstmt() {
+	switch (t.id) {
+		case algo:
+			algo();
+			break;
+		default:
+			error();
+			break;
+	}
+}
+/** --------- ARTHUR --------- **/

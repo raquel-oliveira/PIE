@@ -209,7 +209,7 @@ LITERAL -> 'intliteral'
 LITERAL -> 'realliteral'
 LITERAL -> 'charliteral'
 LITERAL -> 'stringliteral'
-LITERAL -> SUBRANGELITERAL
+LITERAL -> 'subrangeliteral'
 
 EXPRLIST -> ''
 EXPRLIST -> EXPRLIST+
