@@ -365,3 +365,6 @@ TSWLatexianTemp*
 # auto folder when using emacs and auctex
 
 # expex forward references with \gathertags
+
+*.pdf
+name
