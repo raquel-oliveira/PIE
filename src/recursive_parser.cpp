@@ -1149,14 +1149,11 @@ void sumprime() {
 	}
 }
 
-<<<<<<< Updated upstream
-=======
 /** --------- GODEIRO --------- **/
 
 /** --------- ARTHUR --------- **/
 //NEG -> MUL
 //NEG -> '!' MUL
->>>>>>> Stashed changes
 void neg() {
 	switch (t.id) {
 		case ID_TOKEN:
@@ -1401,10 +1398,14 @@ void param() {
 	}
 }
 
+//WRITESTMT -> 'write' '(' EXPR ')'
 void writestmt() {
 	switch (t.id) {
-		case algo:
-			algo();
+		case WRITE_TOKEN:
+			eat('write');
+			eat('(');
+			expr();
+			eat(')');
 			break;
 		default:
 			error();
@@ -1412,10 +1413,14 @@ void writestmt() {
 	}
 }
 
+//WRITELNSTMT -> 'writeln' '(' EXPR ')'
 void writelnstmt() {
 	switch (t.id) {
-		case algo:
-			algo();
+		case WRITELN_TOKEN:
+			eat('writeln');
+			eat('(');
+			expr();
+			eat(')');
 			break;
 		default:
 			error();
@@ -1423,10 +1428,14 @@ void writelnstmt() {
 	}
 }
 
+//READSTMT -> 'read' '(' 'id' ')'
 void readstmt() {
 	switch (t.id) {
-		case algo:
-			algo();
+		case READ_TOKEN:
+			eat('read');
+			eat('(');
+			eat('id');
+			eat(')');
 			break;
 		default:
 			error();
@@ -1434,10 +1443,14 @@ void readstmt() {
 	}
 }
 
+//READLNSTMT -> 'readln' (' 'id' ')'
 void readlnstmt() {
 	switch (t.id) {
-		case algo:
-			algo();
+		case READLN_TOKEN:
+			eat('readln');
+			eat('(');
+			eat('id');
+			eat(')');
 			break;
 		default:
 			error();
@@ -1445,3 +1458,4 @@ void readlnstmt() {
 	}
 }
 /** --------- ARTHUR --------- **/
+

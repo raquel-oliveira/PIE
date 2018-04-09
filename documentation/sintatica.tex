@@ -140,7 +140,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={variable}, language=pie]
 <variable> ::= `->' id  <variableprime>                 | 
-               `[' <exprlist+> `]' < variableprime>
+               `[' <exprlistplus> `]' < variableprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={variableprime}, language=pie]
@@ -358,16 +358,16 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={exprlist}, language=pie]
 <exprlist> ::= `' | 
-               <exprlist+>
+               <exprlistplus>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={exprlist+}, language=pie]
-<exprlist+> ::= <expr> <exprlist+prime> 
+\begin{lstlisting}[frame=single, label={exprlistplus}, language=pie]
+<exprlistplus> ::= <expr> <exprlistplusprime> 
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={exprlist+prime}, language=pie]
-<exprlist+prime> ::= `'              |
-                     `,' < exprlist+> 
+\begin{lstlisting}[frame=single, label={exprlistplusprime}, language=pie]
+<exprlistplusprime> ::= `'              |
+                     `,' < exprlistplus> 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subprograms}, language=pie]
