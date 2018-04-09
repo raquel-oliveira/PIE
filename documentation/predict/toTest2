@@ -147,8 +147,8 @@ GOTOSTMT -> 'goto' 'label'
 
 FORBLOCK -> 'for' 'id' FORBLOCKPRIME
 
-FORBLOCKPRIME -> VARIABLE ':=' EXPR to EXPR 'step' EXPR 'do' STMT
-FORBLOCKPRIME -> ':=' EXPR to EXPR 'step' EXPR 'do' STMT
+FORBLOCKPRIME -> VARIABLE ':=' EXPR 'to' EXPR 'step' EXPR 'do' STMT
+FORBLOCKPRIME -> ':=' EXPR 'to' EXPR 'step' EXPR 'do' STMT
 
 EXPR -> CONJ DISJ
 

@@ -649,8 +649,7 @@ void stmtprime() {
 			subprogcall();
 			break;
 		default:
-			std::cout << "default\n"; // no error
-      break;
+			error();
 	}
 }
 
@@ -663,8 +662,7 @@ void subprogcall() {
 			eat(')');
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -678,8 +676,7 @@ void exitstmt() {
 			eat(')');
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -691,8 +688,7 @@ void returnstmt() {
 			expr();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -704,8 +700,7 @@ void attrstmt() {
 			attrstmtprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -724,8 +719,7 @@ void attrstmtprime() {
 			expr();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -741,8 +735,7 @@ void ifblock() {
 			elseblock();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 
 	}
 }
@@ -758,8 +751,7 @@ void elseblock() {
 			eat(ELSE_TOKEN);
 			stmt();
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -771,8 +763,7 @@ void loopblock() {
 			stmt();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -787,8 +778,7 @@ void caseblock() {
 			caseblockprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -805,8 +795,7 @@ void caseblockprime() {
 			eat(END_TOKEN);
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -823,8 +812,7 @@ void caselist() {
 			eat(';');
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -839,8 +827,7 @@ void literallist() {
 		 	listerallistprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -853,8 +840,7 @@ void listerallistprime() {
 			literallist();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -866,8 +852,7 @@ void gotostmt() {
 			eat(LABEL_TOKEN);
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
@@ -880,13 +865,31 @@ void forblock() {
 			forblockprime();
 			break;
 		default:
-			std::cout << "error\n";
-			break;
+			error();
 	}
 }
 
-bool forblockprime() {
-	return true;
+//FORBLOCKPRIME -> VARIABLE ':=' EXPR to EXPR 'step' EXPR 'do' STMT
+//FORBLOCKPRIME -> ':=' EXPR to EXPR 'step' EXPR 'do' STMT
+void forblockprime() {
+	switch (t.id) {
+		case '[':
+		case ACCESS_TOKEN:
+			variable();
+		case ATTR_TOKEN:
+			eat(ATTR_TOKEN);
+			eat(ATTR_TOKEN);
+			expr();
+			eat(TO_TOKEN);
+			expr();
+			eat(STEP_TOKEN);
+			expr();
+			eat(DO_TOKEN);
+			stmt();
+			break;
+		default:
+			error();
+	}
 }
 
 void expr() {
@@ -1011,6 +1014,8 @@ void conj() {
 		case STRINGLITERAL_TOKEN 	:
 		case SUBRANGELITERAL_TOKEN 	: comp(); conjprime(); break;
 		default		  				: error();
+		case '&'	  : eat('&'); comp(); conjprime(); break;
+		default		  : error();
 	}
 }
 
@@ -1160,7 +1165,7 @@ void neg() {
 			mul();
 			break;
 		default:
-            std::cout << "error\n";
+            error();
             break;
 	}
 }
