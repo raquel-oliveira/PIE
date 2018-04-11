@@ -164,5 +164,7 @@ void print_token(int token) {
 		case RANGE_TOKEN:
 			std::cout << "RANGE_TOKEN";
 			break;
+		default:
+			std::cout << char(token);
 	}
 }
