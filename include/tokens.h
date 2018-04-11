@@ -66,4 +66,6 @@ struct Token {
 
 struct Token t;
 
+void print_token(int token);
+
 #endif
