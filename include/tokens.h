@@ -1,6 +1,8 @@
 #ifndef _TOKENS_H_
 #define _TOKENS_H_
 
+#include <iostream>
+
 enum Tokens {
 	ENDOFFILE_TOKEN = 128,
 	PROGRAM_TOKEN,

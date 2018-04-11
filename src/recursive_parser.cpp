@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "../include/tokens.h"
 #include "../include/recursive_parser.hpp"
 
 int main(int argc, char *argv[]) {
@@ -22,15 +21,30 @@ int main(int argc, char *argv[]) {
 
 void eat(int expected) {
 	if(t.id != expected) {
-		error();
+		std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+		std::cout << "		Expected: ";
+		print_token(expected);
+		std::cout << std::endl;
+		std::cout << "		Found: ";
+		print_token(t.id);
+		std::cout << std::endl;
+		if(t.lexeme != NULL) {
+			std::cout << " (with lexeme " << t.lexeme << ")";
+		}
+		std::cout << std::endl;
 	}
-	else {
-		next_token();
-	}
+	next_token();
 }
 
 void error() {
-	std::cout << "ERROR:Not expected symbol in line " << t.row << " column " << t.col << std::endl;
+	std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+	std::cout << "		Not expected symbol: ";
+	print_token(t.id);
+	std::cout << std::endl;
+	if(t.lexeme != NULL) {
+		std::cout << " (with lexeme " << t.lexeme << ")";
+	}
+	std::cout << std::endl;
 	next_token();
 }
 
@@ -97,7 +111,7 @@ void listconst() {
 void listconstprime() {
 	switch(t.id) {
 		case ID_TOKEN:
-			listconstprime();
+			listconst();
 			break;
 		case VAR_TOKEN:
 		case PROC_TOKEN:
