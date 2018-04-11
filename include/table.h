@@ -315,47 +315,133 @@ void initTable() {
     table[{ATTRSTMTPRIME, ACCESS_TOKEN}] = {VARIABLE, ATTR_TOKEN, EXPR};
     table[{ATTRSTMTPRIME, ATTR_TOKEN}] = {ATTR_TOKEN, EXPR};
     // IFBLOCK
-    table[{IFBLOCK, }] = {};
+    table[{IFBLOCK, IF_TOKEN}] = {IF_TOKEN, '(', EXPR, ')', STMT, ELSEBLOCK};
     // ELSEBLOCK
-    table[{ELSEBLOCK, }] = {};
+    table[{ELSEBLOCK, ';'}] = {};
+    table[{ELSEBLOCK, END_TOKEN}] = {};
+    table[{ELSEBLOCK, ELSE_TOKEN}] = {ELSE_TOKEN, STMT};
     // LOOPBLOCK
-    table[{LOOPBLOCK, }] = {};
+    table[{LOOPBLOCK, LOOP_TOKEN}] = {LOOP_TOKEN, STMT};
     // CASEBLOCK
-    table[{CASEBLOCK, }] = {};
+    table[{CASEBLOCK, CASE_TOKEN}] = {CASE_TOKEN, EXPR, OF_TOKEN, CASELIST, CASEBLOCKPRIME};
     // CASEBLOCKPRIME
-    table[{CASEBLOCKPRIME, }] = {};
+    table[{CASEBLOCKPRIME, END_TOKEN}] = {END_TOKEN};
+    table[{CASEBLOCKPRIME, ELSE_TOKEN}] = {ELSE_TOKEN, STMT, END_TOKEN};
     // CASELIST
-    table[{CASELIST, }] = {};
+    table[{CASELIST, INT_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, REAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, CHAR_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, STRING_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, SUBRANGELITERAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
     // LITERALLIST
-    table[{LITERALLIST, }] = {};
+    table[{LITERALLIST, INT_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, REAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, CHAR_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, STRING_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, SUBRANGELITERAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
     // LISTERALLISTPRIME
-    table[{LISTERALLISTPRIME, }] = {};
+    table[{LISTERALLISTPRIME, ','}] = {',', LITERALLIST};
     // GOTOSTMT
-    table[{GOTOSTMT, }] = {};
+    table[{GOTOSTMT, GOTO_TOKEN}] = {GOTO_TOKEN, LABEL_TOKEN};
     // FORBLOCK
-    table[{FORBLOCK, }] = {};
+    table[{FORBLOCK, FOR_TOKEN}] = {FOR_TOKEN, ID_TOKEN, FORBLOCKPRIME};
     // FORBLOCKPRIME
-    table[{FORBLOCKPRIME, }] = {};
+    table[{FORBLOCKPRIME, '['}] = {VARIABLE,  ATTR_TOKEN, EXPR, TO_TOKEN, EXPR, STEP_TOKEN, EXPR, DO_TOKEN, STMT};
+    table[{FORBLOCKPRIME, ACCESS_TOKEN}] = {VARIABLE,  ATTR_TOKEN, EXPR, TO_TOKEN, EXPR, STEP_TOKEN, EXPR, DO_TOKEN, STMT};
+    table[{FORBLOCKPRIME, ATTR_TOKEN}] = {ATTR_TOKEN, EXPR, TO_TOKEN, EXPR, STEP_TOKEN, EXPR, DO_TOKEN, STMT};
     // EXPR
-    table[{EXPR, }] = {};
+    table[{EXPR, ID_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, '('}] = {CONJ, DISJ};
+    table[{EXPR, '!'}] = {CONJ, DISJ};
+    table[{EXPR, INT_TOKEN] = {CONJ, DISJ};
+    table[{EXPR, REAL_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, CHAR_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, STRING_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, SUBRANGELITERAL_TOKEN}] = {CONJ, DISJ};
     // DISJ
-    table[{DISJ, }] = {};
+    table[{DISJ, ';'}] = {};
+    table[{DISJ, ']'}] = {};
+    table[{DISJ, OF_TOKEN}] = {};
+    table[{DISJ, ','}] = {};
+    table[{DISJ, ')'}] = {};
+    table[{DISJ, END_TOKEN}] = {};
+    table[{DISJ, ELSE_TOKEN}] = {};
+    table[{DISJ, TO_TOKEN}] = {};
+    table[{DISJ, STEP_TOKEN}] = {};
+    table[{DISJ, DO_TOKEN}] = {};
+    table[{DISJ, OR_TOKEN}] = {OR_TOKEN, CONJ};
     // FINAL_TERM
-    table[{FINAL_TERM, }] = {};
+    table[{FINAL_TERM, ID_TOKEN}] = {ID_TOKEN, FINAL_TERMPRIME};
+    table[{FINAL_TERM, INT_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, REAL_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, CHAR_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, STRING_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, SUBRANGELITERAL_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, '('}] = {'(', EXPR, ')'};
     // FINAL_TERMPRIME
-    table[{FINAL_TERMPRIME, }] = {};
+    table[{FINAL_TERMPRIME, '['}] = {VARIABLE};
+    table[{FINAL_TERMPRIME, ACCESS_TOKEN}] = {VARIABLE};
+    table[{FINAL_TERMPRIME, ';'}] = {};
+    table[{FINAL_TERMPRIME, ']'}] = {};
+    table[{FINAL_TERMPRIME, OF_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, ','}] = {};
+    table[{FINAL_TERMPRIME, ')'}] = {};
+    table[{FINAL_TERMPRIME, END_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, ELSE_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, TO_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, STEP_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, DO_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, OR_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, '+'}] = {};
+    table[{FINAL_TERMPRIME, '-'}] = {};
+    table[{FINAL_TERMPRIME, '*'}] = {};
+    table[{FINAL_TERMPRIME, '/'}] = {};
+    table[{FINAL_TERMPRIME, '%'}] = {};
+    table[{FINAL_TERMPRIME, EQUAL_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, DIFF_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, '<'}] = {};
+    table[{FINAL_TERMPRIME, LE_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, '>'}] = {};
+    table[{FINAL_TERMPRIME, GE_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, AND_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, '('}] = {SUBPROGCALL};
     // ADD_OP
-    table[{ADD_OP, }] = {};
+    table[{ADD_OP, '+'}] = {'+'};
+    table[{ADD_OP, '-'}] = {'-'};
     // MUL_OP
-    table[{MUL_OP, }] = {};
+    table[{MUL_OP, '*'}] = {'*'};
+    table[{MUL_OP, '/'}] = {'/'};
+    table[{MUL_OP, '%'}] = {'%'};
     // EQUALITY_OP
-    table[{EQUALITY_OP, }] = {};
+    table[{EQUALITY_OP, EQUAL_TOKEN}] = {EQUAL_TOKEN};
+    table[{EQUALITY_OP, DIFF_TOKEN}] = {DIFF_TOKEN};
     // RELATIONAL_OP
-    table[{RELATIONAL_OP, }] = {};
+    table[{RELATIONAL_OP, '<'}] = {'<'};
+    table[{RELATIONAL_OP, '>'}] = {'>'};
+    table[{RELATIONAL_OP, LE_TOKEN}] = {LE_TOKEN};
+    table[{RELATIONAL_OP, GE_TOKEN}] = {GE_TOKEN};
     // CONJ
-    table[{CONJ, }] = {};
+    table[{CONJ, ID_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, '('}] = {COMP, CONJPRIME};
+    table[{CONJ, '!'}] = {COMP, CONJPRIME};
+    table[{CONJ, INT_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, REAL_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, CHAR_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, STRING_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, SUBRANGELITERAL_TOKEN}] = {COMP, CONJPRIME};
     // CONJPRIME
-    table[{CONJPRIME, }] = {};
+    table[{CONJPRIME, ';'}] = {};
+    table[{CONJPRIME, ']'}] = {};
+    table[{CONJPRIME, OF_TOKEN}] = {};
+    table[{CONJPRIME, ','}] = {};
+    table[{CONJPRIME, ')'}] = {};
+    table[{CONJPRIME, END_TOKEN}] = {};
+    table[{CONJPRIME, ELSE_TOKEN}] = {};
+    table[{CONJPRIME, TO_TOKEN}] = {};
+    table[{CONJPRIME, STEP_TOKEN}] = {};
+    table[{CONJPRIME, DO_TOKEN}] = {};
+    table[{CONJPRIME, OR_TOKEN}] = {};
+    table[{CONJPRIME, AND_TOKEN}] = {AND_TOKEN, COMP};
     // COMP
     table[{COMP, }] = {};
     // COMPPRIME
