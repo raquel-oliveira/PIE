@@ -18,22 +18,23 @@ void update_token(int id, int row, int col, char* lexeme) {
 
 %}
 
-LETTER        [a-zA-Z]
-DIGIT         [0-9]
-INTLITERAL    ("-"|"+")?{DIGIT}+
-EXPONENT      ([E|e]("+"|"-")?({DIGIT}+))
-R             ([0-9]*[.])?[0-9]+
-R2 	 		  ([0-9]*[.])?[0-9]+{EXPONENT}?
-REALLITERAL   (("-"|"+")?{R}|("-"|"+")?{R2})
-NEW_LINE      (\n)
-TAB           [ \t]+
-STRINGLITERAL \"[^"\n]*\"
-LINECOMMENT   "#"((.)*)\n
-CHARLITERAL   \'[^']*\'
-ID            {LETTER}({LETTER}|{DIGIT}|"_")*
-LABEL         @({LETTER}|{DIGIT}|"_")*
-WHITESPACE    [ \t\v\f]*
-UNACCEPTABLE  .
+LETTER          [a-zA-Z]
+DIGIT           [0-9]
+INTLITERAL      ("-"|"+")?{DIGIT}+
+EXPONENT        ([E|e]("+"|"-")?({DIGIT}+))
+R               ([0-9]*[.])?[0-9]+
+R2 	 		    ([0-9]*[.])?[0-9]+{EXPONENT}?
+REALLITERAL     (("-"|"+")?{R}|("-"|"+")?{R2})
+NEW_LINE        (\n)
+TAB             [ \t]+
+STRINGLITERAL   \"[^"\n]*\"
+SUBRANGELITERAL (INTLITERAL".."INTLITERAL)|(LETTER".."LETTER)
+LINECOMMENT     "#"((.)*)\n
+CHARLITERAL     \'[^']*\'
+ID              {LETTER}({LETTER}|{DIGIT}|"_")*
+LABEL           @({LETTER}|{DIGIT}|"_")*
+WHITESPACE      [ \t\v\f]*
+UNACCEPTABLE    .
 
 %%
 
