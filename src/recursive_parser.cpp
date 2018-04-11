@@ -22,30 +22,30 @@ int main(int argc, char *argv[]) {
 void eat(int expected) {
 	if(t.id != expected) {
 		std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
-		std::cout << "		Expected: ";
+		std::cout << "	Expected: ";
 		print_token(expected);
 		std::cout << std::endl;
-		std::cout << "		Found: ";
+		std::cout << "	Found: ";
 		print_token(t.id);
-		std::cout << std::endl;
 		if(t.lexeme != NULL) {
 			std::cout << " (with lexeme " << t.lexeme << ")";
 		}
 		std::cout << std::endl;
 	}
-	next_token();
+	if(t.id != ENDOFFILE_TOKEN)
+		next_token();
 }
 
 void error() {
 	std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
-	std::cout << "		Not expected symbol: ";
+	std::cout << "	Not expected symbol: ";
 	print_token(t.id);
-	std::cout << std::endl;
 	if(t.lexeme != NULL) {
 		std::cout << " (with lexeme " << t.lexeme << ")";
 	}
 	std::cout << std::endl;
-	next_token();
+	if(t.id != ENDOFFILE_TOKEN)
+		next_token();
 }
 
 void prog() {
@@ -396,7 +396,16 @@ void vars() {
 
 void varlistlist() {
 	switch(t.id) {
+		case '(':
 		case ID_TOKEN:
+		case INT_TOKEN:
+		case REAL_TOKEN:
+		case BOOL_TOKEN:
+		case CHAR_TOKEN:
+		case STRING_TOKEN:
+		case ARRAY_TOKEN:
+		case SET_TOKEN:
+		case RECORD_TOKEN:
 			varlist();
 			varlistlistprime();
 			break;
@@ -657,7 +666,9 @@ void stmt() {
 //STMTPRIME -> SUBPROGCALL
 void stmtprime() {
 	switch(t.id) {
-		case ID_TOKEN:
+		case '[':
+		case ACCESS_TOKEN:
+		case ATTR_TOKEN:
 			attrstmt();
 			break;
 		case '(':
@@ -707,21 +718,9 @@ void returnstmt() {
 	}
 }
 
-//ATTRSTMT -> 'id' ATTRSTMTPRIME
+//ATTRSTMT -> VARIABLE ':=' EXPR
+//ATTRSTMT -> ':=' EXPR
 void attrstmt() {
-	switch (t.id) {
-		case ID_TOKEN:
-			eat(ID_TOKEN);
-			attrstmtprime();
-			break;
-		default:
-			error();
-	}
-}
-
-//ATTRSTMTPRIME -> VARIABLE ':=' EXPR
-//ATTRSTMTPRIME -> ':=' EXPR
-void attrstmtprime() {
 	switch (t.id) {
 		case '[':
 		case ACCESS_TOKEN:
@@ -839,17 +838,19 @@ void literallist() {
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
 		case SUBRANGE_TOKEN:
-		 	listerallistprime();
+		 	literallistprime();
 			break;
 		default:
 			error();
 	}
 }
 
-//LISTERALLISTPRIME -> LAMBDA
-//LISTERALLISTPRIME -> ',' LITERALLIST
-void listerallistprime() {
+//LITERALLISTPRIME -> LAMBDA
+//LITERALLISTPRIME -> ',' LITERALLIST
+void literallistprime() {
 	switch (t.id) {
+		case ':':
+			break;
 		case ',':
 			eat(',');
 			literallist();
@@ -892,7 +893,6 @@ void forblockprime() {
 		case ACCESS_TOKEN:
 			variable();
 		case ATTR_TOKEN:
-			eat(ATTR_TOKEN);
 			eat(ATTR_TOKEN);
 			expr();
 			eat(TO_TOKEN);
@@ -1277,7 +1277,6 @@ void mul() {
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
 		case SUBRANGELITERAL_TOKEN:
-			mul();
 			final_term();
 			mulprime();
 			break;
@@ -1294,6 +1293,27 @@ void mulprime() {
 			mul_op();
 			final_term();
 			mulprime();
+			break;
+		case ';':
+		case ']':
+		case OF_TOKEN:
+		case ',':
+		case ')':
+		case END_TOKEN:
+		case ELSE_TOKEN:
+		case TO_TOKEN:
+		case STEP_TOKEN:
+		case DO_TOKEN:
+		case OR_TOKEN:
+		case '+':
+		case '-':
+		case EQUAL_TOKEN:
+		case DIFF_TOKEN:
+		case '<':
+		case LE_TOKEN:
+		case '>':
+		case GE_TOKEN:
+		case AND_TOKEN:
 			break;
 		default:
 			error();

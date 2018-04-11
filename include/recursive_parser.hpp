@@ -54,7 +54,7 @@ void caseblock();
 void caseblockprime();
 void caselist();
 void literallist();
-void listerallistprime();
+void literallistprime();
 void gotostmt();
 void forblock();
 void forblockprime();
