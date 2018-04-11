@@ -1,6 +1,8 @@
 #ifndef _TOKENS_H_
 #define _TOKENS_H_
 
+#include <iostream>
+
 enum Tokens {
 	ENDOFFILE_TOKEN = 128,
 	PROGRAM_TOKEN,
@@ -67,5 +69,7 @@ struct Token {
 };
 
 struct Token t;
+
+void print_token(int token);
 
 #endif
