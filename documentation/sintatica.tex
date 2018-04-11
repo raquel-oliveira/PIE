@@ -140,7 +140,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={variable}, language=pie]
 <variable> ::= `->' id  <variableprime>                 | 
-               `[' <exprlist+> `]' < variableprime>
+               `[' <exprlistplus> `]' < variableprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={variableprime}, language=pie]
@@ -286,7 +286,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={sumprime}, language=pie]
 <sumprime> ::= `'                       | 
-              <add-op> <neg> <sumprime>
+              <add_op> <neg> <sumprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={neg}, language=pie]
@@ -295,54 +295,54 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={mul}, language=pie]
-<mul> ::= <final-term> <mulprime>
+<mul> ::= <final_term> <mulprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={mulprime}, language=pie]
 <mulprime> ::= `'                              | 
-                <mul-op> <final-term> <mulprime>
+                <mul_op> <final_term> <mulprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={relationalprime}, language=pie]
 <relationalprime> ::= `'                    | 
-                      <relational-op> <sum>
+                      <relational_op> <sum>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={comprime}, language=pie]
 <comprime> ::= `' |
-              <equality-op> <relational>
+              <equality_op> <relational>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={final-term}, language=pie]
-<final-term> ::= id <final-termprime> | 
+\begin{lstlisting}[frame=single, label={final_term}, language=pie]
+<final_term> ::= id <final_termprime> | 
                 <literal>             | 
                 `(' <expr> `)'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={final-termprime}, language=pie]
-<final-termprime> ::= `'         | 
+\begin{lstlisting}[frame=single, label={final_termprime}, language=pie]
+<final_termprime> ::= `'         | 
                     <variable>   | 
                     <subprogcall>  
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={add-op}, language=pie]
-<add-op> ::= `+' | 
+\begin{lstlisting}[frame=single, label={add_op}, language=pie]
+<add_op> ::= `+' | 
              `-'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={mul-op}, language=pie]
-<mul-op> ::= `*' | 
+\begin{lstlisting}[frame=single, label={mul_op}, language=pie]
+<mul_op> ::= `*' | 
              `/' |
              `%'
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={equality-op}, language=pie]
-<equality-op> ::= `==' | 
+\begin{lstlisting}[frame=single, label={equality_op}, language=pie]
+<equality_op> ::= `==' | 
                   `!='
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={relational-op}, language=pie]
-<relational-op> ::= `<' | 
+\begin{lstlisting}[frame=single, label={relational_op}, language=pie]
+<relational_op> ::= `<' | 
 	   	    `<=' |
 		    `>'  |
 		    `>='
@@ -358,16 +358,16 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={exprlist}, language=pie]
 <exprlist> ::= `' | 
-               <exprlist+>
+               <exprlistplus>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={exprlist+}, language=pie]
-<exprlist+> ::= <expr> <exprlist+prime> 
+\begin{lstlisting}[frame=single, label={exprlistplus}, language=pie]
+<exprlistplus> ::= <expr> <exprlistplusprime> 
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={exprlist+prime}, language=pie]
-<exprlist+prime> ::= `'              |
-                     `,' < exprlist+> 
+\begin{lstlisting}[frame=single, label={exprlistplusprime}, language=pie]
+<exprlistplusprime> ::= `'              |
+                     `,' < exprlistplus> 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subprograms}, language=pie]

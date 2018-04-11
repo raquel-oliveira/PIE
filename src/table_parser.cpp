@@ -6,8 +6,8 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	initLexer(argv[1]);
-	nextToken();
-	initTable();
+	next_token();
+	init_table();
 	std::stack<int> stack;
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
 		stack.push(PROG);
@@ -24,13 +24,13 @@ void eat(int expected) {
 		error();
 	}
 	else {
-		nextToken();
+		next_token();
 	}
 }
 
 void error() {
 	std::cout << "ERROR: Not expected symbol in line " << t.row << " column " << t.col << std::endl;
-	nextToken();
+	next_token();
 }
 
 void error_recovery(std::stack<int>& stack) {
@@ -41,7 +41,7 @@ void error_recovery(std::stack<int>& stack) {
 		stack.pop();
 	}
 	while(t.id != ';') {
-		nextToken();
+		next_token();
 	} 
 }
 
@@ -66,7 +66,6 @@ void table_parser(std::stack<int>& stack) {
 			else {
 				push_rule(table[{top, t.id}], sizeof(table[{top, t.id}]) / sizeof(int), stack);
 				stack.pop();
-
 			}
 		}
 	}
