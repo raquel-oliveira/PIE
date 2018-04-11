@@ -4,6 +4,7 @@
 #include "include/tokens.h"
 
 int num_line = 1, num_column = 1;
+struct Token t;
 
 void update_column(int yyleng) {
 	num_column += yyleng;
@@ -127,3 +128,4 @@ void next_token() {
 void init_lexer(char* arg) {
 	yyin = fopen(arg, "r");
 }
+

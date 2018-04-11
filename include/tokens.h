@@ -68,8 +68,6 @@ struct Token {
 	char* lexeme;
 };
 
-struct Token t;
-
 void print_token(int token);
 
 #endif
