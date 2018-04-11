@@ -10,7 +10,7 @@ const
 
 type
     TRange = FIRST..LAST;
-    TVector = vecay [TRange] of int;
+    TVector = array [TRange] of int;
 
 var
     int i, j, tmp;
