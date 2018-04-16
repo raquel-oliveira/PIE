@@ -706,7 +706,7 @@ void subprogcall() {
 	}
 }
 
-//EXISTSTMT -> 'exitwhen' '(' EXPR ')'
+//EXITSTMT -> 'exitwhen' '(' EXPR ')'
 void exitstmt() {
 	switch (t.id) {
 		case EXITWHEN_TOKEN:
@@ -1549,6 +1549,7 @@ void param() {
 	switch (t.id) {
 		case ')':
 			break;
+		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
 		case REAL_TOKEN:
@@ -1557,7 +1558,6 @@ void param() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
-		case '(':
 		case RECORD_TOKEN:
 			paramlistlist();
 			break;
@@ -1568,6 +1568,7 @@ void param() {
 
 void paramlistlist() {
 	switch(t.id) {
+		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
 		case REAL_TOKEN:
@@ -1576,7 +1577,6 @@ void paramlistlist() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
-		case '(':
 		case RECORD_TOKEN:
 			paramlist();
 			paramlistlistprime();
