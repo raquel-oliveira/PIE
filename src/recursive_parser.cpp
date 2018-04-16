@@ -803,7 +803,6 @@ void ifblock() {
 	}
 }
 
-//ELSEBLOCK -> LAMBDA
 //ELSEBLOCK -> 'else' STMT
 void elseblock() {
 	switch(t.id){
@@ -813,6 +812,7 @@ void elseblock() {
 		case ELSE_TOKEN:
 			eat(ELSE_TOKEN);
 			stmt();
+			break;
 		default:
 			error();
 	}
