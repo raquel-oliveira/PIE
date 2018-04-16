@@ -1626,6 +1626,7 @@ void param() {
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
 		case RECORD_TOKEN:
+		case REF_TOKEN:
 			paramlistlist();
 			break;
 		default:
@@ -1645,6 +1646,7 @@ void paramlistlist() {
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
 		case RECORD_TOKEN:
+		case REF_TOKEN:
 			paramlist();
 			paramlistlistprime();
 			break;
@@ -1678,6 +1680,11 @@ void paramlist() {
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
 		case RECORD_TOKEN:
+			types();
+			idlist();
+			break;
+		case REF_TOKEN:
+			eat(REF_TOKEN);
 			types();
 			idlist();
 			break;
