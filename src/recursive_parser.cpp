@@ -242,9 +242,7 @@ void subrangelist() {
 	switch(t.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
-			eat(RANGE_TOKEN);
-			subrangetype();
-			subrangelistprime();
+			subrangeprime();
 			break;
 		case INT_TOKEN:
 			eat(INT_TOKEN);
@@ -256,6 +254,22 @@ void subrangelist() {
 			eat(CHAR_TOKEN);
 			eat(RANGE_TOKEN);
 			subrangetype();
+			subrangelistprime();
+			break;
+		default:
+			error();
+	}
+}
+
+void subrangeprime() {
+	switch(t.id) {
+		case RANGE_TOKEN:
+			eat(RANGE_TOKEN);
+			subrangetype();
+			subrangelistprime();
+			break;
+		case ']':
+		case ',':
 			subrangelistprime();
 			break;
 		default:
@@ -697,9 +711,7 @@ void exitstmt() {
 	switch (t.id) {
 		case EXITWHEN_TOKEN:
 			eat(EXITWHEN_TOKEN);
-			eat('(');
 			expr();
-			eat(')');
 			break;
 		default:
 			error();
@@ -742,9 +754,10 @@ void ifblock() {
 	switch(t.id){
 		case IF_TOKEN:
 			eat(IF_TOKEN);
-			eat('(');
 			expr();
-			eat(')');
+			std::cout << std::endl;
+			print_token(t.id);
+			std::cout << std::endl;
 			stmt();
 			elseblock();
 			break;
@@ -932,14 +945,29 @@ void disj() {
 		case OF_TOKEN:
 		case ',':
 		case ')':
+		case ID_TOKEN:
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case FOR_TOKEN:
+		case GOTO_TOKEN:
 		case ELSE_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
 			break;
 		case OR_TOKEN:
 			eat(OR_TOKEN);
+			conj();
 			break;
 		default:
 			error();
@@ -972,15 +1000,26 @@ void final_term() {
 void final_termprime() {
 	switch(t.id) {
 		case '[':
+		case ACCESS_TOKEN:
 			variable();
 			break;
 		case ';':
 		case ']':
 		case OF_TOKEN:
+		case ID_TOKEN:
 		case ',':
 		case ')':
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
 		case ELSE_TOKEN:
+		case IF_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case GOTO_TOKEN:
+		case FOR_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
@@ -997,6 +1036,10 @@ void final_termprime() {
 		case '<':
 		case GE_TOKEN:
 		case AND_TOKEN:
+		case WRITELN_TOKEN:
+		case WRITE_TOKEN:
+		case READLN_TOKEN:
+		case READ_TOKEN:
 			break;
 		case '(':
 			subprogcall();
@@ -1092,12 +1135,27 @@ void conjprime() {
 		case OF_TOKEN:
 		case ',':
 		case ')':
+		case ID_TOKEN:
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case FOR_TOKEN:
+		case GOTO_TOKEN:
 		case ELSE_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
-		case OR_TOKEN:break;
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
+		case OR_TOKEN:
+			break;
 		case AND_TOKEN:
 			eat(AND_TOKEN);
 			comp();
@@ -1116,6 +1174,7 @@ void comp() {
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
 			relational();
 			compprime();
 			break;
@@ -1127,18 +1186,32 @@ void comp() {
 
 void compprime() {
 	switch(t.id) {
+		case ID_TOKEN:
 		case ';':
 		case ']':
 		case OF_TOKEN:
 		case ',':
 		case ')':
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
 		case ELSE_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case GOTO_TOKEN:
+		case FOR_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
 		case OR_TOKEN:
 		case AND_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
 			break;
 		case EQUAL_TOKEN:
 		case DIFF_TOKEN:
@@ -1170,13 +1243,23 @@ void relational() {
 
 void relationalprime() {
 	switch(t.id) {
+		case ID_TOKEN:
 		case ';':
 		case ']':
 		case OF_TOKEN:
 		case ',':
 		case ')':
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
 		case ELSE_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case GOTO_TOKEN:
+		case FOR_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
@@ -1184,6 +1267,10 @@ void relationalprime() {
 		case EQUAL_TOKEN:
 		case DIFF_TOKEN:
 		case AND_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
 			break;
 		case '<':
 		case LE_TOKEN:
@@ -1472,7 +1559,60 @@ void param() {
 		case SET_TOKEN:
 		case '(':
 		case RECORD_TOKEN:
-			varlistlist();
+			paramlistlist();
+			break;
+		default:
+			error();
+	}
+}
+
+void paramlistlist() {
+	switch(t.id) {
+		case ID_TOKEN:
+		case INT_TOKEN:
+		case REAL_TOKEN:
+		case BOOL_TOKEN:
+		case CHAR_TOKEN:
+		case STRING_TOKEN:
+		case ARRAY_TOKEN:
+		case SET_TOKEN:
+		case '(':
+		case RECORD_TOKEN:
+			paramlist();
+			paramlistlistprime();
+			break;
+		default:
+			error();
+	}
+}
+
+void paramlistlistprime() {
+	switch(t.id) {
+		case ')':
+			break;
+		case ';':
+			eat(';');
+			paramlistlist();
+			break;
+		default:
+			error();
+	}
+}
+
+void paramlist() {
+	switch(t.id) {
+		case '(':
+		case ID_TOKEN:
+		case INT_TOKEN:
+		case REAL_TOKEN:
+		case BOOL_TOKEN:
+		case CHAR_TOKEN:
+		case STRING_TOKEN:
+		case ARRAY_TOKEN:
+		case SET_TOKEN:
+		case RECORD_TOKEN:
+			types();
+			idlist();
 			break;
 		default:
 			error();
@@ -1511,6 +1651,7 @@ void readstmt() {
 			eat(READ_TOKEN);
 			eat('(');
 			eat(ID_TOKEN);
+			variableprime();
 			eat(')');
 			break;
 		default:
@@ -1524,6 +1665,7 @@ void readlnstmt() {
 			eat(READLN_TOKEN);
 			eat('(');
 			eat(ID_TOKEN);
+			variableprime();
 			eat(')');
 			break;
 		default:

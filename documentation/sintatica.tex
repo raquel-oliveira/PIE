@@ -61,10 +61,16 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangelist}, language=pie]
-<subrangelist> ::= id `..' <subrangetype> <subrangelistprime>  |
+<subrangelist> ::= id <subrangeprime>  |
                    int `..' <subrangetype> <subrangelistprime> |
                    char `..' <subrangetype> <subrangelistprime>
 \end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangeprime}, language=pie]
+<subrangeprime> ::= <subrangelistprime>  |
+                   `..' <subrangetype> <subrangelistprime>
+\end{lstlisting}
+
 
 \begin{lstlisting}[frame=single, label={subrangelistprime}, language=pie]
 <subrangelistprime> ::=  `' |
@@ -189,7 +195,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={exitstmt}, language=pie]
-<exitstmt> ::= exitwhen `(' <expr> `)'
+<exitstmt> ::= exitwhen <expr>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={returnstmt}, language=pie]
@@ -202,7 +208,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={ifblock}, language=pie]
-<ifblock> ::= if `(' <expr> `)' <stmt> <elseblock> 
+<ifblock> ::= if <expr> <stmt> <elseblock> 
 \end{lstlisting}
 
 
@@ -387,7 +393,20 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={param}, language=pie]
 <param> ::= `'            |
-            <varlistlist>
+            <paramlistlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={paramlistlist}, language=pie]
+<paramlistlist> ::= `' | 
+                    `;' <paramlistlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={paramlistlist}, language=pie]
+<paramlist> ::= <types> <idlist>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={paramlistlistprime}, language=pie]
+<paramlistlistprime> ::= <paramlist> <paramlistlistprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={writestmt}, language=pie]
@@ -399,10 +418,10 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={readstmt}, language=pie]
-<readstmt> ::= read `(' id `)'
+<readstmt> ::= read `(' id <variableprime> `)'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={readlnstmt}, language=pie]
-<readlnstmt> ::= readln `(' id `)'
+<readlnstmt> ::= readln `(' id <variableprime> `)'
 \end{lstlisting}
 \end{footnotesize}
