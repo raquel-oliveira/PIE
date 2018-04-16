@@ -794,9 +794,6 @@ void ifblock() {
 		case IF_TOKEN:
 			eat(IF_TOKEN);
 			expr();
-			std::cout << std::endl;
-			print_token(t.id);
-			std::cout << std::endl;
 			stmt();
 			elseblock();
 			break;
