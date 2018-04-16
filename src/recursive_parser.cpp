@@ -63,16 +63,18 @@ void prog() {
 	}
 }
 
+//DECL -> CONSTS USERTYPES VARS SUBPROGRAMS
 void decl() {
 	switch(t.id) {
+		case BEGIN_TOKEN:
 		case CONST_TOKEN:
-			consts();
 		case TYPE_TOKEN:
-			usertypes();
 		case VAR_TOKEN:
-			vars();
 		case PROC_TOKEN:
 		case FUNC_TOKEN:
+			consts();
+			usertypes();
+			vars();
 			subprograms();
 			break;
 		default:
@@ -80,6 +82,8 @@ void decl() {
 	}
 }
 
+//CONSTS -> ''
+//CONSTS -> 'const' LISTCONST
 void consts() {
 	switch(t.id) {
 		case CONST_TOKEN:
@@ -97,6 +101,7 @@ void consts() {
 	}
 }
 
+//LISTCONST -> CONSTDECL LISTCONSTPRIME
 void listconst() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -108,6 +113,7 @@ void listconst() {
 	}
 }
 
+//LISTCONSTPRIME -> LISTCONST
 void listconstprime() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -124,6 +130,7 @@ void listconstprime() {
 	}
 }
 
+//CONSTDECL -> 'id' '=' EXPR ';'
 void constdecl() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -137,6 +144,8 @@ void constdecl() {
 	}
 }
 
+//TYPES -> 'id' TYPESPRIME
+//TYPES -> PRIMTYPES
 void types() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -151,7 +160,7 @@ void types() {
 		case ARRAY_TOKEN:
 		case RECORD_TOKEN:
 		case SET_TOKEN:
-		case ENUM_TOKEN:
+		case '(':
 			primtypes();
 			break;
 		default:
@@ -159,6 +168,8 @@ void types() {
 	}
 }
 
+//TYPESPRIME -> ''
+//TYPESPRIME -> '..' SUBRANGETYPE
 void typesprime() {
 	switch(t.id) {
 		case RANGE_TOKEN:
@@ -173,6 +184,15 @@ void typesprime() {
 	}
 }
 
+// PRIMTYPES -> 'int' PRIMTYPESPRIME
+// PRIMTYPES -> 'real'
+// PRIMTYPES -> 'bool'
+// PRIMTYPES -> 'char' PRIMTYPESPRIME
+// PRIMTYPES -> 'string'
+// PRIMTYPES -> ARRAYTYPE
+// PRIMTYPES -> SETTYPE
+// PRIMTYPES -> ENUMTYPE
+// PRIMTYPES -> RECORDTYPE
 void primtypes() {
 	switch(t.id) {
 		case INT_TOKEN:
@@ -209,6 +229,8 @@ void primtypes() {
 	}
 }
 
+//PRIMTYPESPRIME -> '..' SUBRANGETYPE
+//PRIMTYPESPRIME -> ''
 void primtypesprime() {
 	switch(t.id) {
 		case RANGE_TOKEN:
@@ -223,6 +245,7 @@ void primtypesprime() {
 	}
 }
 
+//ARRAYTYPE -> 'array' '[' SUBRANGELIST ']' 'of' TYPES
 void arraytype() {
 	switch(t.id) {
 		case ARRAY_TOKEN:
@@ -706,7 +729,7 @@ void subprogcall() {
 	}
 }
 
-//EXISTSTMT -> 'exitwhen' '(' EXPR ')'
+//EXITSTMT -> 'exitwhen' '(' EXPR ')'
 void exitstmt() {
 	switch (t.id) {
 		case EXITWHEN_TOKEN:
@@ -1577,6 +1600,7 @@ void param() {
 	switch (t.id) {
 		case ')':
 			break;
+		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
 		case REAL_TOKEN:
@@ -1585,7 +1609,6 @@ void param() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
-		case '(':
 		case RECORD_TOKEN:
 			paramlistlist();
 			break;
@@ -1596,6 +1619,7 @@ void param() {
 
 void paramlistlist() {
 	switch(t.id) {
+		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
 		case REAL_TOKEN:
@@ -1604,7 +1628,6 @@ void paramlistlist() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
-		case '(':
 		case RECORD_TOKEN:
 			paramlist();
 			paramlistlistprime();
