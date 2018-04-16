@@ -556,10 +556,20 @@ void variableprime() {
 		case '%':
 		case '<':
 		case '>':
+		case ID_TOKEN:
 		case OF_TOKEN:
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
 		case ATTR_TOKEN:
+		case IF_TOKEN:
 		case ELSE_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case GOTO_TOKEN:
+		case FOR_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
@@ -569,6 +579,10 @@ void variableprime() {
 		case LE_TOKEN:
 		case GE_TOKEN:
 		case AND_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
 			break;
 		case '[':
 		case ACCESS_TOKEN:
@@ -590,7 +604,7 @@ void block() {
 			error();
 	}
 }
-/*** GODEIRO **/
+
 void stmts() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -684,7 +698,6 @@ void stmt() {
 			error();
 	}
 }
-/*** GODEIRO **/
 
 //STMTPRIME -> ATTRSTMT
 //STMTPRIME -> SUBPROGCALL
