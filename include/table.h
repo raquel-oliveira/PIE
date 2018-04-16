@@ -443,49 +443,188 @@ void initTable() {
     table[{CONJPRIME, OR_TOKEN}] = {};
     table[{CONJPRIME, AND_TOKEN}] = {AND_TOKEN, COMP};
     // COMP
-    table[{COMP, }] = {};
+    table[{COMP, ID_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, '('}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, '!'}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, INT_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, REAL_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, CHAR_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, STRING_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, SUBRANGELITERAL_TOKEN}] = {RELATIONAL, COMPPRIME};
     // COMPPRIME
-    table[{COMPPRIME, }] = {};
+    table[{COMPPRIME, ';'}] = {};
+    table[{COMPPRIME, ']'}] = {};
+    table[{COMPPRIME, OF_TOKEN}] = {};
+    table[{COMPPRIME, ','}] = {};
+    table[{COMPPRIME, ')'}] = {};
+    table[{COMPPRIME, END_TOKEN}] = {};
+    table[{COMPPRIME, ELSE_TOKEN}] = {};
+    table[{COMPPRIME, TO_TOKEN}] = {};
+    table[{COMPPRIME, STEP_TOKEN}] = {};
+    table[{COMPPRIME, DO_TOKEN}] = {};
+    table[{COMPPRIME, OR_TOKEN}] = {};
+    table[{COMPPRIME, AND_TOKEN}] = {};
+    table[{COMPPRIME, EQUAL_TOKEN}] = {EQUALITY_OP, RELATIONAL};
+    table[{COMPPRIME, DIFF_TOKEN}] = {EQUALITY_OP, RELATIONAL};
     // RELATIONAL
-    table[{RELATIONAL, }] = {};
+    table[{RELATIONAL, ID_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, '('}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, '!'}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, INT_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, REAL_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, CHAR_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, STRING_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, SUBRANGELITERAL_TOKEN}] = {SUM, RELATIONALPRIME};
     // RELATIONALPRIME
-    table[{RELATIONALPRIME, }] = {};
+    table[{RELATIONALPRIME, ';'}] = {};
+    table[{RELATIONALPRIME, ']'}] = {};
+    table[{RELATIONALPRIME, OF_TOKEN}] = {};
+    table[{RELATIONALPRIME, ','}] = {};
+    table[{RELATIONALPRIME, ')'}] = {};
+    table[{RELATIONALPRIME, END_TOKEN}] = {};
+    table[{RELATIONALPRIME, ELSE_TOKEN}] = {};
+    table[{RELATIONALPRIME, TO_TOKEN}] = {};
+    table[{RELATIONALPRIME, STEP_TOKEN}] = {};
+    table[{RELATIONALPRIME, DO_TOKEN}] = {};
+    table[{RELATIONALPRIME, OR_TOKEN}] = {};
+    table[{RELATIONALPRIME, EQUAL_TOKEN}] = {};
+    table[{RELATIONALPRIME, DIFF_TOKEN}] = {};
+    table[{RELATIONALPRIME, AND_TOKEN}] = {};
+    table[{RELATIONALPRIME, '<'}] = {RELATIONAL_OP, SUM};
+    table[{RELATIONALPRIME, LE_TOKEN}] = {RELATIONAL_OP, SUM};
+    table[{RELATIONALPRIME, '>'}] = {RELATIONAL_OP, SUM};
+    table[{RELATIONALPRIME, GE_TOKEN}] = {RELATIONAL_OP, SUM};
     // SUM
-    table[{SUM, }] = {};
+    table[{SUM, ID_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, '('}] = {NEG, SUMPRIME};
+    table[{SUM, '!'}] = {NEG, SUMPRIME};
+    table[{SUM, INT_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, REAL_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, CHAR_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, STRING_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, SUBRANGELITERAL_TOKENR}] = {NEG, SUMPRIME};
     // SUMPRIME
-    table[{SUMPRIME, }] = {};
+    table[{SUMPRIME, ';'}] = {};
+    table[{SUMPRIME, ']'}] = {};
+    table[{SUMPRIME, OF_TOKEN}] = {};
+    table[{SUMPRIME, ','}] = {};
+    table[{SUMPRIME, ')'}] = {};
+    table[{SUMPRIME, END_TOKEN}] = {};
+    table[{SUMPRIME, ELSE_TOKEN}] = {};
+    table[{SUMPRIME, TO_TOKEN}] = {};
+    table[{SUMPRIME, STEP_TOKEN}] = {};
+    table[{SUMPRIME, DO_TOKEN}] = {};
+    table[{SUMPRIME, OR_TOKEN}] = {};
+    table[{SUMPRIME, EQUAL_TOKEN}] = {};
+    table[{SUMPRIME, DIFF_TOKEN}] = {};
+    table[{SUMPRIME, '<'}] = {};
+    table[{SUMPRIME, LE_TOKEN}] = {};
+    table[{SUMPRIME, '>'}] = {};
+    table[{SUMPRIME, GE_TOKEN}] = {};
+    table[{SUMPRIME, AND_TOKEN}] = {};
+    table[{SUMPRIME, '+'}] = {ADD_OP, NEG, SUMPRIME};
+    table[{SUMPRIME, '-'}] = {ADD_OP, NEG, SUMPRIME};
     // NEG
-    table[{NEG, }] = {};
+    table[{NEG, ID_TOKEN}] = {MUL};
+    table[{NEG, '('}] = {MUL};
+    table[{NEG, INT_TOKEN}] = {MUL};
+    table[{NEG, REAL_TOKEN}] = {MUL};
+    table[{NEG, CHAR_TOKEN}] = {MUL};
+    table[{NEG, STRING_TOKEN}] = {MUL};
+    table[{NEG, SUBRANGELITERAL_TOKEN}] = {MUL};
+    table[{NEG, '!'}] = {'!', MUL};
     // MUL
-    table[{MUL, }] = {};
+    table[{MUL, ID_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, '('}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, INT_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, REAL_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, CHAR_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, STRING_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, SUBRANGELITERAL_TOKEN}] = {FINAL_TERM, MULPRIME};
     // MULPRIME
-    table[{MULPRIME, }] = {};
+    table[{MULPRIME, ';'}] = {};
+    table[{MULPRIME, ']'}] = {};
+    table[{MULPRIME, OF_TOKEN}] = {};
+    table[{MULPRIME, ','}] = {};
+    table[{MULPRIME, ')'}] = {};
+    table[{MULPRIME, END_TOKEN}] = {};
+    table[{MULPRIME, ELSE_TOKEN}] = {};
+    table[{MULPRIME, TO_TOKEN}] = {};
+    table[{MULPRIME, STEP_TOKEN}] = {};
+    table[{MULPRIME, DO_TOKEN}] = {};
+    table[{MULPRIME, OR_TOKEN}] = {};
+    table[{MULPRIME, '+'}] = {};
+    table[{MULPRIME, '-'}] = {};
+    table[{MULPRIME, EQUAL_TOKEN}] = {};
+    table[{MULPRIME, DIFF_TOKEN}] = {};
+    table[{MULPRIME, '<'}] = {};
+    table[{MULPRIME, LE_TOKEN}] = {};
+    table[{MULPRIME, '>'}] = {};
+    table[{MULPRIME, GE_TOKEN}] = {};
+    table[{MULPRIME, AND_TOKEN}] = {};
+    table[{MULPRIME, '*'}] = {MUL_OP, FINAL_TERM, MULPRIME};
+    table[{MULPRIME, '/'}] = {MUL_OP, FINAL_TERM, MULPRIME};
+    table[{MULPRIME, '%'}] = {MUL_OP, FINAL_TERM, MULPRIME};
     // LITERAL
-    table[{LITERAL, }] = {};
+    table[{LITERAL, INT_TOKEN}] = {INT_TOKEN};
+    table[{LITERAL, REAL_TOKEN}] = {REAL_TOKEN};
+    table[{LITERAL, CHAR_TOKEN}] = {CHAR_TOKEN};
+    table[{LITERAL, STRING_TOKEN}] = {STRING_TOKEN};
+    table[{LITERAL, SUBRANGELITERAL_TOKEN}] = {SUBRANGELITERAL_TOKEN};
     // EXPRLIST
-    table[{EXPRLIST, }] = {};
+    table[{EXPRLIST, ')'}] = {};
+    table[{EXPRLIST, ID_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, '('}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, '!'}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, INT_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, REAL_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, CHAR_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, STRING_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, SUBRANGELITERAL_TOKEN}] = {EXPRLISTPLUS};
     // EXPRLISTPLUS
-    table[{EXPRLISTPLUS, }] = {};
+    table[{EXPRLISTPLUS, ID_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, '('}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, '!'}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, INT_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, REAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, CHAR_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, STRING_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, SUBRANGELITERAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
     // EXPRLISTPLUSPRIME
-    table[{EXPRLISTPLUSPRIME, }] = {};
+    table[{EXPRLISTPLUSPRIME, ']'}] = {};
+    table[{EXPRLISTPLUSPRIME, ')'}] = {};
+    table[{EXPRLISTPLUSPRIME, ','}] = {',', EXPRLISTPLUS};
     // SUBPROGRAMS
-    table[{SUBPROGRAMS, }] = {};
+    table[{SUBPROGRAMS, BEGIN_TOKEN}] = {};
+    table[{SUBPROGRAMS, PROC_TOKEN}] = {PROCEDURE, SUBPROGRAMSPRIME};
+    table[{SUBPROGRAMS, FUNC_TOKEN}] = {FUNCTION, SUBPROGRAMSPRIME};
     // SUBPROGRAMSPRIME
-    table[{SUBPROGRAMSPRIME, }] = {};
+    table[{SUBPROGRAMSPRIME, BEGIN_TOKEN}] = {};
+    table[{SUBPROGRAMSPRIME, ';'}] = {';', SUBPROGRAMS};
     // PROCEDURE
-    table[{PROCEDURE, }] = {};
+    table[{PROCEDURE, PROC_TOKEN}] = {PROC_TOKEN, ID_TOKEN, '(', PARAM, ')', ';', DECL BLOCK};
     // FUNCTION
-    table[{FUNCTION, }] = {};
+    table[{FUNCTION, FUNC_TOKEN}] = {FUNC_TOKEN, TYPES, ID_TOKEN, '(', PARAM, ')', ';', DECL BLOCK};
     // PARAM
-    table[{PARAM, }] = {};
+    table[{PARAM, ')'}] = {};
+    table[{PARAM, ID_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, INT_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, REAL_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, BOOL_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, CHAR_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, STRING_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, ARRAY_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, SET_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, '('}] = {VARLISTLIST};
+    table[{PARAM, RECORD_TOKEN}] = {VARLISTLIST};
     // WRITESTMT
-    table[{WRITESTMT, }] = {};
+    table[{WRITESTMT, WRITE_TOKEN}] = {WRITE_TOKEN, '(', EXPR, ')',};
     // WRITELNSTMT
-    table[{WRITELNSTMT, }] = {};
+    table[{WRITELNSTMT, WRITELN_TOKEN}] = {WRITELN_TOKEN, '(', EXPR, ')'};
     // READSTMT
-    table[{READSTMT, }] = {};
+    table[{READSTMT, READ_TOKEN}] = {READ_TOKEN, '(', 'id', ')'};
     // READLNSTMT
-    table[{READLNSTMT, }] = {};
+    table[{READLNSTMT, READLN_TOKEN}] = {READLN_TOKEN, '(', 'id', ')'};
 }
 
 #endif
