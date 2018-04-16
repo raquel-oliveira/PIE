@@ -63,16 +63,18 @@ void prog() {
 	}
 }
 
+//DECL -> CONSTS USERTYPES VARS SUBPROGRAMS
 void decl() {
 	switch(t.id) {
+		case BEGIN_TOKEN:
 		case CONST_TOKEN:
-			consts();
 		case TYPE_TOKEN:
-			usertypes();
 		case VAR_TOKEN:
-			vars();
 		case PROC_TOKEN:
 		case FUNC_TOKEN:
+			consts();
+			usertypes();
+			vars();
 			subprograms();
 			break;
 		default:
@@ -80,6 +82,8 @@ void decl() {
 	}
 }
 
+//CONSTS -> ''
+//CONSTS -> 'const' LISTCONST
 void consts() {
 	switch(t.id) {
 		case CONST_TOKEN:
@@ -97,6 +101,7 @@ void consts() {
 	}
 }
 
+//LISTCONST -> CONSTDECL LISTCONSTPRIME
 void listconst() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -108,6 +113,7 @@ void listconst() {
 	}
 }
 
+//LISTCONSTPRIME -> LISTCONST
 void listconstprime() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -124,6 +130,7 @@ void listconstprime() {
 	}
 }
 
+//CONSTDECL -> 'id' '=' EXPR ';'
 void constdecl() {
 	switch(t.id) {
 		case ID_TOKEN:
