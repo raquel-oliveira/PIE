@@ -46,7 +46,7 @@ void error_recovery(std::stack<int>& stack) {
 }
 
 void push_rule(int rule[], int size, std::stack<int>& stack) {
-	for(int i = 0; i < size; i++) {
+	for(int i = size-1; i >= 0; i--) {
 		stack.push(rule[i]);
 	}
 }
