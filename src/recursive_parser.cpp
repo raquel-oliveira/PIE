@@ -144,6 +144,8 @@ void constdecl() {
 	}
 }
 
+//TYPES -> 'id' TYPESPRIME
+//TYPES -> PRIMTYPES
 void types() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -158,7 +160,7 @@ void types() {
 		case ARRAY_TOKEN:
 		case RECORD_TOKEN:
 		case SET_TOKEN:
-		case ENUM_TOKEN:
+		case '(':
 			primtypes();
 			break;
 		default:
@@ -166,6 +168,8 @@ void types() {
 	}
 }
 
+//TYPESPRIME -> ''
+//TYPESPRIME -> '..' SUBRANGETYPE
 void typesprime() {
 	switch(t.id) {
 		case RANGE_TOKEN:
@@ -180,6 +184,15 @@ void typesprime() {
 	}
 }
 
+// PRIMTYPES -> 'int' PRIMTYPESPRIME
+// PRIMTYPES -> 'real'
+// PRIMTYPES -> 'bool'
+// PRIMTYPES -> 'char' PRIMTYPESPRIME
+// PRIMTYPES -> 'string'
+// PRIMTYPES -> ARRAYTYPE
+// PRIMTYPES -> SETTYPE
+// PRIMTYPES -> ENUMTYPE
+// PRIMTYPES -> RECORDTYPE
 void primtypes() {
 	switch(t.id) {
 		case INT_TOKEN:
@@ -216,6 +229,8 @@ void primtypes() {
 	}
 }
 
+//PRIMTYPESPRIME -> '..' SUBRANGETYPE
+//PRIMTYPESPRIME -> ''
 void primtypesprime() {
 	switch(t.id) {
 		case RANGE_TOKEN:
@@ -230,6 +245,7 @@ void primtypesprime() {
 	}
 }
 
+//ARRAYTYPE -> 'array' '[' SUBRANGELIST ']' 'of' TYPES
 void arraytype() {
 	switch(t.id) {
 		case ARRAY_TOKEN:
