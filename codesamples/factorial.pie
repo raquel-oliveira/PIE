@@ -5,7 +5,7 @@
 
 program factorial;
 
-var 
+var
     int num, sum, i;
 
 begin
