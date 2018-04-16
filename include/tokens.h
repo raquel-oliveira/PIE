@@ -59,7 +59,8 @@ enum Tokens {
     SUBRANGELITERAL_TOKEN,
     ID_TOKEN,
     ERROR_TOKEN,
-	RANGE_TOKEN 
+	RANGE_TOKEN,
+    REF_TOKEN
  };
 
 struct Token {

@@ -78,6 +78,7 @@ subrange   		{ update_token(SUBRANGE_TOKEN, num_line, num_column, NULL); update_
 set        		{ update_token(SET_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 true			{ update_token(TRUE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 false			{ update_token(FALSE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
+ref				{ update_token(REF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 "+"             { update_token('+', num_line, num_column, NULL); update_column(yyleng); return 0; }
 "-"         	{ update_token('-', num_line, num_column, NULL); update_column(yyleng); return 0; }
