@@ -1304,13 +1304,23 @@ void sum() {
 
 void sumprime() {
 	switch(t.id) {
+		case ID_TOKEN:
 		case ';':
 		case ']':
 		case OF_TOKEN:
 		case ',':
 		case ')':
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
 		case ELSE_TOKEN:
+		case LOOP_TOKEN:
+		case CASE_TOKEN:
+		case GOTO_TOKEN:
+		case FOR_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
@@ -1322,6 +1332,10 @@ void sumprime() {
 		case '>':
 		case GE_TOKEN:
 		case AND_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN:
 			break;
 		case '+':
 		case '-':
@@ -1381,13 +1395,23 @@ void mulprime() {
 			final_term();
 			mulprime();
 			break;
+		case ID_TOKEN:
 		case ';':
 		case ']':
 		case OF_TOKEN:
 		case ',':
 		case ')':
 		case END_TOKEN:
+		case BEGIN_TOKEN:
+		case LABEL_TOKEN:
+		case EXITWHEN_TOKEN:
+		case RETURN_TOKEN:
+		case IF_TOKEN:
 		case ELSE_TOKEN:
+		case LOOP_TOKEN:
+		case GOTO_TOKEN:
+		case CASE_TOKEN:
+		case FOR_TOKEN:
 		case TO_TOKEN:
 		case STEP_TOKEN:
 		case DO_TOKEN:
@@ -1401,6 +1425,10 @@ void mulprime() {
 		case '>':
 		case GE_TOKEN:
 		case AND_TOKEN:
+		case WRITE_TOKEN:
+		case WRITELN_TOKEN:
+		case READ_TOKEN:
+		case READLN_TOKEN
 			break;
 		default:
 			error();
