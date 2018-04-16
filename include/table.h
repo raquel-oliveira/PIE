@@ -103,6 +103,7 @@ void initTable() {
     table[{DECL, CONST_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
     table[{DECL, TYPE_TOKEN}] = {USERTYPES, VARS, SUBPROGRAMS};
     table[{DECL, VAR_TOKEN}] = {VARS, SUBPROGRAMS};
+    table[{DECL, BEGIN_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
     table[{DECL, FUNC_TOKEN}] = {SUBPROGRAMS};
     table[{DECL, PROC_TOKEN}] = {SUBPROGRAMS};
     // CONSTS
@@ -132,6 +133,7 @@ void initTable() {
     table[{TYPES, STRING_TOKEN}] = {};
     table[{TYPES, ARRAY_TOKEN}] = {};
     table[{TYPES, RECORD_TOKEN}] = {};
+    table[{TYPES, '('}] = {};
     table[{TYPES, SET_TOKEN}] = {};
     table[{TYPES, ENUM_TOKEN}] = {};
     // TYPESPRIME
