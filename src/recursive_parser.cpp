@@ -1451,7 +1451,7 @@ void mulprime() {
 		case WRITE_TOKEN:
 		case WRITELN_TOKEN:
 		case READ_TOKEN:
-		case READLN_TOKEN
+		case READLN_TOKEN:
 			break;
 		default:
 			error();
