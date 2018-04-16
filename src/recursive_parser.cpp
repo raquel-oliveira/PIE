@@ -371,6 +371,8 @@ void listusertypesprime() {
 	switch(t.id) {
 		case VAR_TOKEN:
 		case BEGIN_TOKEN:
+		case PROC_TOKEN:
+		case FUNC_TOKEN:
 			break;
 		case ID_TOKEN:
 			listusertypes();
@@ -430,7 +432,6 @@ void varlistlist() {
 
 void varlistlistprime() {
 	switch(t.id) {
-		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
 		case REAL_TOKEN:
@@ -439,6 +440,7 @@ void varlistlistprime() {
 		case STRING_TOKEN:
 		case ARRAY_TOKEN:
 		case SET_TOKEN:
+		case '(':
 		case RECORD_TOKEN:
 			varlistlist();
 			break;
@@ -581,7 +583,7 @@ void block() {
 			error();
 	}
 }
-
+/*** GODEIRO **/
 void stmts() {
 	switch(t.id) {
 		case ID_TOKEN:
@@ -675,6 +677,7 @@ void stmt() {
 			error();
 	}
 }
+/*** GODEIRO **/
 
 //STMTPRIME -> ATTRSTMT
 //STMTPRIME -> SUBPROGCALL
