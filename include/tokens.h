@@ -37,7 +37,6 @@ enum Tokens {
     STRING_TOKEN,
     ARRAY_TOKEN,
     RECORD_TOKEN,
-    ENUM_TOKEN,
     SUBRANGE_TOKEN,
     SET_TOKEN,
     TRUE_TOKEN,

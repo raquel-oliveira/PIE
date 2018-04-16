@@ -73,7 +73,6 @@ char       		{ update_token(CHAR_TOKEN, num_line, num_column, NULL); update_colu
 string     		{ update_token(STRING_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 array      		{ update_token(ARRAY_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 record     		{ update_token(RECORD_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
-enum       		{ update_token(ENUM_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 subrange   		{ update_token(SUBRANGE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 set        		{ update_token(SET_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 true			{ update_token(TRUE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
