@@ -114,7 +114,7 @@ STMTPRIME -> SUBPROGCALL
 
 SUBPROGCALL -> '(' EXPRLIST ')'
 
-EXISTSTMT -> 'exitwhen' EXPR
+EXITSTMT -> 'exitwhen' EXPR
 
 RETURNSTMT -> 'return' EXPR
 
