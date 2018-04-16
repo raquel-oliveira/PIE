@@ -12,16 +12,16 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={consts}, language=pie]
-<consts> ::= `'                    | 
+<consts> ::= `'                    |
              const <listconst> `;'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={listconst}, language=pie]
-<listconst> ::=  <constdecl> <listconstprime]>
+<listconst> ::=  <constdecl> <listconstprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={listconstprime}, language=pie]
-<listconstprime> ::=  `'  | 
+<listconstprime> ::=  `'  |
 		    <listconst>
 \end{lstlisting}
 
@@ -37,12 +37,12 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \begin{lstlisting}[frame=single, label={typesprime}, language=pie]
 <typesprime> ::= `'                  |
                  `..' <subrangetype>
-           
+
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={primtypes}, language=pie]
 <primtypes> ::= int <primtypesprime>    |
-                real                    | 
+                real                    |
                 bool                    |
                 char   <primtypesprime> |
                 string                  |
@@ -74,11 +74,11 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={subrangelistprime}, language=pie]
 <subrangelistprime> ::=  `' |
-	                 `,' <subrangelist>          
+	                 `,' <subrangelist>
 \end{lstlisting}
 \begin{lstlisting}[frame=single, label={subrangetype}, language=pie]
 <subrangetype> ::= id     |
-                   int    | 
+                   int    |
                    char
 \end{lstlisting}
 
@@ -140,18 +140,18 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={idattr}, language=pie]
-<idattr> ::= `'         | 
-             `=' <expr> 
+<idattr> ::= `'         |
+             `=' <expr>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={variable}, language=pie]
-<variable> ::= `->' id  <variableprime>                 | 
+<variable> ::= `->' id  <variableprime>                 |
                `[' <exprlistplus> `]' < variableprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={variableprime}, language=pie]
 <variableprime> ::= `'         |
-                    <variable> 
+                    <variable>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={block}, language=pie]
@@ -168,7 +168,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={stmt}, language=pie]
-<stmt> ::= `'             | 
+<stmt> ::= `'             |
            label <stmt>   |
            <block>        |
            <writestmt>    |
@@ -208,7 +208,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={ifblock}, language=pie]
-<ifblock> ::= if <expr> <stmt> <elseblock> 
+<ifblock> ::= if <expr> <stmt> <elseblock>
 \end{lstlisting}
 
 
@@ -240,7 +240,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 
 \begin{lstlisting}[frame=single, label={literallistprime}, language=pie]
 <literallistprime> ::= `' |
-                       `,' <literallist> 
+                       `,' <literallist>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={gotostmt}, language=pie]
@@ -270,7 +270,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={conjprime}, language=pie]
-<conjprime> ::=  `'           | 
+<conjprime> ::=  `'           |
                  `&&' <comp>
 \end{lstlisting}
 
@@ -287,12 +287,12 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={sumprime}, language=pie]
-<sumprime> ::= `'                       | 
+<sumprime> ::= `'                       |
               <add_op> <neg> <sumprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={neg}, language=pie]
-<neg> ::= <mul>         | 
+<neg> ::= <mul>         |
           `!' <mul>
 \end{lstlisting}
 
@@ -301,12 +301,12 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={mulprime}, language=pie]
-<mulprime> ::= `'                              | 
+<mulprime> ::= `'                              |
                 <mul_op> <final_term> <mulprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={relationalprime}, language=pie]
-<relationalprime> ::= `'                    | 
+<relationalprime> ::= `'                    |
                       <relational_op> <sum>
 \end{lstlisting}
 
@@ -316,60 +316,60 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={final_term}, language=pie]
-<final_term> ::= id <final_termprime> | 
-                <literal>             | 
+<final_term> ::= id <final_termprime> |
+                <literal>             |
                 `(' <expr> `)'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={final_termprime}, language=pie]
-<final_termprime> ::= `'         | 
-                    <variable>   | 
-                    <subprogcall>  
+<final_termprime> ::= `'         |
+                    <variable>   |
+                    <subprogcall>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={add_op}, language=pie]
-<add_op> ::= `+' | 
+<add_op> ::= `+' |
              `-'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={mul_op}, language=pie]
-<mul_op> ::= `*' | 
+<mul_op> ::= `*' |
              `/' |
              `%'
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={equality_op}, language=pie]
-<equality_op> ::= `==' | 
+<equality_op> ::= `==' |
                   `!='
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={relational_op}, language=pie]
-<relational_op> ::= `<' | 
+<relational_op> ::= `<' |
 	   	    `<=' |
 		    `>'  |
 		    `>='
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={literal}, language=pie]
-<literal> ::= intliteral        | 
-              realiteral        | 
+<literal> ::= intliteral        |
+              realiteral        |
               charliteral       |
               stringliteral     |
               <subrangeliteral>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={exprlist}, language=pie]
-<exprlist> ::= `' | 
+<exprlist> ::= `' |
                <exprlistplus>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={exprlistplus}, language=pie]
-<exprlistplus> ::= <expr> <exprlistplusprime> 
+<exprlistplus> ::= <expr> <exprlistplusprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={exprlistplusprime}, language=pie]
 <exprlistplusprime> ::= `'              |
-                     `,' < exprlistplus> 
+                     `,' < exprlistplus>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subprograms}, language=pie]
@@ -384,7 +384,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={procedure}, language=pie]
-<procedure> ::= proc id `(' <param> `)' `;' <decl> <block> 
+<procedure> ::= proc id `(' <param> `)' `;' <decl> <block>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={function}, language=pie]
@@ -397,7 +397,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={paramlistlist}, language=pie]
-<paramlistlist> ::= `' | 
+<paramlistlist> ::= `' |
                     `;' <paramlistlist>
 \end{lstlisting}
 
