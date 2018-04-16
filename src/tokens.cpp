@@ -101,8 +101,6 @@ void print_token(int token) {
 		case RECORD_TOKEN:
 			std::cout << "RECORD_TOKEN";
 			break;
-		case ENUM_TOKEN:
-			std::cout << "ENUM_TOKEN";
 			break;
 		case SUBRANGE_TOKEN:
 			std::cout << "SUBRANGE_TOKEN";
@@ -164,6 +162,8 @@ void print_token(int token) {
 		case RANGE_TOKEN:
 			std::cout << "RANGE_TOKEN";
 			break;
+		case REF_TOKEN:
+			std::cout << "REF_TOKEN";
 		default:
 			std::cout << char(token);
 	}

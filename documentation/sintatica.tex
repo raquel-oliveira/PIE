@@ -41,21 +41,17 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={primtypes}, language=pie]
-<primtypes> ::= int <primtypesprime>    |
-                real                    |
-                bool                    |
-                char   <primtypesprime> |
-                string                  |
-                <arraytype>             |
-                <settype>               |
-                <enumtype>              |
+<primtypes> ::= int <typesprime>    |
+                real                |
+                bool                |
+                char   <typesprime> |
+                string              |
+                <arraytype>         |
+                <settype>           |
+                <enumtype>          |
                 <recordtype>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={primtypesprime}, language=pie]
-	<primtypesprime> ::= `'  |
-	                    `..' <subrangetype>
-\end{lstlisting}
 \begin{lstlisting}[frame=single, label={arraytype}, language=pie]
 <arraytype> ::= array `[' <subrangelist> `]' of <types>
 \end{lstlisting}

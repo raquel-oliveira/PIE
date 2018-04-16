@@ -16,7 +16,6 @@ void constdecl();
 void types();
 void typesprime();
 void primtypes();
-void primtypesprime();
 void arraytype();
 void subrangelist();
 void subrangeprime();

@@ -184,10 +184,10 @@ void typesprime() {
 	}
 }
 
-// PRIMTYPES -> 'int' PRIMTYPESPRIME
+// PRIMTYPES -> 'int' TYPESPRIME
 // PRIMTYPES -> 'real'
 // PRIMTYPES -> 'bool'
-// PRIMTYPES -> 'char' PRIMTYPESPRIME
+// PRIMTYPES -> 'char' TYPESPRIME
 // PRIMTYPES -> 'string'
 // PRIMTYPES -> ARRAYTYPE
 // PRIMTYPES -> SETTYPE
@@ -197,7 +197,7 @@ void primtypes() {
 	switch(t.id) {
 		case INT_TOKEN:
 			eat(INT_TOKEN);
-			primtypesprime();
+			typesprime();
 			break;
 		case REAL_TOKEN:
 			eat(REAL_TOKEN);
@@ -207,7 +207,7 @@ void primtypes() {
 			break;
 		case CHAR_TOKEN:
 			eat(CHAR_TOKEN);
-			primtypesprime();
+			typesprime();
 			break;
 		case STRING_TOKEN:
 			eat(STRING_TOKEN);
@@ -221,24 +221,8 @@ void primtypes() {
 		case SET_TOKEN:
 			settype();
 			break;
-		case ENUM_TOKEN:
+		case '(':
 			enumtype();
-			break;
-		default:
-			error();
-	}
-}
-
-//PRIMTYPESPRIME -> '..' SUBRANGETYPE
-//PRIMTYPESPRIME -> ''
-void primtypesprime() {
-	switch(t.id) {
-		case RANGE_TOKEN:
-			eat(RANGE_TOKEN);
-			subrangetype();
-			break;
-		case ';':
-		case ID_TOKEN:
 			break;
 		default:
 			error();
@@ -745,7 +729,7 @@ void subprogcall() {
 	}
 }
 
-//EXITSTMT -> 'exitwhen' '(' EXPR ')'
+//EXITSTMT -> 'exitwhen' EXPR
 void exitstmt() {
 	switch (t.id) {
 		case EXITWHEN_TOKEN:
@@ -788,7 +772,7 @@ void attrstmt() {
 	}
 }
 
-// IFBLOCK -> 'if' '(' EXPR ')' STMT ELSEBLOCK
+// IFBLOCK -> 'if' EXPR STMT ELSEBLOCK
 void ifblock() {
 	switch(t.id){
 		case IF_TOKEN:
