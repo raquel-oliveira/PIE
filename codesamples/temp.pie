@@ -1,0 +1,11 @@
+program merge_sort;
+
+var
+    int x,y;
+
+begin
+    if 2 < 3 
+        begin
+            x := 3
+        end 
+end.

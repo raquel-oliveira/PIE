@@ -75,6 +75,6 @@ begin
     writeln('Sorted vector: ');
     for index := FIRST to LAST step 1 do
         begin
-           write(vector[index], ' ')
+           write(vector[index] + ' ')
         end
 end.
