@@ -5,12 +5,12 @@ int main(int argc, char *argv[]) {
 		std::cout << "Not enough arguments." << argc << std::endl;
 		return 0;
 	}
-	initLexer(argv[1]);
+	init_lexer(argv[1]);
 	next_token();
 	init_table();
 	std::stack<int> stack;
 	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
-		stack.push(PROG);
+		stack.push(PROGRAM);
 		table_parser(stack);
 	}
 	if(t.id == ERROR_TOKEN) {
@@ -21,16 +21,32 @@ int main(int argc, char *argv[]) {
 
 void eat(int expected) {
 	if(t.id != expected) {
-		error();
+		std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+		std::cout << "	Expected: ";
+		print_token(expected);
+		std::cout << std::endl;
+		std::cout << "	Found: ";
+		print_token(t.id);
+		if(t.lexeme != NULL) {
+			std::cout << " (with lexeme " << t.lexeme << ")";
+		}
+		std::cout << std::endl;
 	}
-	else {
+	if(t.id != ENDOFFILE_TOKEN) {
 		next_token();
 	}
 }
 
 void error() {
-	std::cout << "ERROR: Not expected symbol in line " << t.row << " column " << t.col << std::endl;
-	next_token();
+	std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+	std::cout << "	Not expected symbol: ";
+	print_token(t.id);
+	if(t.lexeme != NULL) {
+		std::cout << " (with lexeme " << t.lexeme << ")";
+	}
+	std::cout << std::endl;
+	if(t.id != ENDOFFILE_TOKEN)
+		next_token();
 }
 
 void error_recovery(std::stack<int>& stack) {
@@ -45,8 +61,8 @@ void error_recovery(std::stack<int>& stack) {
 	} 
 }
 
-void push_rule(int rule[], int size, std::stack<int>& stack) {
-	for(int i = size-1; i >= 0; i--) {
+void push_rule(std::vector<int>& rule, std::stack<int>& stack) {
+	for(int i = rule.size()-1; i >= 0; i--) {
 		stack.push(rule[i]);
 	}
 }
@@ -54,7 +70,7 @@ void push_rule(int rule[], int size, std::stack<int>& stack) {
 void table_parser(std::stack<int>& stack) {
 	while(!stack.empty()) {
 		int top = stack.top();
-		if(top < PROG) { //if top of stack is a terminal symbol
+		if(top < PROGRAM) { //if top of stack is a terminal symbol
 			eat(top);
 			stack.pop();
 		}
@@ -64,8 +80,8 @@ void table_parser(std::stack<int>& stack) {
 				error_recovery(stack);
 			}
 			else {
-				push_rule(table[{top, t.id}], sizeof(table[{top, t.id}]) / sizeof(int), stack);
 				stack.pop();
+				push_rule(table[{top, t.id}], stack);
 			}
 		}
 	}

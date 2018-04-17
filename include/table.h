@@ -17,9 +17,9 @@ enum NonTerminals {
     TYPES,
     TYPESPRIME,
     PRIMTYPES,
-    PRIMTYPESPRIME,
     ARRAYTYPE,
     SUBRANGELIST,
+    SUBRANGEPRIME,
     SUBRANGELISTPRIME,
     SUBRANGETYPE,
     SETTYPE,
@@ -28,7 +28,7 @@ enum NonTerminals {
     USERTYPES,
     LISTUSERTYPES,
     LISTUSERTYPESPRIME,
-    USERTYPES,
+    USERTYPE,
     VARS,
     VARLISTLIST,
     VARLISTLISTPRIME,
@@ -44,7 +44,7 @@ enum NonTerminals {
     STMT,
     STMTPRIME,
     SUBPROGCALL,
-    EXISTSTMT,
+    EXITSTMT,
     RETURNSTMT,
     ATTRSTMT,
     ATTRSTMTPRIME,
@@ -55,7 +55,7 @@ enum NonTerminals {
     CASEBLOCKPRIME,
     CASELIST,
     LITERALLIST,
-    LISTERALLISTPRIME,
+    LITERALLISTPRIME,
     GOTOSTMT,
     FORBLOCK,
     FORBLOCKPRIME,
@@ -87,6 +87,9 @@ enum NonTerminals {
     PROCEDURE,
     FUNCTION,
     PARAM,
+    PARAMLISTLIST,
+    PARAMLISTLISTPRIME,
+    PARAMLIST,
     WRITESTMT,
     WRITELNSTMT,
     READSTMT,
@@ -96,16 +99,16 @@ enum NonTerminals {
 std::map<std::pair<int, int>, std::vector<int>> table;
 
 
-void initTable() {
+void init_table() {
     //PROGRAM
-    table[{PROGRAM, PROGRAM_TOKEN}] = {PROGRAM_TOKEN, ID_TOKEN, ';', BLOCK, '.'};
+    table[{PROGRAM, PROGRAM_TOKEN}] = {PROGRAM_TOKEN, ID_TOKEN, ';', DECL, BLOCK, '.'};
     // DECL
     table[{DECL, CONST_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
-    table[{DECL, TYPE_TOKEN}] = {USERTYPES, VARS, SUBPROGRAMS};
-    table[{DECL, VAR_TOKEN}] = {VARS, SUBPROGRAMS};
+    table[{DECL, TYPE_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
+    table[{DECL, VAR_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
     table[{DECL, BEGIN_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
-    table[{DECL, FUNC_TOKEN}] = {SUBPROGRAMS};
-    table[{DECL, PROC_TOKEN}] = {SUBPROGRAMS};
+    table[{DECL, FUNC_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
+    table[{DECL, PROC_TOKEN}] = {CONSTS, USERTYPES, VARS, SUBPROGRAMS};
     // CONSTS
     table[{CONSTS, CONST_TOKEN}] = {CONST_TOKEN, LISTCONST};
     table[{CONSTS, VAR_TOKEN}] = {};
@@ -116,7 +119,7 @@ void initTable() {
     // LISTCONST
     table[{LISTCONST, ID_TOKEN}] = {CONSTDECL, LISTCONSTPRIME};
     // LISTCONSTPRIME
-    table[{LISTCONSTPRIME, ID_TOKEN}] = {LISTCONSTPRIME};
+    table[{LISTCONSTPRIME, ID_TOKEN}] = {LISTCONST};
     table[{LISTCONSTPRIME, VAR_TOKEN}] = {};
     table[{LISTCONSTPRIME, PROC_TOKEN}] = {};
     table[{LISTCONSTPRIME, FUNC_TOKEN}] = {};
@@ -126,40 +129,39 @@ void initTable() {
     table[{CONSTDECL, ID_TOKEN}] = {ID_TOKEN, '=', EXPR, ';'};
     // TYPES
     table[{TYPES, ID_TOKEN}] = {ID_TOKEN, TYPESPRIME};
-    table[{TYPES, INT_TOKEN}] = {};
-    table[{TYPES, REAL_TOKEN}] = {};
-    table[{TYPES, BOOL_TOKEN}] = {};
-    table[{TYPES, CHAR_TOKEN}] = {};
-    table[{TYPES, STRING_TOKEN}] = {};
-    table[{TYPES, ARRAY_TOKEN}] = {};
-    table[{TYPES, RECORD_TOKEN}] = {};
-    table[{TYPES, '('}] = {};
-    table[{TYPES, SET_TOKEN}] = {};
-    table[{TYPES, ENUM_TOKEN}] = {};
+    table[{TYPES, INT_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, REAL_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, BOOL_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, CHAR_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, STRING_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, ARRAY_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, RECORD_TOKEN}] = {PRIMTYPES};
+    table[{TYPES, '('}] = {PRIMTYPES};
+    table[{TYPES, SET_TOKEN}] = {PRIMTYPES};
     // TYPESPRIME
     table[{TYPESPRIME, RANGE_TOKEN}] = {RANGE_TOKEN, SUBRANGETYPE};
     table[{TYPESPRIME, ID_TOKEN}] = {};
     table[{TYPESPRIME, ';'}] = {};
     // PRIMTYPES
-    table[{PRIMTYPES, INT_TOKEN}] = {INT_TOKEN, PRIMTYPESPRIME};
+    table[{PRIMTYPES, INT_TOKEN}] = {INT_TOKEN, TYPESPRIME};
     table[{PRIMTYPES, REAL_TOKEN}] = {REAL_TOKEN};
     table[{PRIMTYPES, BOOL_TOKEN}] = {BOOL_TOKEN};
-    table[{PRIMTYPES, CHAR_TOKEN}] = {CHAR_TOKEN, PRIMTYPESPRIME};
+    table[{PRIMTYPES, CHAR_TOKEN}] = {CHAR_TOKEN, TYPESPRIME};
     table[{PRIMTYPES, STRING_TOKEN}] = {STRING_TOKEN};
     table[{PRIMTYPES, ARRAY_TOKEN}] = {ARRAYTYPE};
     table[{PRIMTYPES, RECORD_TOKEN}] = {RECORDTYPE};
     table[{PRIMTYPES, SET_TOKEN}] = {SETTYPE};
-    table[{PRIMTYPES, ENUM_TOKEN}] = {ENUMTYPE};
-    // PRIMTYPESPRIME
-    table[{PRIMTYPESPRIME, RANGE_TOKEN}] = {RANGE_TOKEN, SUBRANGETYPE};
-    table[{PRIMTYPESPRIME, ID_TOKEN}] = {};
-    table[{PRIMTYPESPRIME, ';'}] = {};
+    table[{PRIMTYPES, '('}] = {ENUMTYPE};
     // ARRAYTYPE
     table[{ARRAYTYPE, ARRAY_TOKEN}] = {ARRAY_TOKEN, '[', SUBRANGELIST, ']', OF_TOKEN, TYPES};
     // SUBRANGELIST
-    table[{SUBRANGELIST, ID_TOKEN}] = {ID_TOKEN, RANGE_TOKEN, SUBRANGETYPE, SUBRANGELISTPRIME};
+    table[{SUBRANGELIST, ID_TOKEN}] = {ID_TOKEN, SUBRANGEPRIME};
     table[{SUBRANGELIST, INT_TOKEN}] = {INT_TOKEN, RANGE_TOKEN, SUBRANGETYPE, SUBRANGELISTPRIME};
     table[{SUBRANGELIST, CHAR_TOKEN}] = {CHAR_TOKEN, RANGE_TOKEN, SUBRANGETYPE, SUBRANGELISTPRIME};
+    // SUBRANGEPRIME
+    table[{SUBRANGEPRIME, RANGE_TOKEN}] = {RANGE_TOKEN, SUBRANGETYPE, SUBRANGELISTPRIME};
+    table[{SUBRANGEPRIME, ']'}] = {SUBRANGELISTPRIME};
+    table[{SUBRANGEPRIME, ','}] = {SUBRANGELISTPRIME};
     // SUBRANGELISTPRIME
     table[{SUBRANGELISTPRIME, ','}] = {',', SUBRANGELIST};
     table[{SUBRANGELISTPRIME, ']'}] = {};
@@ -185,6 +187,8 @@ void initTable() {
     table[{LISTUSERTYPESPRIME, ID_TOKEN}] = {LISTUSERTYPES};
     table[{LISTUSERTYPESPRIME, VAR_TOKEN}] = {};
     table[{LISTUSERTYPESPRIME, BEGIN_TOKEN}] = {};
+    table[{LISTUSERTYPESPRIME, PROC_TOKEN}] = {};
+    table[{LISTUSERTYPESPRIME, FUNC_TOKEN}] = {};
     // USERTYPE
     table[{USERTYPE, ID_TOKEN}] = {ID_TOKEN, '=', TYPES, ';'};
     // VARS
@@ -194,6 +198,15 @@ void initTable() {
     table[{VARS, BEGIN_TOKEN}] = {};
     // VARLISTLIST
     table[{VARLISTLIST, ID_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, INT_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, REAL_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, BOOL_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, CHAR_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, STRING_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, ARRAY_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, SET_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, '('}] = {VARLIST, VARLISTLISTPRIME};
+    table[{VARLISTLIST, RECORD_TOKEN}] = {VARLIST, VARLISTLISTPRIME};
     // VARLISTLISTPRIME
     table[{VARLISTLISTPRIME, '('}] = {VARLISTLIST};
     table[{VARLISTLISTPRIME, ID_TOKEN}] = {VARLISTLIST};
@@ -205,7 +218,6 @@ void initTable() {
     table[{VARLISTLISTPRIME, ARRAY_TOKEN}] = {VARLISTLIST};
     table[{VARLISTLISTPRIME, SET_TOKEN}] = {VARLISTLIST};
     table[{VARLISTLISTPRIME, RECORD_TOKEN}] = {VARLISTLIST};
-    table[{VARLISTLISTPRIME, ')'}] = {};
     table[{VARLISTLISTPRIME, END_TOKEN}] = {};
     table[{VARLISTLISTPRIME, BEGIN_TOKEN}] = {};
     table[{VARLISTLISTPRIME, PROC_TOKEN}] = {};
@@ -230,13 +242,14 @@ void initTable() {
     // IDATTR
     table[{IDATTR, '='}] = {'=', EXPR};
     table[{IDATTR, ';'}] = {};
-    table[{IDATTR, '.'}] = {};
+    table[{IDATTR, ','}] = {};
     table[{IDATTR, ')'}] = {};
     // VARIABLE
     table[{VARIABLE, '['}] = {'[', EXPRLISTPLUS, ']', VARIABLEPRIME};
     table[{VARIABLE, ACCESS_TOKEN}] = {ACCESS_TOKEN, ID_TOKEN, VARIABLEPRIME};
     // VARIABLEPRIME
     table[{VARIABLEPRIME, ACCESS_TOKEN}] = {VARIABLE};
+    table[{VARIABLEPRIME, '['}] = {VARIABLE};
     table[{VARIABLEPRIME, ';'}] = {};
     table[{VARIABLEPRIME, ']'}] = {};
     table[{VARIABLEPRIME, ','}] = {};
@@ -248,10 +261,20 @@ void initTable() {
     table[{VARIABLEPRIME, '%'}] = {};
     table[{VARIABLEPRIME, '<'}] = {};
     table[{VARIABLEPRIME, '>'}] = {};
+    table[{VARIABLEPRIME, ID_TOKEN}] = {};
     table[{VARIABLEPRIME, OF_TOKEN}] = {};
     table[{VARIABLEPRIME, END_TOKEN}] = {};
+    table[{VARIABLEPRIME, BEGIN_TOKEN}] = {};
+    table[{VARIABLEPRIME, LABEL_TOKEN}] = {};
+    table[{VARIABLEPRIME, EXITWHEN_TOKEN}] = {};
+    table[{VARIABLEPRIME, RETURN_TOKEN}] = {};
     table[{VARIABLEPRIME, ATTR_TOKEN}] = {};
+    table[{VARIABLEPRIME, IF_TOKEN}] = {};
     table[{VARIABLEPRIME, ELSE_TOKEN}] = {};
+    table[{VARIABLEPRIME, LOOP_TOKEN}] = {};
+    table[{VARIABLEPRIME, CASE_TOKEN}] = {};
+    table[{VARIABLEPRIME, GOTO_TOKEN}] = {};
+    table[{VARIABLEPRIME, FOR_TOKEN}] = {};
     table[{VARIABLEPRIME, TO_TOKEN}] = {};
     table[{VARIABLEPRIME, STEP_TOKEN}] = {};
     table[{VARIABLEPRIME, DO_TOKEN}] = {};
@@ -261,6 +284,10 @@ void initTable() {
     table[{VARIABLEPRIME, LE_TOKEN}] = {};
     table[{VARIABLEPRIME, GE_TOKEN}] = {};
     table[{VARIABLEPRIME, AND_TOKEN}] = {};
+    table[{VARIABLEPRIME, WRITE_TOKEN}] = {};
+    table[{VARIABLEPRIME, WRITELN_TOKEN}] = {};
+    table[{VARIABLEPRIME, READ_TOKEN}] = {};
+    table[{VARIABLEPRIME, READLN_TOKEN}] = {};
     // BLOCK
     table[{BLOCK, BEGIN_TOKEN}] = {BEGIN_TOKEN, STMTS, END_TOKEN};
     // STMTS
@@ -284,40 +311,40 @@ void initTable() {
     table[{STMTLISTPRIME, ';'}] = {';', STMTS};
     table[{STMTLISTPRIME, END_TOKEN}] = {};
     // STMT
-    table[{STMT, LABEL_TOKEN}] = {LABEL_TOKEN, STMT};
-    table[{STMT, BEGIN_TOKEN}] = {BLOCK};
     table[{STMT, WRITE_TOKEN}] = {WRITESTMT};
     table[{STMT, WRITELN_TOKEN}] = {WRITELNSTMT};
     table[{STMT, READ_TOKEN}] = {READSTMT};
     table[{STMT, READLN_TOKEN}] = {READLNSTMT};
-    table[{STMT, LOOP_TOKEN}] = {LOOPBLOCK};
-    table[{STMT, IF_TOKEN}] = {IFBLOCK};
     table[{STMT, FOR_TOKEN}] = {FORBLOCK};
-    table[{STMT, CASE_TOKEN}] = {CASEBLOCK};
-    table[{STMT, GOTO_TOKEN}] = {GOTOSTMT};
-    table[{STMT, ID_TOKEN}] = {ID_TOKEN, STMTPRIME};
-    table[{STMT, EXITWHEN_TOKEN}] = {EXISTSTMT};
-    table[{STMT, RETURN_TOKEN}] = {READLNSTMT};
     table[{STMT, ';'}] = {};
     table[{STMT, END_TOKEN}] = {};
+    table[{STMT, BEGIN_TOKEN}] = {BLOCK};
+    table[{STMT, LABEL_TOKEN}] = {LABEL_TOKEN, STMT};
+    table[{STMT, EXITWHEN_TOKEN}] = {EXITSTMT};
+    table[{STMT, ID_TOKEN}] = {ID_TOKEN, STMTPRIME};
+    table[{STMT, RETURN_TOKEN}] = {RETURNSTMT};
+    table[{STMT, IF_TOKEN}] = {IFBLOCK};
     table[{STMT, ELSE_TOKEN}] = {};
+    table[{STMT, LOOP_TOKEN}] = {LOOPBLOCK};
+    table[{STMT, CASE_TOKEN}] = {CASEBLOCK};
+    table[{STMT, GOTO_TOKEN}] = {GOTOSTMT};
     // STMTPRIME
-    table[{STMTPRIME, ID_TOKEN}] = {ATTRSTMT};
+    table[{STMTPRIME, '['}] = {ATTRSTMT};
+    table[{STMTPRIME, ACCESS_TOKEN}] = {ATTRSTMT};
+    table[{STMTPRIME, ATTR_TOKEN}] = {ATTRSTMT};
     table[{STMTPRIME, '('}] = {SUBPROGCALL};
     // SUBPROGCALL
     table[{SUBPROGCALL, '('}] = {'(', EXPRLIST, ')'};
-    // EXISTSTMT
-    table[{EXISTSTMT, EXITWHEN_TOKEN}] = {EXITWHEN_TOKEN, '(', EXPR, ')'};
+    // EXITSTMT
+    table[{EXITSTMT, EXITWHEN_TOKEN}] = {EXITWHEN_TOKEN, EXPR};
     // RETURNSTMT
     table[{RETURNSTMT, RETURN_TOKEN}] = {RETURN_TOKEN, EXPR};
     // ATTRSTMT
-    table[{ATTRSTMT, ID_TOKEN}] = {ID_TOKEN, ATTRSTMTPRIME};
-    // ATTRSTMTPRIME
-    table[{ATTRSTMTPRIME, '['}] = {VARIABLE, ATTR_TOKEN, EXPR};
-    table[{ATTRSTMTPRIME, ACCESS_TOKEN}] = {VARIABLE, ATTR_TOKEN, EXPR};
-    table[{ATTRSTMTPRIME, ATTR_TOKEN}] = {ATTR_TOKEN, EXPR};
+    table[{ATTRSTMT, '['}] = {VARIABLE, ATTR_TOKEN, EXPR};
+    table[{ATTRSTMT, ACCESS_TOKEN}] = {VARIABLE, ATTR_TOKEN, EXPR};
+    table[{ATTRSTMT, ATTR_TOKEN}] = {ATTR_TOKEN, EXPR};
     // IFBLOCK
-    table[{IFBLOCK, IF_TOKEN}] = {IF_TOKEN, '(', EXPR, ')', STMT, ELSEBLOCK};
+    table[{IFBLOCK, IF_TOKEN}] = {IF_TOKEN, EXPR, STMT, ELSEBLOCK};
     // ELSEBLOCK
     table[{ELSEBLOCK, ';'}] = {};
     table[{ELSEBLOCK, END_TOKEN}] = {};
@@ -330,19 +357,20 @@ void initTable() {
     table[{CASEBLOCKPRIME, END_TOKEN}] = {END_TOKEN};
     table[{CASEBLOCKPRIME, ELSE_TOKEN}] = {ELSE_TOKEN, STMT, END_TOKEN};
     // CASELIST
-    table[{CASELIST, INT_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
-    table[{CASELIST, REAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
-    table[{CASELIST, CHAR_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
-    table[{CASELIST, STRING_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, INTLITERAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, REALLITERAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, CHARLITERAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
+    table[{CASELIST, STRINGLITERAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
     table[{CASELIST, SUBRANGELITERAL_TOKEN}] = {LITERALLIST, ':', STMT, ';'};
     // LITERALLIST
-    table[{LITERALLIST, INT_TOKEN}] = {LITERAL, LITERALLISTPRIME};
-    table[{LITERALLIST, REAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
-    table[{LITERALLIST, CHAR_TOKEN}] = {LITERAL, LITERALLISTPRIME};
-    table[{LITERALLIST, STRING_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, INTLITERAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, REALLITERAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, CHARLITERAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
+    table[{LITERALLIST, STRINGLITERAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
     table[{LITERALLIST, SUBRANGELITERAL_TOKEN}] = {LITERAL, LITERALLISTPRIME};
-    // LISTERALLISTPRIME
-    table[{LISTERALLISTPRIME, ','}] = {',', LITERALLIST};
+    // LITERALLISTPRIME
+    table[{LITERALLISTPRIME, ','}] = {',', LITERALLIST};
+    table[{LITERALLISTPRIME, ':'}] = {};
     // GOTOSTMT
     table[{GOTOSTMT, GOTO_TOKEN}] = {GOTO_TOKEN, LABEL_TOKEN};
     // FORBLOCK
@@ -355,41 +383,66 @@ void initTable() {
     table[{EXPR, ID_TOKEN}] = {CONJ, DISJ};
     table[{EXPR, '('}] = {CONJ, DISJ};
     table[{EXPR, '!'}] = {CONJ, DISJ};
-    table[{EXPR, INT_TOKEN] = {CONJ, DISJ};
-    table[{EXPR, REAL_TOKEN}] = {CONJ, DISJ};
-    table[{EXPR, CHAR_TOKEN}] = {CONJ, DISJ};
-    table[{EXPR, STRING_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, INTLITERAL_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, REALLITERAL_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, CHARLITERAL_TOKEN}] = {CONJ, DISJ};
+    table[{EXPR, STRINGLITERAL_TOKEN}] = {CONJ, DISJ};
     table[{EXPR, SUBRANGELITERAL_TOKEN}] = {CONJ, DISJ};
     // DISJ
+    table[{DISJ, ID_TOKEN}] = {};
     table[{DISJ, ';'}] = {};
     table[{DISJ, ']'}] = {};
     table[{DISJ, OF_TOKEN}] = {};
     table[{DISJ, ','}] = {};
     table[{DISJ, ')'}] = {};
     table[{DISJ, END_TOKEN}] = {};
+    table[{DISJ, BEGIN_TOKEN}] = {};
+    table[{DISJ, LABEL_TOKEN}] = {};
+    table[{DISJ, EXITWHEN_TOKEN}] = {};
+    table[{DISJ, RETURN_TOKEN}] = {};
+    table[{DISJ, IF_TOKEN}] = {};
     table[{DISJ, ELSE_TOKEN}] = {};
+    table[{DISJ, LOOP_TOKEN}] = {};
+    table[{DISJ, CASE_TOKEN}] = {};
+    table[{DISJ, GOTO_TOKEN}] = {};
+    table[{DISJ, FOR_TOKEN}] = {};
     table[{DISJ, TO_TOKEN}] = {};
     table[{DISJ, STEP_TOKEN}] = {};
     table[{DISJ, DO_TOKEN}] = {};
+    table[{DISJ, WRITE_TOKEN}] = {};
+    table[{DISJ, WRITELN_TOKEN}] = {};
+    table[{DISJ, READ_TOKEN}] = {};
+    table[{DISJ, READLN_TOKEN}] = {};
     table[{DISJ, OR_TOKEN}] = {OR_TOKEN, CONJ};
     // FINAL_TERM
     table[{FINAL_TERM, ID_TOKEN}] = {ID_TOKEN, FINAL_TERMPRIME};
-    table[{FINAL_TERM, INT_TOKEN}] = {LITERAL};
-    table[{FINAL_TERM, REAL_TOKEN}] = {LITERAL};
-    table[{FINAL_TERM, CHAR_TOKEN}] = {LITERAL};
-    table[{FINAL_TERM, STRING_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, INTLITERAL_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, REALLITERAL_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, CHARLITERAL_TOKEN}] = {LITERAL};
+    table[{FINAL_TERM, STRINGLITERAL_TOKEN}] = {LITERAL};
     table[{FINAL_TERM, SUBRANGELITERAL_TOKEN}] = {LITERAL};
     table[{FINAL_TERM, '('}] = {'(', EXPR, ')'};
     // FINAL_TERMPRIME
-    table[{FINAL_TERMPRIME, '['}] = {VARIABLE};
-    table[{FINAL_TERMPRIME, ACCESS_TOKEN}] = {VARIABLE};
+    table[{FINAL_TERMPRIME, ID_TOKEN}] = {};
     table[{FINAL_TERMPRIME, ';'}] = {};
+    table[{FINAL_TERMPRIME, '['}] = {VARIABLE};
     table[{FINAL_TERMPRIME, ']'}] = {};
     table[{FINAL_TERMPRIME, OF_TOKEN}] = {};
     table[{FINAL_TERMPRIME, ','}] = {};
+    table[{FINAL_TERMPRIME, '('}] = {SUBPROGCALL};
     table[{FINAL_TERMPRIME, ')'}] = {};
     table[{FINAL_TERMPRIME, END_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, ACCESS_TOKEN}] = {VARIABLE};
+    table[{FINAL_TERMPRIME, BEGIN_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, LABEL_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, EXITWHEN_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, RETURN_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, IF_TOKEN}] = {};
     table[{FINAL_TERMPRIME, ELSE_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, LOOP_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, CASE_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, GOTO_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, FOR_TOKEN}] = {};
     table[{FINAL_TERMPRIME, TO_TOKEN}] = {};
     table[{FINAL_TERMPRIME, STEP_TOKEN}] = {};
     table[{FINAL_TERMPRIME, DO_TOKEN}] = {};
@@ -406,7 +459,10 @@ void initTable() {
     table[{FINAL_TERMPRIME, '>'}] = {};
     table[{FINAL_TERMPRIME, GE_TOKEN}] = {};
     table[{FINAL_TERMPRIME, AND_TOKEN}] = {};
-    table[{FINAL_TERMPRIME, '('}] = {SUBPROGCALL};
+    table[{FINAL_TERMPRIME, WRITE_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, WRITELN_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, READ_TOKEN}] = {};
+    table[{FINAL_TERMPRIME, READLN_TOKEN}] = {};
     // ADD_OP
     table[{ADD_OP, '+'}] = {'+'};
     table[{ADD_OP, '-'}] = {'-'};
@@ -426,65 +482,103 @@ void initTable() {
     table[{CONJ, ID_TOKEN}] = {COMP, CONJPRIME};
     table[{CONJ, '('}] = {COMP, CONJPRIME};
     table[{CONJ, '!'}] = {COMP, CONJPRIME};
-    table[{CONJ, INT_TOKEN}] = {COMP, CONJPRIME};
-    table[{CONJ, REAL_TOKEN}] = {COMP, CONJPRIME};
-    table[{CONJ, CHAR_TOKEN}] = {COMP, CONJPRIME};
-    table[{CONJ, STRING_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, INTLITERAL_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, REALLITERAL_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, CHARLITERAL_TOKEN}] = {COMP, CONJPRIME};
+    table[{CONJ, STRINGLITERAL_TOKEN}] = {COMP, CONJPRIME};
     table[{CONJ, SUBRANGELITERAL_TOKEN}] = {COMP, CONJPRIME};
     // CONJPRIME
+    table[{CONJPRIME, ID_TOKEN}] = {};
     table[{CONJPRIME, ';'}] = {};
     table[{CONJPRIME, ']'}] = {};
     table[{CONJPRIME, OF_TOKEN}] = {};
     table[{CONJPRIME, ','}] = {};
     table[{CONJPRIME, ')'}] = {};
     table[{CONJPRIME, END_TOKEN}] = {};
+    table[{CONJPRIME, BEGIN_TOKEN}] = {};
+    table[{CONJPRIME, LABEL_TOKEN}] = {};
+    table[{CONJPRIME, EXITWHEN_TOKEN}] = {};
+    table[{CONJPRIME, RETURN_TOKEN}] = {};
+    table[{CONJPRIME, IF_TOKEN}] = {};
     table[{CONJPRIME, ELSE_TOKEN}] = {};
+    table[{CONJPRIME, LOOP_TOKEN}] = {};
+    table[{CONJPRIME, CASE_TOKEN}] = {};
+    table[{CONJPRIME, GOTO_TOKEN}] = {};
+    table[{CONJPRIME, FOR_TOKEN}] = {};
     table[{CONJPRIME, TO_TOKEN}] = {};
     table[{CONJPRIME, STEP_TOKEN}] = {};
     table[{CONJPRIME, DO_TOKEN}] = {};
     table[{CONJPRIME, OR_TOKEN}] = {};
+    table[{CONJPRIME, WRITE_TOKEN}] = {};
+    table[{CONJPRIME, WRITELN_TOKEN}] = {};
+    table[{CONJPRIME, READ_TOKEN}] = {};
+    table[{CONJPRIME, READLN_TOKEN}] = {};
     table[{CONJPRIME, AND_TOKEN}] = {AND_TOKEN, COMP};
     // COMP
     table[{COMP, ID_TOKEN}] = {RELATIONAL, COMPPRIME};
     table[{COMP, '('}] = {RELATIONAL, COMPPRIME};
     table[{COMP, '!'}] = {RELATIONAL, COMPPRIME};
-    table[{COMP, INT_TOKEN}] = {RELATIONAL, COMPPRIME};
-    table[{COMP, REAL_TOKEN}] = {RELATIONAL, COMPPRIME};
-    table[{COMP, CHAR_TOKEN}] = {RELATIONAL, COMPPRIME};
-    table[{COMP, STRING_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, INTLITERAL_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, REALLITERAL_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, CHARLITERAL_TOKEN}] = {RELATIONAL, COMPPRIME};
+    table[{COMP, STRINGLITERAL_TOKEN}] = {RELATIONAL, COMPPRIME};
     table[{COMP, SUBRANGELITERAL_TOKEN}] = {RELATIONAL, COMPPRIME};
     // COMPPRIME
+    table[{COMPPRIME, ID_TOKEN}] = {};
     table[{COMPPRIME, ';'}] = {};
     table[{COMPPRIME, ']'}] = {};
     table[{COMPPRIME, OF_TOKEN}] = {};
     table[{COMPPRIME, ','}] = {};
     table[{COMPPRIME, ')'}] = {};
     table[{COMPPRIME, END_TOKEN}] = {};
+    table[{COMPPRIME, BEGIN_TOKEN}] = {};
+    table[{COMPPRIME, LABEL_TOKEN}] = {};
+    table[{COMPPRIME, EXITWHEN_TOKEN}] = {};
+    table[{COMPPRIME, RETURN_TOKEN}] = {};
+    table[{COMPPRIME, IF_TOKEN}] = {};
     table[{COMPPRIME, ELSE_TOKEN}] = {};
+    table[{COMPPRIME, LOOP_TOKEN}] = {};
+    table[{COMPPRIME, CASE_TOKEN}] = {};
+    table[{COMPPRIME, GOTO_TOKEN}] = {};
+    table[{COMPPRIME, FOR_TOKEN}] = {};
     table[{COMPPRIME, TO_TOKEN}] = {};
     table[{COMPPRIME, STEP_TOKEN}] = {};
     table[{COMPPRIME, DO_TOKEN}] = {};
     table[{COMPPRIME, OR_TOKEN}] = {};
     table[{COMPPRIME, AND_TOKEN}] = {};
+    table[{COMPPRIME, WRITE_TOKEN}] = {};
+    table[{COMPPRIME, WRITELN_TOKEN}] = {};
+    table[{COMPPRIME, READ_TOKEN}] = {};
+    table[{COMPPRIME, READLN_TOKEN}] = {};
     table[{COMPPRIME, EQUAL_TOKEN}] = {EQUALITY_OP, RELATIONAL};
     table[{COMPPRIME, DIFF_TOKEN}] = {EQUALITY_OP, RELATIONAL};
     // RELATIONAL
     table[{RELATIONAL, ID_TOKEN}] = {SUM, RELATIONALPRIME};
     table[{RELATIONAL, '('}] = {SUM, RELATIONALPRIME};
     table[{RELATIONAL, '!'}] = {SUM, RELATIONALPRIME};
-    table[{RELATIONAL, INT_TOKEN}] = {SUM, RELATIONALPRIME};
-    table[{RELATIONAL, REAL_TOKEN}] = {SUM, RELATIONALPRIME};
-    table[{RELATIONAL, CHAR_TOKEN}] = {SUM, RELATIONALPRIME};
-    table[{RELATIONAL, STRING_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, INTLITERAL_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, REALLITERAL_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, CHARLITERAL_TOKEN}] = {SUM, RELATIONALPRIME};
+    table[{RELATIONAL, STRINGLITERAL_TOKEN}] = {SUM, RELATIONALPRIME};
     table[{RELATIONAL, SUBRANGELITERAL_TOKEN}] = {SUM, RELATIONALPRIME};
     // RELATIONALPRIME
+    table[{RELATIONALPRIME, ID_TOKEN}] = {};
     table[{RELATIONALPRIME, ';'}] = {};
     table[{RELATIONALPRIME, ']'}] = {};
     table[{RELATIONALPRIME, OF_TOKEN}] = {};
     table[{RELATIONALPRIME, ','}] = {};
     table[{RELATIONALPRIME, ')'}] = {};
     table[{RELATIONALPRIME, END_TOKEN}] = {};
+    table[{RELATIONALPRIME, BEGIN_TOKEN}] = {};
+    table[{RELATIONALPRIME, LABEL_TOKEN}] = {};
+    table[{RELATIONALPRIME, EXITWHEN_TOKEN}] = {};
+    table[{RELATIONALPRIME, RETURN_TOKEN}] = {};
+    table[{RELATIONALPRIME, IF_TOKEN}] = {};
     table[{RELATIONALPRIME, ELSE_TOKEN}] = {};
+    table[{RELATIONALPRIME, LOOP_TOKEN}] = {};
+    table[{RELATIONALPRIME, CASE_TOKEN}] = {};
+    table[{RELATIONALPRIME, GOTO_TOKEN}] = {};
+    table[{RELATIONALPRIME, FOR_TOKEN}] = {};
     table[{RELATIONALPRIME, TO_TOKEN}] = {};
     table[{RELATIONALPRIME, STEP_TOKEN}] = {};
     table[{RELATIONALPRIME, DO_TOKEN}] = {};
@@ -492,6 +586,10 @@ void initTable() {
     table[{RELATIONALPRIME, EQUAL_TOKEN}] = {};
     table[{RELATIONALPRIME, DIFF_TOKEN}] = {};
     table[{RELATIONALPRIME, AND_TOKEN}] = {};
+    table[{RELATIONALPRIME, WRITE_TOKEN}] = {};
+    table[{RELATIONALPRIME, WRITELN_TOKEN}] = {};
+    table[{RELATIONALPRIME, READ_TOKEN}] = {};
+    table[{RELATIONALPRIME, READLN_TOKEN}] = {};
     table[{RELATIONALPRIME, '<'}] = {RELATIONAL_OP, SUM};
     table[{RELATIONALPRIME, LE_TOKEN}] = {RELATIONAL_OP, SUM};
     table[{RELATIONALPRIME, '>'}] = {RELATIONAL_OP, SUM};
@@ -500,19 +598,29 @@ void initTable() {
     table[{SUM, ID_TOKEN}] = {NEG, SUMPRIME};
     table[{SUM, '('}] = {NEG, SUMPRIME};
     table[{SUM, '!'}] = {NEG, SUMPRIME};
-    table[{SUM, INT_TOKEN}] = {NEG, SUMPRIME};
-    table[{SUM, REAL_TOKEN}] = {NEG, SUMPRIME};
-    table[{SUM, CHAR_TOKEN}] = {NEG, SUMPRIME};
-    table[{SUM, STRING_TOKEN}] = {NEG, SUMPRIME};
-    table[{SUM, SUBRANGELITERAL_TOKENR}] = {NEG, SUMPRIME};
+    table[{SUM, INTLITERAL_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, REALLITERAL_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, CHARLITERAL_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, STRINGLITERAL_TOKEN}] = {NEG, SUMPRIME};
+    table[{SUM, SUBRANGELITERAL_TOKEN}] = {NEG, SUMPRIME};
     // SUMPRIME
+    table[{SUMPRIME, ID_TOKEN}] = {};
     table[{SUMPRIME, ';'}] = {};
     table[{SUMPRIME, ']'}] = {};
     table[{SUMPRIME, OF_TOKEN}] = {};
     table[{SUMPRIME, ','}] = {};
     table[{SUMPRIME, ')'}] = {};
     table[{SUMPRIME, END_TOKEN}] = {};
+    table[{SUMPRIME, BEGIN_TOKEN}] = {};
+    table[{SUMPRIME, LABEL_TOKEN}] = {};
+    table[{SUMPRIME, EXITWHEN_TOKEN}] = {};
+    table[{SUMPRIME, RETURN_TOKEN}] = {};
+    table[{SUMPRIME, IF_TOKEN}] = {};
     table[{SUMPRIME, ELSE_TOKEN}] = {};
+    table[{SUMPRIME, LOOP_TOKEN}] = {};
+    table[{SUMPRIME, CASE_TOKEN}] = {};
+    table[{SUMPRIME, GOTO_TOKEN}] = {};
+    table[{SUMPRIME, FOR_TOKEN}] = {};
     table[{SUMPRIME, TO_TOKEN}] = {};
     table[{SUMPRIME, STEP_TOKEN}] = {};
     table[{SUMPRIME, DO_TOKEN}] = {};
@@ -524,33 +632,47 @@ void initTable() {
     table[{SUMPRIME, '>'}] = {};
     table[{SUMPRIME, GE_TOKEN}] = {};
     table[{SUMPRIME, AND_TOKEN}] = {};
+    table[{SUMPRIME, WRITE_TOKEN}] = {};
+    table[{SUMPRIME, WRITELN_TOKEN}] = {};
+    table[{SUMPRIME, READ_TOKEN}] = {};
+    table[{SUMPRIME, READLN_TOKEN}] = {};
     table[{SUMPRIME, '+'}] = {ADD_OP, NEG, SUMPRIME};
     table[{SUMPRIME, '-'}] = {ADD_OP, NEG, SUMPRIME};
     // NEG
     table[{NEG, ID_TOKEN}] = {MUL};
     table[{NEG, '('}] = {MUL};
-    table[{NEG, INT_TOKEN}] = {MUL};
-    table[{NEG, REAL_TOKEN}] = {MUL};
-    table[{NEG, CHAR_TOKEN}] = {MUL};
-    table[{NEG, STRING_TOKEN}] = {MUL};
+    table[{NEG, INTLITERAL_TOKEN}] = {MUL};
+    table[{NEG, REALLITERAL_TOKEN}] = {MUL};
+    table[{NEG, CHARLITERAL_TOKEN}] = {MUL};
+    table[{NEG, STRINGLITERAL_TOKEN}] = {MUL};
     table[{NEG, SUBRANGELITERAL_TOKEN}] = {MUL};
     table[{NEG, '!'}] = {'!', MUL};
     // MUL
     table[{MUL, ID_TOKEN}] = {FINAL_TERM, MULPRIME};
     table[{MUL, '('}] = {FINAL_TERM, MULPRIME};
-    table[{MUL, INT_TOKEN}] = {FINAL_TERM, MULPRIME};
-    table[{MUL, REAL_TOKEN}] = {FINAL_TERM, MULPRIME};
-    table[{MUL, CHAR_TOKEN}] = {FINAL_TERM, MULPRIME};
-    table[{MUL, STRING_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, INTLITERAL_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, REALLITERAL_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, CHARLITERAL_TOKEN}] = {FINAL_TERM, MULPRIME};
+    table[{MUL, STRINGLITERAL_TOKEN}] = {FINAL_TERM, MULPRIME};
     table[{MUL, SUBRANGELITERAL_TOKEN}] = {FINAL_TERM, MULPRIME};
     // MULPRIME
+    table[{MULPRIME, ID_TOKEN}] = {};
     table[{MULPRIME, ';'}] = {};
     table[{MULPRIME, ']'}] = {};
     table[{MULPRIME, OF_TOKEN}] = {};
     table[{MULPRIME, ','}] = {};
     table[{MULPRIME, ')'}] = {};
     table[{MULPRIME, END_TOKEN}] = {};
+    table[{MULPRIME, BEGIN_TOKEN}] = {};
+    table[{MULPRIME, LABEL_TOKEN}] = {};
+    table[{MULPRIME, EXITWHEN_TOKEN}] = {};
+    table[{MULPRIME, RETURN_TOKEN}] = {};
+    table[{MULPRIME, IF_TOKEN}] = {};
     table[{MULPRIME, ELSE_TOKEN}] = {};
+    table[{MULPRIME, LOOP_TOKEN}] = {};
+    table[{MULPRIME, CASE_TOKEN}] = {};
+    table[{MULPRIME, GOTO_TOKEN}] = {};
+    table[{MULPRIME, FOR_TOKEN}] = {};
     table[{MULPRIME, TO_TOKEN}] = {};
     table[{MULPRIME, STEP_TOKEN}] = {};
     table[{MULPRIME, DO_TOKEN}] = {};
@@ -564,33 +686,37 @@ void initTable() {
     table[{MULPRIME, '>'}] = {};
     table[{MULPRIME, GE_TOKEN}] = {};
     table[{MULPRIME, AND_TOKEN}] = {};
+    table[{MULPRIME, WRITE_TOKEN}] = {};
+    table[{MULPRIME, WRITELN_TOKEN}] = {};
+    table[{MULPRIME, READ_TOKEN}] = {};
+    table[{MULPRIME, READLN_TOKEN}] = {};
     table[{MULPRIME, '*'}] = {MUL_OP, FINAL_TERM, MULPRIME};
     table[{MULPRIME, '/'}] = {MUL_OP, FINAL_TERM, MULPRIME};
     table[{MULPRIME, '%'}] = {MUL_OP, FINAL_TERM, MULPRIME};
     // LITERAL
-    table[{LITERAL, INT_TOKEN}] = {INT_TOKEN};
-    table[{LITERAL, REAL_TOKEN}] = {REAL_TOKEN};
-    table[{LITERAL, CHAR_TOKEN}] = {CHAR_TOKEN};
-    table[{LITERAL, STRING_TOKEN}] = {STRING_TOKEN};
+    table[{LITERAL, INTLITERAL_TOKEN}] = {INTLITERAL_TOKEN};
+    table[{LITERAL, REALLITERAL_TOKEN}] = {REALLITERAL_TOKEN};
+    table[{LITERAL, CHARLITERAL_TOKEN}] = {CHARLITERAL_TOKEN};
+    table[{LITERAL, STRINGLITERAL_TOKEN}] = {STRINGLITERAL_TOKEN};
     table[{LITERAL, SUBRANGELITERAL_TOKEN}] = {SUBRANGELITERAL_TOKEN};
     // EXPRLIST
     table[{EXPRLIST, ')'}] = {};
     table[{EXPRLIST, ID_TOKEN}] = {EXPRLISTPLUS};
     table[{EXPRLIST, '('}] = {EXPRLISTPLUS};
     table[{EXPRLIST, '!'}] = {EXPRLISTPLUS};
-    table[{EXPRLIST, INT_TOKEN}] = {EXPRLISTPLUS};
-    table[{EXPRLIST, REAL_TOKEN}] = {EXPRLISTPLUS};
-    table[{EXPRLIST, CHAR_TOKEN}] = {EXPRLISTPLUS};
-    table[{EXPRLIST, STRING_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, INTLITERAL_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, REALLITERAL_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, CHARLITERAL_TOKEN}] = {EXPRLISTPLUS};
+    table[{EXPRLIST, STRINGLITERAL_TOKEN}] = {EXPRLISTPLUS};
     table[{EXPRLIST, SUBRANGELITERAL_TOKEN}] = {EXPRLISTPLUS};
     // EXPRLISTPLUS
     table[{EXPRLISTPLUS, ID_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
     table[{EXPRLISTPLUS, '('}] = {EXPR, EXPRLISTPLUSPRIME};
     table[{EXPRLISTPLUS, '!'}] = {EXPR, EXPRLISTPLUSPRIME};
-    table[{EXPRLISTPLUS, INT_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
-    table[{EXPRLISTPLUS, REAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
-    table[{EXPRLISTPLUS, CHAR_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
-    table[{EXPRLISTPLUS, STRING_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, INTLITERAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, REALLITERAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, CHARLITERAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
+    table[{EXPRLISTPLUS, STRINGLITERAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
     table[{EXPRLISTPLUS, SUBRANGELITERAL_TOKEN}] = {EXPR, EXPRLISTPLUSPRIME};
     // EXPRLISTPLUSPRIME
     table[{EXPRLISTPLUSPRIME, ']'}] = {};
@@ -604,29 +730,57 @@ void initTable() {
     table[{SUBPROGRAMSPRIME, BEGIN_TOKEN}] = {};
     table[{SUBPROGRAMSPRIME, ';'}] = {';', SUBPROGRAMS};
     // PROCEDURE
-    table[{PROCEDURE, PROC_TOKEN}] = {PROC_TOKEN, ID_TOKEN, '(', PARAM, ')', ';', DECL BLOCK};
+    table[{PROCEDURE, PROC_TOKEN}] = {PROC_TOKEN, ID_TOKEN, '(', PARAM, ')', ';', DECL, BLOCK};
     // FUNCTION
-    table[{FUNCTION, FUNC_TOKEN}] = {FUNC_TOKEN, TYPES, ID_TOKEN, '(', PARAM, ')', ';', DECL BLOCK};
+    table[{FUNCTION, FUNC_TOKEN}] = {FUNC_TOKEN, TYPES, ID_TOKEN, '(', PARAM, ')', ';', DECL, BLOCK};
     // PARAM
     table[{PARAM, ')'}] = {};
-    table[{PARAM, ID_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, INT_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, REAL_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, BOOL_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, CHAR_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, STRING_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, ARRAY_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, SET_TOKEN}] = {VARLISTLIST};
-    table[{PARAM, '('}] = {VARLISTLIST};
-    table[{PARAM, RECORD_TOKEN}] = {VARLISTLIST};
+    table[{PARAM, ID_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, INT_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, REAL_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, BOOL_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, CHAR_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, STRING_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, ARRAY_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, SET_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, '('}] = {PARAMLISTLIST};
+    table[{PARAM, RECORD_TOKEN}] = {PARAMLISTLIST};
+    table[{PARAM, REF_TOKEN}] = {PARAMLISTLIST};
+    // PARAMLISTLIST
+    table[{PARAMLISTLIST, ID_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, INT_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, REAL_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, BOOL_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, CHAR_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, STRING_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, ARRAY_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, SET_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, '('}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, RECORD_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    table[{PARAMLISTLIST, REF_TOKEN}] = {PARAMLIST, PARAMLISTLISTPRIME};
+    // PARAMLISTLISTPRIME
+    table[{PARAMLISTLISTPRIME, ')'}] = {};
+    table[{PARAMLISTLISTPRIME, ';'}] = {';', PARAMLISTLIST};
+    // PARAMLIST
+    table[{PARAMLIST, ID_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, INT_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, REAL_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, BOOL_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, CHAR_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, STRING_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, ARRAY_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, SET_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, '('}] = {TYPES, IDLIST};
+    table[{PARAMLIST, RECORD_TOKEN}] = {TYPES, IDLIST};
+    table[{PARAMLIST, REF_TOKEN}] = {REF_TOKEN, TYPES, IDLIST};
     // WRITESTMT
     table[{WRITESTMT, WRITE_TOKEN}] = {WRITE_TOKEN, '(', EXPR, ')',};
     // WRITELNSTMT
     table[{WRITELNSTMT, WRITELN_TOKEN}] = {WRITELN_TOKEN, '(', EXPR, ')'};
     // READSTMT
-    table[{READSTMT, READ_TOKEN}] = {READ_TOKEN, '(', 'id', ')'};
+    table[{READSTMT, READ_TOKEN}] = {READ_TOKEN, '(', ID_TOKEN, VARIABLEPRIME, ')'};
     // READLNSTMT
-    table[{READLNSTMT, READLN_TOKEN}] = {READLN_TOKEN, '(', 'id', ')'};
+    table[{READLNSTMT, READLN_TOKEN}] = {READLN_TOKEN, '(', ID_TOKEN, VARIABLEPRIME, ')'};
 }
 
 #endif
