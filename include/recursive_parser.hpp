@@ -2,9 +2,6 @@
 #define _RECURSIVE_PARSER_HPP_
 #include "../lex.yy.c"
 
-extern void next_token();
-extern void init_lexer(char* arg);
-
 void eat(int expected);
 void error();
 void prog();
