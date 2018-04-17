@@ -69,7 +69,7 @@ O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textb
 \input{lexico-termos.tex}
 
 \newpage
-\chapter{Regras}
+\chapter{Regras sobre símbolos terminais}
 \input{regras.tex}
 
 \newpage
@@ -77,31 +77,33 @@ O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textb
 O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 \section{Compilação}
 \begin{verbatim}
-    lex pie.l
-    cc lex.yy.c -o name -ll
+    make
 \end{verbatim}
 
 \section{Execução}
+\subsection{Parser recursivo}
 \begin{verbatim}
-    ./name
+    ./recursive pathtofile.pie
 \end{verbatim}
 
-ou
-
+\subsection{Parser por tabela}
 \begin{verbatim}
-    ./name < pathtofile.pie
+    ./table pathtofile.pie
 \end{verbatim}
 
-\chapter{Exemplos}
-
+\section{Exemplo}
 \begin{verbatim}
-    lex pie.l
-    cc lex.yy.c -o pie -ll
-    ./pie < codesamples/merge_sort.pie
+    make
+    ./recursive codesamples/merge_sort.pie
 \end{verbatim}
 
 \newpage
+\chapter{Exemplos de programas}
 \input{exemplos.tex}
+
+\newpage
+\chapter{Analisador Sintático (Parser)}
+\input{parser.tex}
 
 \nocite{*}
 \bibliographystyle{ieeetr}
