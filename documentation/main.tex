@@ -1,13 +1,18 @@
 \documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage[brazilian]{babel}
-\usepackage[protrusion=true,expansion=true]{microtype} % S2  %
+%\usepackage[protrusion=true,expansion=true]{microtype} % S2  %
 \usepackage{listings}
 \usepackage{fullpage} % changes the margin
 \usepackage{pxfonts} % to bold in listings
 \usepackage{xcolor}
 \usepackage{fancyvrb}
 \usepackage{float}
+\usepackage{txfonts}
+\let\iint\relax
+\let\iiint\relax
+\let\iiiint\relax
+\let\idotsint\relax
 \usepackage{amsmath}
 \usepackage{comment}
 
@@ -74,6 +79,10 @@ O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textb
 \input{regras.tex}
 
 \newpage
+\chapter{Analisador Sintático (Parser)}
+\input{parser.tex}
+
+\newpage
 \chapter{Forma de uso}
 O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 \section{Compilação}
@@ -103,8 +112,21 @@ O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 \input{exemplos.tex}
 
 \newpage
-\chapter{Analisador Sintático (Parser)}
-\input{parser.tex}
+\chapter{Participação}
+\begin{table}[h]
+	\centering
+	\label{my-label}
+	\begin{tabular}{|l|l|r|}
+		\hline
+		\textbf{Matrícula} & \textbf{Aluno(a)} & \textbf{Participação (\%)} \\ \hline
+		20180008183        & BRENO MAURICIO DE FREITAS VIANA & 22\%                       \\ \hline
+		20170153995        & FERNANDA MENEZES PAES ISABEL    & 22\%                       \\ \hline
+		2012912517         & LUIZ ARTHUR DE LIMA FREIRE      & 18\%                       \\ \hline
+		20180008281        & RAQUEL LOPES DE OLIVEIRA        & 20\%                       \\ \hline
+		20180008316        & VÍTOR DE GODEIRO MARQUES        & 18\%                       \\ \hline
+		\multicolumn{2}{|l|}{\textbf{TOTAL}}            & 100\%                      \\ \hline
+	\end{tabular}
+\end{table}
 
 \nocite{*}
 \bibliographystyle{ieeetr}
