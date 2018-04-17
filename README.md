@@ -1,25 +1,30 @@
 # PIE
 
-PIE is a Pascal-like programming language.
+PIE is a Pascal-like programming language. This project consists of a compiler for PIE.
 
 ## How to compile and run
 
 ### Compiling
 
 ```bash
-lex pie.l
-g++ -std=c++11 -o name src/recursive_parser.cpp -ll
+make
 ```
 ### Running
 
+#### Recursive parser
+
 ```bash
-./name < pathtofile.pie
+./recursive pathtofile.pie
+```
+#### Table parser
+
+```bash
+./table pathtofile.pie
 ```
 ### Example
 ```bash
-lex pie.l
-g++ -std=c++11 -o pie src/recursive_parser.cpp -ll
-./pie < codesamples/merge_sort.pie
+make
+./recursive codesamples/merge_sort.pie
 ```
 
 ## Team
