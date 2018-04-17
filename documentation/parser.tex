@@ -1,11 +1,54 @@
+Os dois parsers implementados (recursivo e por tabela) são parsers recursivos. Isso significa que não utilizam de backtracking e portanto rodam em tempo linear (de acordo com o tamnho do input, a palavra sendo analisada). Isso é importante pois o tempo de compilação de programas deve ser o menor possível. O parsing é feito analisando as regras sintáticas da linguagem e um input (uma palavra), e é utilizado para determinar se essa palavra faz parte da linguagem. 
+
 \section{Conjuntos Predict}
-Cada regra sintática tem associada a si um conjunto chamado \textit{predict}, que permite sabermos qual regra deverá ser usada. O conjunto predict basicamente nos diz quais símbolos terminais podem ser o próximo a ser comido se usarmos aquela regra; ou seja, se 
+Cada regra sintática tem associada a si um conjunto de terminais chamado \textit{Predict}.
 
-\section{Parser recursivo}
-No parser recursivo, é utilizada a pilha de execução do programa 
+Seja $A$ um símbolo não-terminal, $S$ o símbolo não-terminal inicial, $\alpha$ e $\beta$ sequências de não-terminais e/ou terminais e $T$ o conjunto dos símbolos terminais,
 
-\subsection{Recuperação de erro}
+\begin{equation}
+\begin{split}
+Predict(A \rightarrow \alpha) & = First(A\rightarrow \alpha) \cup Follow(A), \text{ if } A \Rightarrow^* \lambda \\
+ & = First(A\rightarrow \alpha), \text{ otherwise}
+\end{split}
+\end{equation}
 
-\section{Parser por tabela}
+\begin{equation}
+First(A \rightarrow \alpha) = \{s \in T \mid \alpha \Rightarrow^* s\beta\}
+\end{equation}
 
-\subsection{Recuperação de erro}
+\begin{equation}
+Follow(A) = \{s \in T \mid S \Rightarrow^* ...As...\}
+\end{equation}
+
+O conjunto Predict de uma regra $\alpha$ basicamente nos diz quais símbolos terminais são candidatos a serem o próximo a aparecer se usarmos $\alpha$. Tanto no parser recursivo como o por tabela, a cada passo nós estamos analisando um símbolo não-terminal $A$ (começando pelo símbolo inicial) e um terminal $s$ (vindo do input). Para sabermos qual regra utilizar, basta olharmos as regras de $A$ e acharmos a que tem $s$ no seu conjunto Predict. Se $s$ não estiver no conjunto Predict de nenhuma regra de $A$, o input não é uma palavra da linguagem, e um erro deve ser gerado. Como nossa gramática é LL1 (ignorando o caso do else), isso significa que não há interseção nos conjuntos Predict de regras de um mesmo símbolo não-terminal. Ou seja, para cada não-terminal $A$ e terminal $s$, no máximo uma regra de $A$ terá $s$ no seu Predict, permitindo que o parsing seja realizado da maneira descrita nesse parágrafo com sucesso. Os conjuntos Predict de todas as regras da nossa gramática podem ser vistos na Tabela bla.
+
+\section{Parser preditivo recursivo}
+No parser recursivo, é utilizada a pilha de execução do programa para fazer o parsing top-down. Há uma funcão para cada não-terminal e o programa é inicilizado chamando a função do não-terminal inicial. Na função de cada não-terminal $A$, fazemos um switch/case utilizando o próximo símbolo terminal $t$ainda não \textit{matched} do input, onde cada case é a regra tal que $t$ está no Predict dessa regra: para cada não-terminal $B$ da regra, chamamos a função de $B$, e para cada terminal $s$ da regra, chamamos um \textit{matching} de $s$ e $t$ (que gera um erro se $s$ e $t$ forem diferentes e avança no input para o próximo símbolo). O caso default é onde $t$ não está no Predict de nenhuma regra de $A$, e gera um erro.  
+
+\section{Parser preditivo por tabela}
+No parser por tabela, utilizamos uma pilha explícita e uma tabela. No nosso código, a tabela é um std::map onde a chave é um par de um símbolo não-terminal e um símbolo terminal e o valor é um vetor de símbolos terminais e não-terminais (uma regra). Essa tabela é construída utilizando os conjuntos Predict; há uma entrada na tabela para a chave ($A$,$s$) se $s$ está no Predict de alguma regra de $A$, e o valor associado a essa chave é justamente essa regra. O programa é inicilizado empilhando o símbolo não-terminal inicial, e então fica em um loop enquanto a pilha não estiver vazia. A cada passo desse loop, olhamos o símbolo no topo da pilha. Se for um símbolo terminal $s$, fazemos o \textit{matching} com o próximo símbolo terminal $t$ ainda não \textit{matched} do input (que gera um erro se $s$ e $t$ forem diferentes e avança no input para o próximo símbolo). Se for um símbolo não-terminal $A$, olhamos na tabela a chave {$A$,$t$} e empilhamos a regra (o vetor) correspondente. Caso não haja um vetor para essa chave, um erro é gerado.
+
+\section{Recuperação de erro}
+O compilador não deve parar sua execução ao encontrar um erro sintático, mas sim notificar o erro e continuar o parsing. Desse modo, vários erros podem ser reportados com uma só compilação. Para isso, ao encontrar um erro, é preciso utilizar de alguma técnica de recuperação de erro para que o parsing possa continuar. No nosso caso, utilizamos diferentes técnicas de recuperação de erro. 
+
+No parser recursivo, quando há um erro de \textit{matching} ou um erro de símbolo não esperado (quando não há regra cujo Predict contém o símbolo), esse erro é notificado e então avançamos no input para o próximo símbolo. Isso é uma boa técnica quando erros de digitação são frequentes, mas resulta em muitos outros erros se há uma palavra faltando no input. 
+
+Já no parser por tabela, o erro de símbolo não esperado é recuperado de uma forma diferente: desempilhamos a pilha até encontrarmos um $;$ (ou até ela ficar vazia) e avançamos no input até encontrarmos um $;$ (ou até ele acabar). A intuição é que estamos continuando o parsing a partir do próximo $;$. O erro de \textit{matching} é recuperado da mesma forma que no recursivo.
+
+\section{Saídas dos parsers}
+Os parsers não tem saída quando não há erros, ou seja, quando o programa (o input) for uma palavra da linguagem. Para todos os nossos programas de exemplo (factorial.pie, quick_sort.pie e merge_sort.pie), os dois parsers não estão imprimindo nenhuma saída, o que significa que esses programas estão corretos em relação a linguagem.
+
+Quando há um erro, ele é disponibilizado das seguintes formas:
+\vspace{0.5cm}
+
+\begin{verbatim}
+ERROR: At row 48 column 24 
+    Not expected symbol: ;
+ERROR: At row 49 column 17 
+    Not expected symbol: ID_TOKEN (with lexeme k)
+ERROR: At row 49 column 19
+    Expected: END_TOKEN
+    Found: ATTR_TOKEN
+\end{verbatim} 
+
+
