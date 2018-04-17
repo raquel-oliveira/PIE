@@ -4,17 +4,17 @@
 #include "include/tokens.h"
 
 int num_line = 1, num_column = 1;
-struct Token t;
+struct Token token;
 
 void update_column(int yyleng) {
 	num_column += yyleng;
 }
 
 void update_token(int id, int row, int col, char* lexeme) {
-	t.id = id;
-	t.row = row;
-	t.col = col;
-	t.lexeme = lexeme;
+	token.id = id;
+	token.row = row;
+	token.col = col;
+	token.lexeme = lexeme;
 }
 
 %}

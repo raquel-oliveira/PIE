@@ -9,43 +9,43 @@ int main(int argc, char *argv[]) {
 	next_token();
 	init_table();
 	std::stack<int> stack;
-	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
+	if(token.id != ENDOFFILE_TOKEN && token.id != ERROR_TOKEN) {
 		stack.push(PROGRAM);
 		table_parser(stack);
 	}
-	if(t.id == ERROR_TOKEN) {
-		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
+	if(token.id == ERROR_TOKEN) {
+		std::cout << "Non recognized symbol '" << token.lexeme << "' in line " << token.row << " column " << token.col << std::endl;
 	}
 	return 0;
 }
 
 void eat(int expected) {
-	if(t.id != expected) {
-		std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+	if(token.id != expected) {
+		std::cout << "ERROR: At row " << token.row << " column " << token.col << std::endl;
 		std::cout << "	Expected: ";
 		print_token(expected);
 		std::cout << std::endl;
 		std::cout << "	Found: ";
-		print_token(t.id);
-		if(t.lexeme != NULL) {
-			std::cout << " (with lexeme " << t.lexeme << ")";
+		print_token(token.id);
+		if(token.lexeme != NULL) {
+			std::cout << " (with lexeme " << token.lexeme << ")";
 		}
 		std::cout << std::endl;
 	}
-	if(t.id != ENDOFFILE_TOKEN) {
+	if(token.id != ENDOFFILE_TOKEN) {
 		next_token();
 	}
 }
 
 void error() {
-	std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+	std::cout << "ERROR: At row " << token.row << " column " << token.col << std::endl;
 	std::cout << "	Not expected symbol: ";
-	print_token(t.id);
-	if(t.lexeme != NULL) {
-		std::cout << " (with lexeme " << t.lexeme << ")";
+	print_token(token.id);
+	if(token.lexeme != NULL) {
+		std::cout << " (with lexeme " << token.lexeme << ")";
 	}
 	std::cout << std::endl;
-	if(t.id != ENDOFFILE_TOKEN)
+	if(token.id != ENDOFFILE_TOKEN)
 		next_token();
 }
 
@@ -56,7 +56,7 @@ void error_recovery(std::stack<int>& stack) {
 	if(!stack.empty()) {
 		stack.pop();
 	}
-	while(t.id != ';') {
+	while(token.id != ';') {
 		next_token();
 	} 
 }
@@ -75,13 +75,13 @@ void table_parser(std::stack<int>& stack) {
 			stack.pop();
 		}
 		else {
-			if(table.find({top, t.id}) == table.end()) { 
+			if(table.find({top, token.id}) == table.end()) { 
 				error();
 				error_recovery(stack);
 			}
 			else {
 				stack.pop();
-				push_rule(table[{top, t.id}], stack);
+				push_rule(table[{top, token.id}], stack);
 			}
 		}
 	}

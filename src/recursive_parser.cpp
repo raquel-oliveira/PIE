@@ -10,46 +10,46 @@ int main(int argc, char *argv[]) {
 	}
 	init_lexer(argv[1]);
 	next_token();
-	if(t.id != ENDOFFILE_TOKEN && t.id != ERROR_TOKEN) {
+	if(token.id != ENDOFFILE_TOKEN && token.id != ERROR_TOKEN) {
 		prog();
 	}
-	if(t.id == ERROR_TOKEN) {
-		std::cout << "Non recognized symbol '" << t.lexeme << "' in line " << t.row << " column " << t.col << std::endl;
+	if(token.id == ERROR_TOKEN) {
+		std::cout << "Non recognized symbol '" << token.lexeme << "' in line " << token.row << " column " << token.col << std::endl;
 	}
 	return 0;
 }
 
 void eat(int expected) {
-	if(t.id != expected) {
-		std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+	if(token.id != expected) {
+		std::cout << "ERROR: At row " << token.row << " column " << token.col << std::endl;
 		std::cout << "	Expected: ";
 		print_token(expected);
 		std::cout << std::endl;
 		std::cout << "	Found: ";
-		print_token(t.id);
-		if(t.lexeme != NULL) {
-			std::cout << " (with lexeme " << t.lexeme << ")";
+		print_token(token.id);
+		if(token.lexeme != NULL) {
+			std::cout << " (with lexeme " << token.lexeme << ")";
 		}
 		std::cout << std::endl;
 	}
-	if(t.id != ENDOFFILE_TOKEN)
+	if(token.id != ENDOFFILE_TOKEN)
 		next_token();
 }
 
 void error() {
-	std::cout << "ERROR: At row " << t.row << " column " << t.col << std::endl;
+	std::cout << "ERROR: At row " << token.row << " column " << token.col << std::endl;
 	std::cout << "	Not expected symbol: ";
-	print_token(t.id);
-	if(t.lexeme != NULL) {
-		std::cout << " (with lexeme " << t.lexeme << ")";
+	print_token(token.id);
+	if(token.lexeme != NULL) {
+		std::cout << " (with lexeme " << token.lexeme << ")";
 	}
 	std::cout << std::endl;
-	if(t.id != ENDOFFILE_TOKEN)
+	if(token.id != ENDOFFILE_TOKEN)
 		next_token();
 }
 
 void prog() {
-	switch(t.id) {
+	switch(token.id) {
 		case PROGRAM_TOKEN:
 			eat(PROGRAM_TOKEN);
 			eat(ID_TOKEN);
@@ -65,7 +65,7 @@ void prog() {
 
 //DECL -> CONSTS USERTYPES VARS SUBPROGRAMS
 void decl() {
-	switch(t.id) {
+	switch(token.id) {
 		case BEGIN_TOKEN:
 		case CONST_TOKEN:
 		case TYPE_TOKEN:
@@ -85,7 +85,7 @@ void decl() {
 //CONSTS -> ''
 //CONSTS -> 'const' LISTCONST
 void consts() {
-	switch(t.id) {
+	switch(token.id) {
 		case CONST_TOKEN:
 			eat(CONST_TOKEN);
 			listconst();
@@ -103,7 +103,7 @@ void consts() {
 
 //LISTCONST -> CONSTDECL LISTCONSTPRIME
 void listconst() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			constdecl();
 			listconstprime();
@@ -115,7 +115,7 @@ void listconst() {
 
 //LISTCONSTPRIME -> LISTCONST
 void listconstprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			listconst();
 			break;
@@ -132,7 +132,7 @@ void listconstprime() {
 
 //CONSTDECL -> 'id' '=' EXPR ';'
 void constdecl() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			eat('=');
@@ -147,7 +147,7 @@ void constdecl() {
 //TYPES -> 'id' TYPESPRIME
 //TYPES -> PRIMTYPES
 void types() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			typesprime();
@@ -171,7 +171,7 @@ void types() {
 //TYPESPRIME -> ''
 //TYPESPRIME -> '..' SUBRANGETYPE
 void typesprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case RANGE_TOKEN:
 			eat(RANGE_TOKEN);
 			subrangetype();
@@ -194,7 +194,7 @@ void typesprime() {
 // PRIMTYPES -> ENUMTYPE
 // PRIMTYPES -> RECORDTYPE
 void primtypes() {
-	switch(t.id) {
+	switch(token.id) {
 		case INT_TOKEN:
 			eat(INT_TOKEN);
 			typesprime();
@@ -231,7 +231,7 @@ void primtypes() {
 
 //ARRAYTYPE -> 'array' '[' SUBRANGELIST ']' 'of' TYPES
 void arraytype() {
-	switch(t.id) {
+	switch(token.id) {
 		case ARRAY_TOKEN:
 			eat(ARRAY_TOKEN);
 			eat('[');
@@ -246,7 +246,7 @@ void arraytype() {
 }
 
 void subrangelist() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			subrangeprime();
@@ -269,7 +269,7 @@ void subrangelist() {
 }
 
 void subrangeprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case RANGE_TOKEN:
 			eat(RANGE_TOKEN);
 			subrangetype();
@@ -285,7 +285,7 @@ void subrangeprime() {
 }
 
 void subrangelistprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ',':
 			eat(',');
 		    subrangelist();
@@ -297,7 +297,7 @@ void subrangelistprime() {
 }
 
 void subrangetype() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			break;
@@ -313,7 +313,7 @@ void subrangetype() {
 }
 
 void settype() {
-	switch(t.id) {
+	switch(token.id) {
 		case SET_TOKEN:
 			eat(SET_TOKEN);
 			eat(OF_TOKEN);
@@ -325,7 +325,7 @@ void settype() {
 }
 
 void enumtype() {
-	switch(t.id) {
+	switch(token.id) {
 		case '(':
 			eat('(');
 			idlist();
@@ -337,7 +337,7 @@ void enumtype() {
 }
 
 void recordtype() {
-	switch(t.id) {
+	switch(token.id) {
 		case RECORD_TOKEN:
 			eat(RECORD_TOKEN);
 			varlistlist();
@@ -349,7 +349,7 @@ void recordtype() {
 }
 
 void usertypes() {
-	switch(t.id) {
+	switch(token.id) {
 		case TYPE_TOKEN:
 			eat(TYPE_TOKEN);
 			listusertypes();
@@ -364,7 +364,7 @@ void usertypes() {
 }
 
 void listusertypes() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			usertype();
 			listusertypesprime();
@@ -375,7 +375,7 @@ void listusertypes() {
 }
 
 void listusertypesprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case VAR_TOKEN:
 		case BEGIN_TOKEN:
 		case PROC_TOKEN:
@@ -390,7 +390,7 @@ void listusertypesprime() {
 }
 
 void usertype() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			eat('=');
@@ -403,7 +403,7 @@ void usertype() {
 }
 
 void vars() {
-	switch(t.id) {
+	switch(token.id) {
 		case PROC_TOKEN:
 		case FUNC_TOKEN:
 		case BEGIN_TOKEN:
@@ -418,7 +418,7 @@ void vars() {
 }
 
 void varlistlist() {
-	switch(t.id) {
+	switch(token.id) {
 		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
@@ -438,7 +438,7 @@ void varlistlist() {
 }
 
 void varlistlistprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case INT_TOKEN:
 		case REAL_TOKEN:
@@ -464,7 +464,7 @@ void varlistlistprime() {
 }
 
 void varlist() {
-	switch(t.id) {
+	switch(token.id) {
 		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
@@ -485,7 +485,7 @@ void varlist() {
 }
 
 void idlist() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			idattr();
@@ -497,7 +497,7 @@ void idlist() {
 }
 
 void idlistprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ';':
 		case ')':
 			break;
@@ -511,7 +511,7 @@ void idlistprime() {
 }
 
 void idattr() {
-	switch(t.id) {
+	switch(token.id) {
 		case ';':
 		case ',':
 		case ')':
@@ -526,7 +526,7 @@ void idattr() {
 }
 
 void variable() {
-	switch(t.id) {
+	switch(token.id) {
 		case '[':
 			eat('[');
 			exprlist_plus();
@@ -544,7 +544,7 @@ void variable() {
 }
 
 void variableprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ';':
 		case ']':
 		case ',':
@@ -594,7 +594,7 @@ void variableprime() {
 }
 
 void block() {
-	switch(t.id) {
+	switch(token.id) {
 		case BEGIN_TOKEN:
 			eat(BEGIN_TOKEN);
 			stmts();
@@ -606,7 +606,7 @@ void block() {
 }
 
 void stmts() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case ';':
 		case END_TOKEN:
@@ -632,7 +632,7 @@ void stmts() {
 }
 
 void stmtlistprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case END_TOKEN:
 			break;
 		case ';':
@@ -645,7 +645,7 @@ void stmtlistprime() {
 }
 
 void stmt() {
-	switch(t.id) {
+	switch(token.id) {
 		case ';':
 		case END_TOKEN:
 		case ELSE_TOKEN:
@@ -702,7 +702,7 @@ void stmt() {
 //STMTPRIME -> ATTRSTMT
 //STMTPRIME -> SUBPROGCALL
 void stmtprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case '[':
 		case ACCESS_TOKEN:
 		case ATTR_TOKEN:
@@ -718,7 +718,7 @@ void stmtprime() {
 
 //SUBPROGCALL -> '(' EXPRLIST ')'
 void subprogcall() {
-	switch(t.id){
+	switch(token.id){
 		case '(':
 			eat('(');
 			exprlist();
@@ -731,7 +731,7 @@ void subprogcall() {
 
 //EXITSTMT -> 'exitwhen' EXPR
 void exitstmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case EXITWHEN_TOKEN:
 			eat(EXITWHEN_TOKEN);
 			expr();
@@ -743,7 +743,7 @@ void exitstmt() {
 
 //RETURNSTMT -> 'return' EXPR
 void returnstmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case RETURN_TOKEN:
 			eat(RETURN_TOKEN);
 			expr();
@@ -756,7 +756,7 @@ void returnstmt() {
 //ATTRSTMT -> VARIABLE ':=' EXPR
 //ATTRSTMT -> ':=' EXPR
 void attrstmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case '[':
 		case ACCESS_TOKEN:
 			variable();
@@ -774,7 +774,7 @@ void attrstmt() {
 
 // IFBLOCK -> 'if' EXPR STMT ELSEBLOCK
 void ifblock() {
-	switch(t.id){
+	switch(token.id){
 		case IF_TOKEN:
 			eat(IF_TOKEN);
 			expr();
@@ -789,7 +789,7 @@ void ifblock() {
 
 //ELSEBLOCK -> 'else' STMT
 void elseblock() {
-	switch(t.id){
+	switch(token.id){
 		case ';':
 		case END_TOKEN:
 			break;
@@ -804,7 +804,7 @@ void elseblock() {
 
 //LOOPBLOCK -> 'loop' STMT
 void loopblock() {
-	switch(t.id){
+	switch(token.id){
 		case LOOP_TOKEN:
 			eat(LOOP_TOKEN);
 			stmt();
@@ -816,7 +816,7 @@ void loopblock() {
 
 //CASEBLOCK -> 'case' EXPR 'of' CASELIST CASEBLOCKPRIME
 void caseblock() {
-	switch(t.id){
+	switch(token.id){
 		case CASE_TOKEN:
 			eat(CASE_TOKEN);
 			expr();
@@ -832,7 +832,7 @@ void caseblock() {
 //CASEBLOCKPRIME -> 'end'
 //CASEBLOCKPRIME -> 'else' STMT 'end'
 void caseblockprime() {
-	switch(t.id){
+	switch(token.id){
 		case END_TOKEN:
 			eat(END_TOKEN);
 			break;
@@ -848,7 +848,7 @@ void caseblockprime() {
 
 //CASELIST -> LITERALLIST ':' STMT ';'
 void caselist() {
-	switch(t.id){
+	switch(token.id){
 		case INTLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
@@ -865,7 +865,7 @@ void caselist() {
 
 //LITERALLIST -> LITERAL LITERALLISTPRIME
 void literallist() {
-	switch (t.id) {
+	switch (token.id) {
 		case INTLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
@@ -881,7 +881,7 @@ void literallist() {
 //LITERALLISTPRIME -> LAMBDA
 //LITERALLISTPRIME -> ',' LITERALLIST
 void literallistprime() {
-	switch (t.id) {
+	switch (token.id) {
 		case ':':
 			break;
 		case ',':
@@ -895,7 +895,7 @@ void literallistprime() {
 
 //GOTOSTMT -> 'goto' 'label'
 void gotostmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case GOTO_TOKEN:
 			eat(GOTO_TOKEN);
 			eat(LABEL_TOKEN);
@@ -907,7 +907,7 @@ void gotostmt() {
 
 //FORBLOCK -> 'for' 'id' FORBLOCKPRIME
 void forblock() {
-	switch (t.id) {
+	switch (token.id) {
 		case FOR_TOKEN:
 			eat(FOR_TOKEN);
 			eat(ID_TOKEN);
@@ -921,7 +921,7 @@ void forblock() {
 //FORBLOCKPRIME -> VARIABLE ':=' EXPR to EXPR 'step' EXPR 'do' STMT
 //FORBLOCKPRIME -> ':=' EXPR to EXPR 'step' EXPR 'do' STMT
 void forblockprime() {
-	switch (t.id) {
+	switch (token.id) {
 		case '[':
 		case ACCESS_TOKEN:
 			variable();
@@ -941,7 +941,7 @@ void forblockprime() {
 }
 
 void expr() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case '(':
 		case '!':
@@ -959,7 +959,7 @@ void expr() {
 }
 
 void disj() {
-	switch(t.id) {
+	switch(token.id) {
 		case ';':
 		case ']':
 		case OF_TOKEN:
@@ -995,7 +995,7 @@ void disj() {
 }
 
 void final_term() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 			eat(ID_TOKEN);
 			final_termprime();
@@ -1018,7 +1018,7 @@ void final_term() {
 }
 
 void final_termprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case '[':
 		case ACCESS_TOKEN:
 			variable();
@@ -1070,7 +1070,7 @@ void final_termprime() {
 }
 
 void add_op() {
-	switch(t.id) {
+	switch(token.id) {
 		case '+':
 			eat('+');
 			break;
@@ -1083,7 +1083,7 @@ void add_op() {
 }
 
 void mul_op() {
-	switch(t.id) {
+	switch(token.id) {
 		case '*':
 			eat('*');
 			break;
@@ -1099,7 +1099,7 @@ void mul_op() {
 }
 
 void equality_op() {
-	switch(t.id) {
+	switch(token.id) {
 		case EQUAL_TOKEN:
 			eat(EQUAL_TOKEN);
 			break;
@@ -1112,7 +1112,7 @@ void equality_op() {
 }
 
 void relational_op() {
-	switch(t.id) {
+	switch(token.id) {
 		case '<':
 			eat('<');
 			break;
@@ -1131,7 +1131,7 @@ void relational_op() {
 }
 
 void conj() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case '(':
 		case '!':
@@ -1149,7 +1149,7 @@ void conj() {
 }
 
 void conjprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ';':
 		case ']':
 		case OF_TOKEN:
@@ -1186,7 +1186,7 @@ void conjprime() {
 }
 
 void comp() {
-	switch(t.id){
+	switch(token.id){
 		case ID_TOKEN:
 		case '(':
 		case '!':
@@ -1205,7 +1205,7 @@ void comp() {
 }
 
 void compprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case ';':
 		case ']':
@@ -1244,7 +1244,7 @@ void compprime() {
 }
 
 void relational() {
-	switch(t.id){
+	switch(token.id){
 		case ID_TOKEN:
 		case '(':
 		case '!':
@@ -1262,7 +1262,7 @@ void relational() {
 }
 
 void relationalprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case ';':
 		case ']':
@@ -1305,7 +1305,7 @@ void relationalprime() {
 }
 
 void sum() {
-	switch(t.id){
+	switch(token.id){
 		case ID_TOKEN:
 		case '(':
 		case '!':
@@ -1323,7 +1323,7 @@ void sum() {
 }
 
 void sumprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ID_TOKEN:
 		case ';':
 		case ']':
@@ -1370,7 +1370,7 @@ void sumprime() {
 
 /** --------- ARTHUR --------- **/
 void neg() {
-	switch (t.id) {
+	switch (token.id) {
 		case ID_TOKEN:
 		case '(':
 		case INTLITERAL_TOKEN:
@@ -1390,7 +1390,7 @@ void neg() {
 }
 
 void mul() {
-	switch (t.id) {
+	switch (token.id) {
 		case ID_TOKEN:
 		case '(':
 		case INTLITERAL_TOKEN:
@@ -1407,7 +1407,7 @@ void mul() {
 }
 
 void mulprime() {
-	switch (t.id) {
+	switch (token.id) {
 		case '*':
 		case '/':
 		case '%':
@@ -1456,7 +1456,7 @@ void mulprime() {
 }
 
 void literal() {
-	switch (t.id) {
+	switch (token.id) {
 		case INTLITERAL_TOKEN:
 			eat(INTLITERAL_TOKEN);
 			break;
@@ -1478,7 +1478,7 @@ void literal() {
 }
 
 void exprlist() {
-	switch (t.id) {
+	switch (token.id) {
 		case ')':
 			break;
 		case ID_TOKEN:
@@ -1497,7 +1497,7 @@ void exprlist() {
 }
 
 void exprlist_plus() {
-	switch (t.id) {
+	switch (token.id) {
 		case ID_TOKEN:
 		case '(':
 		case '!':
@@ -1515,7 +1515,7 @@ void exprlist_plus() {
 }
 
 void exprlist_plusprime() {
-	switch (t.id) {
+	switch (token.id) {
 		case ']':
 		case ')':
 			break;
@@ -1529,7 +1529,7 @@ void exprlist_plusprime() {
 }
 
 void subprograms() {
-	switch (t.id) {
+	switch (token.id) {
 		case BEGIN_TOKEN:
 			break;
 		case PROC_TOKEN:
@@ -1546,7 +1546,7 @@ void subprograms() {
 }
 
 void subprogramsprime() {
-	switch (t.id) {
+	switch (token.id) {
 		case BEGIN_TOKEN:
 			break;
 		case ';':
@@ -1559,7 +1559,7 @@ void subprogramsprime() {
 }
 
 void procedure() {
-	switch (t.id) {
+	switch (token.id) {
 		case PROC_TOKEN:
 			eat(PROC_TOKEN);
 			eat(ID_TOKEN);
@@ -1576,7 +1576,7 @@ void procedure() {
 }
 
 void function() {
-	switch (t.id) {
+	switch (token.id) {
 		case FUNC_TOKEN:
 			eat(FUNC_TOKEN);
 			types();
@@ -1594,7 +1594,7 @@ void function() {
 }
 
 void param() {
-	switch (t.id) {
+	switch (token.id) {
 		case ')':
 			break;
 		case '(':
@@ -1616,7 +1616,7 @@ void param() {
 }
 
 void paramlistlist() {
-	switch(t.id) {
+	switch(token.id) {
 		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
@@ -1637,7 +1637,7 @@ void paramlistlist() {
 }
 
 void paramlistlistprime() {
-	switch(t.id) {
+	switch(token.id) {
 		case ')':
 			break;
 		case ';':
@@ -1650,7 +1650,7 @@ void paramlistlistprime() {
 }
 
 void paramlist() {
-	switch(t.id) {
+	switch(token.id) {
 		case '(':
 		case ID_TOKEN:
 		case INT_TOKEN:
@@ -1675,7 +1675,7 @@ void paramlist() {
 }
 
 void writestmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case WRITE_TOKEN:
 			eat(WRITE_TOKEN);
 			eat('(');
@@ -1688,7 +1688,7 @@ void writestmt() {
 }
 
 void writelnstmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case WRITELN_TOKEN:
 			eat(WRITELN_TOKEN);
 			eat('(');
@@ -1701,7 +1701,7 @@ void writelnstmt() {
 }
 
 void readstmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case READ_TOKEN:
 			eat(READ_TOKEN);
 			eat('(');
@@ -1715,7 +1715,7 @@ void readstmt() {
 }
 
 void readlnstmt() {
-	switch (t.id) {
+	switch (token.id) {
 		case READLN_TOKEN:
 			eat(READLN_TOKEN);
 			eat('(');
