@@ -19,6 +19,14 @@
 \def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
 \let\endchangemargin=\endlist
 
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 %definition of language PIE
 \input{pie.tex} 
 \lstset{language=pie}
@@ -41,7 +49,7 @@
 
 
 
-\title{DIM0661-PB1}
+\title{DIM0661-PB2}
 %\subtitle{Definição da linguagem e análise léxica}
 \author{Grupo 3}
 \date{\today}
@@ -104,7 +112,7 @@ O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 \section{Exemplo}
 \begin{verbatim}
     make
-    ./recursive codesamples/merge_sort.pie
+    ./recursive codesamples/mergesort.pie
 \end{verbatim}
 
 \newpage
@@ -119,11 +127,11 @@ O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 	\begin{tabular}{|l|l|r|}
 		\hline
 		\textbf{Matrícula} & \textbf{Aluno(a)} & \textbf{Participação (\%)} \\ \hline
-		20180008183        & BRENO MAURICIO DE FREITAS VIANA & 22\%                       \\ \hline
-		20170153995        & FERNANDA MENEZES PAES ISABEL    & 22\%                       \\ \hline
-		2012912517         & LUIZ ARTHUR DE LIMA FREIRE      & 18\%                       \\ \hline
+		20180008183        & BRENO MAURICIO DE FREITAS VIANA & 20\%                       \\ \hline
+		20170153995        & FERNANDA MENEZES PAES ISABEL    & 20\%                       \\ \hline
+		2012912517         & LUIZ ARTHUR DE LIMA FREIRE      & 20\%                       \\ \hline
 		20180008281        & RAQUEL LOPES DE OLIVEIRA        & 20\%                       \\ \hline
-		20180008316        & VÍTOR DE GODEIRO MARQUES        & 18\%                       \\ \hline
+		20180008316        & VÍTOR DE GODEIRO MARQUES        & 20\%                       \\ \hline
 		\multicolumn{2}{|l|}{\textbf{TOTAL}}            & 100\%                      \\ \hline
 	\end{tabular}
 \end{table}

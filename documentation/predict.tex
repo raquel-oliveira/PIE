@@ -1,5 +1,6 @@
 \begin{center}
-\begin{longtable}{|C{5cm} | C{5cm} | C{5cm} |}
+\begin{longtable}[H]{|C{5cm} | C{5cm} | C{5cm} |}
+\caption{Predict}\label{tab:predict}\\
 \hline
 \textbf{Nonterminal} & \textbf{Rule} & \textbf{Predict} \\
 \hline
@@ -112,15 +113,6 @@ STMTS & STMT STMTLISTPRIME & \{`id', `;', `end', `begin', `label', `exitwhen', `
 & EXITSTMT & \{`exitwhen'\}\\ \cline{2-3}
 & RETURNSTMT & \{`return'\}\\
 \hline
-
-
-
-
-
-
-
-
-%Fefa
 \multirow{2}{*}{STMTPRIME} & ATTRSTMT & \{`[', `:=', `-$>$ '\} \\ \cline{2-3}
 & SUBPROGCALL & \{`('\} \\
 \hline
