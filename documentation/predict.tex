@@ -1,0 +1,291 @@
+\begin{center}
+\begin{longtable}{|C{5cm} | C{5cm} | C{5cm} |}
+\hline
+\textbf{Nonterminal} & \textbf{Rule} & \textbf{Predict} \\
+\hline
+PROGRAM &`program' `id' `;' DECL BLOCK `.' & \{`program'\} \\
+\hline
+DECL &CONSTS USERTYPES VARS SUBPROGRAMS &\{`const', `type', `var', `begin', `func', `proc'\} \\
+\hline
+\multirow{2}{*}{CONSTS} & `' & \{`var', `proc', `func', `type', `begin'\} \\ \cline{2-3}
+&`const' LISTCONST & \{`const'\} \\
+\hline
+LISTCONST & CONSTDECL LISTCONSTPRIME & \{`id'\}\\
+\hline
+\multirow{2}{*}{LISTCONSTPRIME} & `' & \{`var', `proc', `func', `type', `begin'\} \\ \cline{2-3}
+& LISTCONST & \{`id'\}\\
+\hline
+CONSTDECL & `id' `=' EXPR `;' & \{`id'\}\\
+\hline
+\multirow{2}{*}{TYPES} & `id' TYPESPRIME & \{`id'\} \\ \cline{2-3}
+& PRIMTYPES & \{`int', `real', `bool', `char', `string', `array', `set', `(', `record'\}\\
+\hline
+\multirow{2}{*}{TYPESPRIME} & `' & \{`id', `;', \} \\ \cline{2-3}
+& `..' SUBRANGETYPE & \{`..'\}\\
+\hline
+\multirow{9}{*}{PRIMTYPES} & `int' TYPESPRIME & \{`int' \} \\ \cline{2-3}
+& `real' & \{`real'\}  \\ \cline{2-3}
+& `bool' & \{`bool'\} \\ \cline{2-3}
+& `char' & \{`char'\} \\ \cline{2-3}
+& `string' & \{`string'\} \\ \cline{2-3}
+& ARRAYTYPE & \{`array'\} \\ \cline{2-3}
+& SETTYPE & \{`set'\} \\ \cline{2-3}
+& ENUMTYPE & \{`('\} \\ \cline{2-3}
+& RECORDTYPE & \{`record'\} \\ \cline{2-3}
+\hline
+ARRAYTYPE & `array' `[' SUBRANGELIST `]' `of' TYPES & \{`array'\} \\
+\hline
+\multirow{3}{*}{SUBRANGELIST} & `id' SUBRANGEPRIME & \{`id'\} \\ \cline{2-3}
+& `int' '..' SUBRANGETYPE SUBRANGELISTPRIME & \{`int'\} \\ \cline{2-3}
+& `char' '..' SUBRANGETYPE SUBRANGELISTPRIME & \{`char'\} \\
+\hline
+\multirow{2}{*}{SUBRANGEPRIME} & SUBRANGELISTPRIME & \{`]', `,'\} \\ \cline{2-3}
+& `..' SUBRANGETYPE SUBRANGELISTPRIME & \{`..'\}\\
+\hline
+\multirow{2}{*}{SUBRANGELISTPRIME} & `' & \{`]'\} \\ \cline{2-3}
+& `,' SUBRANGELIST & \{`,'\}\\
+\hline
+\multirow{3}{*}{SUBRANGETYPE} & `id' & \{`id'\} \\ \cline{2-3}
+& `int' & \{`int'\} \\ \cline{2-3}
+& `char' & \{`char'\}\\
+\hline
+SETTYPE & `set' `of' TYPES & \{`set'\}\\
+\hline
+ENUMTYPE & `(' IDLIST `)' & \{`('\} \\
+\hline
+RECORDTYPE & `record' VARLISTLIST `end' & \{`record'\} \\
+\hline
+\multirow{2}{*}{USERTYPES} & `' & \{`var', `begin', `proc', `func'\} \\ \cline{2-3}
+& `type' LISTUSERTYPES & \{`type'\}\\
+\hline
+LISTUSERTYPES & USERTYPE LISTUSERTYPESPRIME & \{`id'\} \\
+\hline
+\multirow{2}{*}{LISTUSERTYPESPRIME} & `' & \{`var', `begin', `proc', `func'\} \\ \cline{2-3}
+& LISTUSERTYPES & \{`id'\}\\
+\hline
+USERTYPE & `id' `=' TYPES `;' & \{`id'\}\\
+\hline
+\multirow{2}{*}{VARS} & `' & \{`begin', `proc', `func'\} \\ \cline{2-3}
+& `var' VARLISTLIST & \{`var'\}\\
+\hline
+VARLISTLIST & VARLIST VARLISTLISTPRIME & \{`id', `int', `real', `bool', `char', `string', `array', `set', `(', `record'\}\\
+\hline
+\multirow{2}{*}{VARLISTLISTPRIME} & `' & \{`end', `begin', `proc', `func'\} \\ \cline{2-3}
+& VARLISTLIST & \{`id', `int', `real', `bool', `char', `string', `array', `set', `(', `record'\}\\
+\hline
+VARLIST & TYPES IDLIST `;' & \{`id', `int', `real', `bool', `char', `string', `array', `set', `(', `record'\} \\
+\hline
+IDLIST & `id' IDATTR IDLISTPRIME & \{`id'\} \\
+\hline
+\multirow{2}{*}{IDLISTPRIME} & `' & \{`;', `)'\} \\ \cline{2-3}
+& `,' IDLIST & \{`,'\}\\
+\hline
+\multirow{2}{*}{IDATTR} & `' & \{`;', `,', `)'\} \\ \cline{2-3}
+& `=' EXPR & \{`='\}\\
+\hline
+\multirow{2}{*}{VARIABLE} & `$=>$' `id' VARIABLEPRIME & \{`$=>$'\} \\ \cline{2-3}
+& `[' EXPRLISTPLUS `]' VARIABLEPRIME & \{`['\}\\
+\hline
+\multirow{2}{*}{VARIABLEPRIME} & `' `id' VARIABLEPRIME & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `:=', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$||$', `\&\&', `+', `-', `*', `/', `\%', `$==$', `$!=$', `<', `$<=$', `<', `$>=$', `write', `writeln', `read', `readln'\} \\ \cline{2-3}
+& VARIABLE & \{`[', `$=>$'\}\\
+\hline
+BLOCK & `begin' STMTS `end' & \{`begin'\} \\
+\hline
+STMTS & STMT STMTLISTPRIME & \{`id', `;', `end', `begin', `label', `exitwhen', `return', `if', `loop', `case', `goto', `for', `write', `writeln', `read', `readln'\} \\
+\hline
+\multirow{2}{*}{STMTLISTPRIME} & `' & \{`end'\} \\ \cline{2-3}
+& `;' STMTS & \{`;'\}\\
+\hline
+\multirow{15}{*}{STMT} & `' & \{`;', `end', `else'\} \\ \cline{2-3}
+& `label' STMT & \{`label'\}\\ \cline{2-3}
+& `BLOCK & \{`begin'\}\\ \cline{2-3}
+& WRITESTMT & \{`write'\}\\ \cline{2-3}
+& WRITELNSTMT & \{`writeln'\}\\ \cline{2-3}
+& READSTMT & \{`read'\}\\ \cline{2-3}
+& READLNSTMT & \{`readln'\}\\ \cline{2-3}
+& LOOPBLOCK & \{`loop'\}\\ \cline{2-3}
+& IFBLOCK & \{`if'\}\\ \cline{2-3}
+& FORBLOCK & \{`for'\}\\ \cline{2-3}
+& CASEBLOCK & \{`case'\}\\ \cline{2-3}
+& GOTOSTMT & \{`goto'\}\\ \cline{2-3}
+& 'id' STMTPRIME & \{`id'\}\\ \cline{2-3}
+& EXITSTMT & \{`exitwhen'\}\\ \cline{2-3}
+& RETURNSTMT & \{`return'\}\\
+\hline
+
+
+
+
+
+
+
+
+%Fefa
+\multirow{2}{*}{STMTPRIME} & ATTRSTMT & \{`[', `:=', `-$>$ '\} \\ \cline{2-3}
+& SUBPROGCALL & \{`('\} \\
+\hline
+SUBPROGCALL & `(' EXPRLIST `)' & \{`('\} \\
+\hline
+EXITSTMT & `exitwhen' EXPR & `exitwhen'\\
+\hline
+RETURNSTMT & `return' EXPR & `return'\\
+\hline
+\multirow{2}{*}{ATTRSTMT} & VARIABLE ':=' EXPR & \{`[', `-$>$'\}\\ \cline{2-3}
+& ':=' EXPR & \{`:='\}\\
+\hline
+IFBLOCK & 'if' EXPR STMT ELSEBLOCK & \{`if'\}\\
+\hline
+\multirow{2}{*}{ELSEBLOCK} & `' & \{`;', `end'\}\\ \cline{2-3}
+& `else' STMT & \{`else'\}\\
+\hline
+LOOPBLOCK & `loop' STMT & \{`loop'\}\\
+\hline
+CASEBLOCK & `case' EXPR 'of' CASELIST CASEBLOCKPRIME & \{`case'\}\\
+\hline
+\multirow{2}{*}{CASEBLOCKPRIME} & `end' & \{`end'\}\\ \cline{2-3}
+& `else' STMT `end' & \{`else'\}\\
+\hline
+CASELIST & LITERALLIST `:' STMT `;' & \{`intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+\hline
+LITERALLIST & LITERAL LITERALLISTPRIME & \{`intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}  \\
+\hline
+\multirow{2}{*}{LITERALLISTPRIME} & `' & \{`:'\}  \\ \cline{2-3}
+& `,' LITERALLIST & \{`,'\}\\
+\hline
+GOTOSTMT & `goto' `label' & \{`goto'\}\\
+\hline
+FORBLOCK & `for' `id' FORBLOCKPRIME & \{`for'\}\\
+\hline
+\multirow{2}{*}{FORBLOCKPRIME} & VARIABLE `:=' EXPR `to' EXPR `step' EXPR `do' STMT & \{`[', `-$>$'\}\\ \cline{2-3}
+& `:=' EXPR `to' EXPR `step' EXPR `do' STMT & \{`:='\}\\
+\hline
+EXPR & CONJ DISJ & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+\hline
+\multirow{3}{*}{FINAL\_TERM} & `id' FINAL\_TERMPRIME & \{`id'\}\\ \cline{2-3}
+& LITERAL & \{`intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\ \cline{2-3}
+& `(' EXPR `)' & \{`('\}\\
+\hline
+\multirow{3}{*}{FINAL\_TERMPRIME} & VARIABLE & \{`[', `-$>$'\}\\ \cline{2-3}
+& `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `\&\&', `+', `-', `*', `/', `\%', `==', `!=', `$<$', `$<$=', `$>$', `=$>$', `write', `writeln', `read', `readln'\}\\ \cline{2-3}
+& SUBPROGCALL & \{`('\}\\
+\hline
+\multirow{2}{*}{DISJ} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `write', `writeln', `read', `readln'\}\\ \cline{2-3}
+& `$\mid \mid$' CONJ & \{`$\mid \mid$'\}\\
+\hline
+CONJ & COMP CONJPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+\hline
+\multirow{2}{*}{CONJPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `write', `writeln', `read', `readln'\} \\
+\cline{2-3}
+& `\&\&' COMP & \{`\&\&'\} \\
+\hline
+COMP & RELATIONAL COMPPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\hline
+RELATIONAL & SUM RELATIONALPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\hline
+\multirow{2}{*}{RELATIONALPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `==', `!=', `\&\&', `write', `writeln', `read', `readln'\} \\
+\cline{2-3}
+& RELATIONAL\_OP SUM & \{`$<$', `$<$=', `$>$', `=$>$'\} \\
+\hline
+\multirow{2}{*}{COMPPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `\&\&', `write', `writeln', `read', `readln'\} \\
+\cline{2-3}
+& EQUALITY\_OP RELATIONAL & \{`==', `!='\} \\
+\hline
+SUM & NEG SUMPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\hline
+\multirow{2}{*}{SUMPRIME} & '' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `==', `!=' `\&\&', `$<$', `$<$=', `$>$', `=$>$', `write', `writeln', `read', `readln'\} \\
+\cline{2-3}
+& ADD\_OP NEG SUMPRIME & \{`+', `-'\} \\
+\hline
+\multirow{2}{*}{NEG} & MUL & \{`id', `(', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\cline{2-3}
+& '!' MUL & \{`!'\} \\
+\hline
+MUL & FINAL\_TERM MULPRIME & \{`id', `(', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+\hline
+\multirow{2}{*}{MULPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$||$', `$+$', `$-$', `==', `!=', `$<$', `$<=$', `$>$', `$>=$', `\&\&', `write', `writeln', `read', `readln'\} \\
+\cline{2-3}
+& MUL\_OP FINAL\_TERM MULPRIME & \{`$*$', `$/$', `$\%$'\} \\
+\hline
+\multirow{2}{*}{ADD\_OP} & `$+$' & \{`$+$'\} \\
+\cline{2-3}
+& `$-$' & \{`$-$'\} \\
+\cline{2-3}
+\hline
+\multirow{3}{*}{MUL\_OP} & `$*$' & \{`$*$'\} \\
+\cline{2-3}
+& `$/$' & \{`$/$'\} \\
+\cline{2-3}
+& `$\%$' & \{`$\%$'\} \\
+\cline{2-3}
+\hline
+\multirow{2}{*}{EQUALITY\_OP} & `$==$' & \{`$==$'\} \\
+\cline{2-3}
+& `$!=$' & \{`$!=$'\} \\
+\cline{2-3}
+\hline
+\multirow{4}{*}{RELATIONAL\_OP} & `$<$' & \{`$<$'\} \\
+\cline{2-3}
+& `$<=$' & \{`$<=$'\} \\
+\cline{2-3}
+& `$>$' & \{`$>$'\} \\
+\cline{2-3}
+& `$>=$' & \{`$>=$'\} \\
+\hline
+\multirow{5}{*}{LITERAL} & `intliteral' & \{`intliteral'\} \\
+\cline{2-3}
+& `realliteral' & \{`realliteral'\} \\
+\cline{2-3}
+& `charliteral' & \{`charliteral'\} \\
+\cline{2-3}
+& `stringliteral' & \{`stringliteral'\} \\
+\cline{2-3}
+& `subrangeliteral' & \{`subrangeliteral'\} \\
+\hline
+\multirow{2}{*}{EXPRLIST} & `' & \{`)'\} \\
+\cline{2-3}
+& EXPRLISTPLUS & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\hline
+EXPRLISTPLUS & EXPR EXPRLISTPLUSPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\hline
+\multirow{2}{*}{EXPRLISTPLUSPRIME} & `' & \{`]', `)'\} \\
+\cline{2-3}
+&  `,' EXPRLISTPLUS & \{`,'\} \\
+\hline
+\multirow{3}{*}{SUBPROGRAMS} & `' & \{`begin'\} \\
+\cline{2-3}
+& PROCEDURE SUBPROGRAMSPRIME & \{`proc'\} \\
+\cline{2-3}
+& FUNCTION SUBPROGRAMSPRIME & \{`func'\} \\
+\hline
+\multirow{2}{*}{SUBPROGRAMSPRIME} & `' & \{`begin'\} \\
+\cline{2-3}
+& ';' SUBPROGRAMS & \{`;'\} \\
+\hline
+PROCEDURE & 'proc' 'id' '(' PARAM ')' ';' DECL BLOCK & \{`proc'\} \\
+\hline
+FUNCTION & 'func' TYPES 'id' '(' PARAM ')' ';' DECL BLOCK & \{`func'\} \\
+\hline
+\multirow{2}{*}{PARAM} & `' & \{`)'\} \\
+\cline{2-3}
+& PARAMLISTLIST & \{`id', `int', `real', `bool', `char', `string', `array', `set', `(', `record'\} \\
+\hline
+PARAMLISTLIST & PARAMLIST PARAMLISTLISTPRIME & \{`id', `int', `real', `bool', `char', `string', `array', `set', `(', `record'\} \\
+\hline
+\multirow{2}{*}{PARAMLISTLISTPRIME} & `' & \{`)'\} \\
+\cline{2-3}
+& `;' PARAMLISTLIST & \{`;'\} \\
+\hline
+\multirow{2}{*}{PARAMLIST} & `ref' TYPES IDLIST & \{`)'\} \\
+\cline{2-3}
+& TYPES IDLIST & \{`id', `int', `real', `bool', `char', `string', `array', `set', `(', `record'\} \\
+\hline
+WRITESTMT & `write' `(' EXPR `)' & \{`write'\} \\
+\hline
+WRITELNSTMT & `writeln' `(' EXPR `)' & \{`writeln'\} \\
+\hline
+READSTMT & `read' `(' `id' VARIABLEPRIME `)' &  \{`read'\} \\
+\hline
+READLNSTMT & `readln' `(' `id' VARIABLEPRIME `)' & \{`readln'\} \\
+\hline
+\end{longtable}
+\end{center}
