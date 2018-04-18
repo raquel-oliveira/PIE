@@ -5,20 +5,23 @@ Cada regra sintática tem associada a si um conjunto de terminais chamado \texti
 
 Seja $A$ um símbolo não-terminal, $S$ o símbolo não-terminal inicial, $\alpha$ e $\beta$ sequências de não-terminais e/ou terminais e $T$ o conjunto dos símbolos terminais,
 
-\begin{align*} 
-Predict(A \rightarrow \alpha) & = First(A\rightarrow \alpha) \cup Follow(A), \text{ if } A \Rightarrow^* \lambda \\
- & = First(A\rightarrow \alpha), \text{ otherwise}
-\end{align*}
+\begin{equation*}
+Predict(A\rightarrow \alpha) = 
+\begin{cases}
+First(\alpha) \cup Follow(A)  & \text{ if } A \Rightarrow^* \lambda  \\
+First(\alpha) & \text{otherwise}
+\end{cases}
+\end{equation*}
 
 \begin{equation*}
-First(A \rightarrow \alpha) = \{s \in T \mid \alpha \Rightarrow^* s\beta\}
+First( \alpha) = \{s \in T \mid \alpha \Rightarrow^* s\beta\}
 \end{equation*}
 
 \begin{equation*}
 Follow(A) = \{s \in T \mid S \Rightarrow^* ...As...\}
 \end{equation*}
 
-O conjunto Predict de uma regra $\alpha$ basicamente nos diz quais símbolos terminais são candidatos a serem o próximo a aparecer se usarmos $\alpha$. Tanto no parser recursivo como o por tabela, a cada passo nós estamos analisando um símbolo não-terminal $A$ (começando pelo símbolo inicial) e um terminal $s$ (vindo do input). Para sabermos qual regra utilizar, basta olharmos as regras de $A$ e acharmos a que tem $s$ no seu conjunto Predict. Se $s$ não estiver no conjunto Predict de nenhuma regra de $A$, o input não é uma palavra da linguagem, e um erro deve ser gerado. Como nossa gramática é LL1 (ignorando o caso do else), isso significa que não há interseção nos conjuntos Predict de regras de um mesmo símbolo não-terminal. Ou seja, para cada não-terminal $A$ e terminal $s$, no máximo uma regra de $A$ terá $s$ no seu Predict, permitindo que o parsing seja realizado da maneira descrita nesse parágrafo com sucesso. Os conjuntos Predict de todas as regras da nossa gramática podem ser vistos na Tabela bla.
+O conjunto Predict de uma regra $\alpha$ basicamente nos diz quais símbolos terminais são candidatos a serem o próximo a aparecer se usarmos $\alpha$. Tanto no parser recursivo como o por tabela, a cada passo nós estamos analisando um símbolo não-terminal $A$ (começando pelo símbolo inicial) e um terminal $s$ (vindo do input). Para sabermos qual regra utilizar, basta olharmos as regras de $A$ e acharmos a que tem $s$ no seu conjunto Predict. Se $s$ não estiver no conjunto Predict de nenhuma regra de $A$, o input não é uma palavra da linguagem, e um erro deve ser gerado. Como nossa gramática é LL1 (ignorando o caso do else), isso significa que não há interseção nos conjuntos Predict de regras de um mesmo símbolo não-terminal. Ou seja, para cada não-terminal $A$ e terminal $s$, no máximo uma regra de $A$ terá $s$ no seu Predict, permitindo que o parsing seja realizado da maneira descrita nesse parágrafo com sucesso. Os conjuntos Predict de todas as regras da nossa gramática podem ser vistos na Tabela \ref{tab:predict}.
 
 \input{predict.tex}
 
@@ -36,7 +39,7 @@ No parser recursivo, quando há um erro de \textit{matching} ou um erro de símb
 Já no parser por tabela, o erro de símbolo não esperado é recuperado de uma forma diferente: desempilhamos a pilha até encontrarmos um $;$ (ou até ela ficar vazia) e avançamos no input até encontrarmos um $;$ (ou até ele acabar). A intuição é que estamos continuando o parsing a partir do próximo $;$. O erro de \textit{matching} é recuperado da mesma forma que no recursivo.
 
 \section{Saídas dos parsers}
-Os parsers não tem saída quando não há erros, ou seja, quando o programa (o input) for uma palavra da linguagem. Para todos os nossos programas de exemplo (factorial.pie, quick\_sort.pie e merge\_sort.pie), os dois parsers não estão imprimindo nenhuma saída, o que significa que esses programas estão corretos em relação a linguagem.
+Os parsers não tem saída quando não há erros, ou seja, quando o programa (o input) for uma palavra da linguagem. Para todos os nossos programas de exemplo (factorial.pie, quicksort.pie e mergesort.pie), os dois parsers não estão imprimindo nenhuma saída, o que significa que esses programas estão corretos em relação a linguagem.
 
 Quando há um erro, ele é disponibilizado das seguintes formas:
 \vspace{0.5cm}
