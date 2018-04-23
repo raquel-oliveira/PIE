@@ -16,12 +16,6 @@ void update_token(int id, int row, int col, char* lexeme) {
 }
 
 %}
-%union {
-  int id;
-  int row;
-  int col;
-  char* lexeme;
-}
 
 LETTER          [a-zA-Z]
 DIGIT           [0-9]
