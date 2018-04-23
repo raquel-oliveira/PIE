@@ -138,6 +138,9 @@ void print_token(int token) {
 		case ATTR_TOKEN:
 			std::cout << "ATTR_TOKEN";
 			break;
+		case ACCESS_TOKEN:
+			std::cout << "ACCESS_TOKEN";
+			break;
 		case LABEL_TOKEN:
 			std::cout << "LABEL_TOKEN";
 			break;
@@ -152,6 +155,9 @@ void print_token(int token) {
 			break;
 		case STRINGLITERAL_TOKEN:
 			std::cout << "STRINGLITERAL_TOKEN";
+			break;
+		case SUBRANGELITERAL_TOKEN:
+			std::cout << "SUBRANGELITERAL_TOKEN";
 			break;
 		case ID_TOKEN:
 			std::cout << "ID_TOKEN";
