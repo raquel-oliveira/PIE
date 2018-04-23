@@ -24,7 +24,7 @@ make
 ### Example
 ```bash
 make
-./recursive codesamples/merge_sort.pie
+./recursive codesamples/mergesort.pie
 ```
 
 ## Team
