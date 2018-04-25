@@ -1,6 +1,17 @@
+%option yylineno
 %{
 //https://github.com/jinankjain/Lexical-Analyzer-for-C/blob/master/analyzer.l
 #include <math.h>
+#include "../include/utils.h"
+
+int yycolumn = 1;
+#define YY_USER_ACTION         \
+  yylloc.first_line = yylloc.last_line = yylineno;\
+  yylloc.first_column = yycolumn;\
+  yylloc.last_column = yycolumn + yyleng;\
+  yycolumn += yyleng; 
+
+
 
 int num_line = 1, num_column = 1;
 
