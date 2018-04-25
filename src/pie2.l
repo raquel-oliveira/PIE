@@ -4,12 +4,13 @@
 #include <math.h>
 #include "../include/utils.h"
 
-int yycolumn = 1;
+extern YYLTYPE yylloc;
+/*int yycolumn = 1;
 #define YY_USER_ACTION         \
   yylloc.first_line = yylloc.last_line = yylineno;\
   yylloc.first_column = yycolumn;\
   yylloc.last_column = yycolumn + yyleng;\
-  yycolumn += yyleng; 
+  yycolumn += yyleng; */
 
 
 
@@ -21,9 +22,9 @@ void update_column(int yyleng) {
 
 void update_token(int id, int row, int col, char* lexeme) {
 	yylval.id = id;
-	yylval.row = row;
-	yylval.col = col;
 	yylval.lexeme = lexeme;
+	yylloc.first_line = row;
+	yylloc.first_column = col;
 }
 
 %}
