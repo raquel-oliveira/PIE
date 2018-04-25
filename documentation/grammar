@@ -245,4 +245,4 @@ WRITELNSTMT -> 'writeln' '(' EXPR ')'
 
 READSTMT -> 'read' '(' 'id' VARIABLEPRIME ')'
 
-READLNSTMT -> 'readln' (' 'id' VARIABLEPRIME ')'
+READLNSTMT -> 'readln' '(' 'id' VARIABLEPRIME ')'
