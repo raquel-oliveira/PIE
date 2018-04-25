@@ -178,7 +178,86 @@ conj : comp conjprime
 conjprime : 
 		  | AND_TOKEN comp
 		  ;
-
+comp : relational compprime
+	 ;
+relational : sum relationalprime
+		   ;
+relationalprime : 
+				| relationalop sum
+				;
+compprime : 
+		  | equalityop relational
+		  ;
+sum : neg sumprime
+	;
+sumprime : 
+		 | addop neg sumprime
+		 ;
+neg : mul
+	| '!' mul
+	;
+mul : finalterm mulprime
+	;
+mulprime : 
+		 | mulop finalterm mulprime
+		 ;
+addop : '+'
+	  | '-'
+	  ;
+mulop : '*'
+	  | '/'
+	  | '%'
+	  ;
+equalityop : EQUAL_TOKEN
+		   | DIFF_TOKEN
+		   ;
+relationalop : '<'
+			 | LE_TOKEN
+			 | '>'
+			 | GE_TOKEN
+			 ;
+literal : INTLITERAL_TOKEN
+		| REALLITERAL_TOKEN
+		| CHARLITERAL_TOKEN
+		| STRINGLITERAL_TOKEN
+		| SUBRANGELITERAL_TOKEN
+		;
+exprlist : 
+		 | exprlistplus
+exprlistplus : expr exprlistplusprime
+			 ;
+exprlistplusprime : 
+				  | ',' exprlistplus
+				  ;
+subprograms : 
+			| procedure subprogramsprime
+			| function subprogramsprime
+			;
+subprogramsprime : 
+				 ; ';' subprograms
+procedure : PROC_TOKEN ID_TOKEN '(' param ')' ';' decl block
+		  ;
+function : FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl block
+		 ;
+param : 
+	  | paramlistlist
+	  ;
+paramlistlist : paramlist paramlistlistprime
+			  ;
+paramlistlistrime : 
+				  | ';' paramlistlist
+				  ;
+paramlist : REF_TOKEN types idlist
+          | types idlist
+          ;
+writestmt : WRITE_TOKEN '(' expr ')'
+		  ;
+writelnstmt : WRITELN_TOKEN '(' expr ')'
+		    ;
+readstmt : READ_TOKEN '(' ID_TOKEN variableprime ')'
+		 ;
+readlnstmt : READLN_TOKEN '(' ID_TOKEN variableprime ')'
+		   ;
 %%
 main() {
 	yyparse();
