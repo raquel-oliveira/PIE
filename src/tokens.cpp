@@ -101,10 +101,6 @@ void print_token(int token) {
 		case RECORD_TOKEN:
 			std::cout << "RECORD_TOKEN";
 			break;
-			break;
-		case SUBRANGE_TOKEN:
-			std::cout << "SUBRANGE_TOKEN";
-			break;
 		case SET_TOKEN:
 			std::cout << "SET_TOKEN";
 			break;

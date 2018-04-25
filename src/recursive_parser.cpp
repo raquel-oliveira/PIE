@@ -853,7 +853,7 @@ void caselist() {
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
-		case SUBRANGE_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
 			eat(':');
 			stmt();
 			eat(';');
@@ -870,7 +870,7 @@ void literallist() {
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
-		case SUBRANGE_TOKEN:
+		case SUBRANGELITERAL_TOKEN:
 		 	literallistprime();
 			break;
 		default:
