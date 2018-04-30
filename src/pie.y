@@ -11,10 +11,10 @@ bool yydebug = false;
   char* lexeme;
 }
 
-%token ENDOFFILE_TOKEN PROGRAM_TOKEN PROC_TOKEN BEGIN_TOKEN END_TOKEN FUNC_TOKEN CONST_TOKEN TYPE_TOKEN VAR_TOKEN IF_TOKEN ELSE_TOKEN GOTO_TOKEN 
-%token FOR_TOKEN TO_TOKEN DO_TOKEN STEP_TOKEN IN_TOKEN OF_TOKEN LOOP_TOKEN EXITWHEN_TOKEN CASE_TOKEN WRITE_TOKEN WRITELN_TOKEN READ_TOKEN READLN_TOKEN 
-%token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SUBRANGE_TOKEN SET_TOKEN TRUE_TOKEN FALSE_TOKEN 
-%token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN LABEL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN 
+%token PROGRAM_TOKEN PROC_TOKEN BEGIN_TOKEN END_TOKEN FUNC_TOKEN CONST_TOKEN TYPE_TOKEN VAR_TOKEN IF_TOKEN ELSE_TOKEN GOTO_TOKEN
+%token FOR_TOKEN TO_TOKEN DO_TOKEN STEP_TOKEN IN_TOKEN OF_TOKEN LOOP_TOKEN EXITWHEN_TOKEN CASE_TOKEN WRITE_TOKEN WRITELN_TOKEN READ_TOKEN READLN_TOKEN
+%token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SUBRANGE_TOKEN SET_TOKEN TRUE_TOKEN FALSE_TOKEN
+%token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN LABEL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN
 %token REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN ID_TOKEN ERROR_TOKEN RANGE_TOKEN REF_TOKEN
 
 %start program
@@ -24,12 +24,12 @@ program : PROGRAM_TOKEN ID_TOKEN ';' decl block '.'
 		;
 decl : consts usertypes vars subprograms
 	 ;
-consts : 
+consts :
 	   | CONST_TOKEN listconst
 	   ;
 listconst : constdecl listconstprime
 		  ;
-listconstprime : 
+listconstprime :
 			   | listconst
 			   ;
 constdecl : ID_TOKEN '=' expr ';'
@@ -37,7 +37,7 @@ constdecl : ID_TOKEN '=' expr ';'
 types : ID_TOKEN typesprime
 	  | primtypes
 	  ;
-typesprime : 
+typesprime :
 		   | SUBRANGE_TOKEN subrangetype
 		   ;
 primtypes : INT_TOKEN typesprime
@@ -56,10 +56,10 @@ subrangelist : ID_TOKEN subrangeprime
 			 | INT_TOKEN SUBRANGE_TOKEN subrangetype subrangelistprime
 			 | CHAR_TOKEN SUBRANGE_TOKEN subrangetype subrangelistprime
 			 ;
-subrangeprime : subrangelistprime 
+subrangeprime : subrangelistprime
 			  | SUBRANGE_TOKEN subrangetype subrangelistprime
 			  ;
-subrangelistprime : 
+subrangelistprime :
 				  | ',' subrangelist
 				  ;
 subrangetype : ID_TOKEN
@@ -87,17 +87,17 @@ vars :
 	 ;
 varlistlist : varlist varlistlistprime
 			;
-varlistlistprime : 
+varlistlistprime :
 				 | varlistlist
 				 ;
 varlist : types idlist ';'
 		;
 idlist : ID_TOKEN idattr idlistprime
 	   ;
-idlistprime : 
+idlistprime :
 			| ',' idlist
 			;
-idattr : 
+idattr :
 	   | '=' expr
 	   ;
 variable : ACCESS_TOKEN ID_TOKEN variableprime
@@ -110,10 +110,10 @@ block : BEGIN_TOKEN stmts END_TOKEN
 	  ;
 stmts : stmt stmtlistprime
 	  ;
-stmtlistprime : 
+stmtlistprime :
 			  | ';' stmts
 			  ;
-stmt : 
+stmt :
 	 | LABEL_TOKEN stmt
 	 | block
 	 | writestmt
@@ -143,7 +143,7 @@ attrstmt : variable ATTR_TOKEN expr
 		 ;
 ifblock : IF_TOKEN expr stmt elseblock
 		;
-elseblock : 
+elseblock :
 		  | ELSE_TOKEN stmt
 		  ;
 loopblock : LOOP_TOKEN stmt
@@ -157,7 +157,7 @@ caselist : literallist ':' stmt ';'
 		 ;
 literallist : literal literallistprime
 			;
-literallistprime : 
+literallistprime :
 				 | ',' literallist
 				 ;
 gotostmt : GOTO_TOKEN LABEL_TOKEN
@@ -173,31 +173,31 @@ finalterm : ID_TOKEN finaltermprime
 		  | literal
 		  | '(' expr ')'
 		  ;
-finaltermprime : 
+finaltermprime :
 			   | variable
 			   | subprogcall
 			   ;
-disj : 
+disj :
 	 | OR_TOKEN conj
 	 ;
 conj : comp conjprime
 	 ;
-conjprime : 
+conjprime :
 		  | AND_TOKEN comp
 		  ;
 comp : relational compprime
 	 ;
 relational : sum relationalprime
 		   ;
-relationalprime : 
+relationalprime :
 				| relationalop sum
 				;
-compprime : 
+compprime :
 		  | equalityop relational
 		  ;
 sum : neg sumprime
 	;
-sumprime : 
+sumprime :
 		 | addop neg sumprime
 		 ;
 neg : mul
@@ -205,7 +205,7 @@ neg : mul
 	;
 mul : finalterm mulprime
 	;
-mulprime : 
+mulprime :
 		 | mulop finalterm mulprime
 		 ;
 addop : '+'
@@ -229,30 +229,30 @@ literal : INTLITERAL_TOKEN
 		| STRINGLITERAL_TOKEN
 		| SUBRANGELITERAL_TOKEN
 		;
-exprlist : 
+exprlist :
 		 | exprlistplus
 exprlistplus : expr exprlistplusprime
 			 ;
-exprlistplusprime : 
+exprlistplusprime :
 				  | ',' exprlistplus
 				  ;
-subprograms : 
+subprograms :
 			| procedure subprogramsprime
 			| function subprogramsprime
 			;
-subprogramsprime : 
+subprogramsprime :
 				 | ';' subprograms
 				 ;
 procedure : PROC_TOKEN ID_TOKEN '(' param ')' ';' decl block
 		  ;
 function : FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl block
 		 ;
-param : 
+param :
 	  | paramlistlist
 	  ;
 paramlistlist : paramlist paramlistlistprime
 			  ;
-paramlistlistprime : 
+paramlistlistprime :
 				   | ';' paramlistlist
 				   ;
 paramlist : REF_TOKEN types idlist
