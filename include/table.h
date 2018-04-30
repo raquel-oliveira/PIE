@@ -94,7 +94,7 @@ enum NonTerminals {
     WRITELNSTMT,
     READSTMT,
     READLNSTMT
- };
+};
 
 std::map<std::pair<int, int>, std::vector<int>> table;
 

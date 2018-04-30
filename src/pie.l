@@ -38,9 +38,8 @@ WHITESPACE      [ \t\v\f]*
 UNACCEPTABLE    .
 
 %%
-
-
 <<EOF>>     	{ update_token(ENDOFFILE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
+
 program    		{ update_token(PROGRAM_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 proc       		{ update_token(PROC_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 begin      		{ update_token(BEGIN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }

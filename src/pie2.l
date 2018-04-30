@@ -48,9 +48,8 @@ WHITESPACE      [ \t\v\f]*
 UNACCEPTABLE    .
 
 %%
+<<EOF>>     	{ update_token(ENDOFFILE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 
-
-<<EOF>>     	{ update_token(ENDOFFILE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ENDOFFILE_TOKEN; }
 program    		{ update_token(PROGRAM_TOKEN, num_line, num_column, NULL); update_column(yyleng); return PROGRAM_TOKEN; }
 proc       		{ update_token(PROC_TOKEN, num_line, num_column, NULL); update_column(yyleng); return PROC_TOKEN; }
 begin      		{ update_token(BEGIN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return BEGIN_TOKEN; }
@@ -138,4 +137,3 @@ void next_token() {
 void init_lexer(char* arg) {
 	yyin = fopen(arg, "r");
 }
-
