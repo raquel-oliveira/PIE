@@ -204,6 +204,7 @@ RELATIONAL_OP -> '>'
 RELATIONAL_OP -> '>='
 
 LITERAL -> 'intliteral'
+LITERAL -> 'boolliteral'
 LITERAL -> 'realliteral'
 LITERAL -> 'charliteral'
 LITERAL -> 'stringliteral'

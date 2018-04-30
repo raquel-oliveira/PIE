@@ -146,6 +146,9 @@ void print_token(int token) {
 		case INTLITERAL_TOKEN:
 			std::cout << "INTLITERAL_TOKEN";
 			break;
+		case BOOLLITERAL_TOKEN:
+			std::cout << "BOOLLITERAL_TOKEN";
+			break;
 		case REALLITERAL_TOKEN:
 			std::cout << "REALLITERAL_TOKEN";
 			break;

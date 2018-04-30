@@ -137,9 +137,9 @@ CASEBLOCK & `case' EXPR 'of' CASELIST CASEBLOCKPRIME & \{`case'\}\\
 \multirow{2}{*}{CASEBLOCKPRIME} & `end' & \{`end'\}\\ \cline{2-3}
 & `else' STMT `end' & \{`else'\}\\
 \hline
-CASELIST & LITERALLIST `:' STMT `;' & \{`intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+CASELIST & LITERALLIST `:' STMT `;' & \{`intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
 \hline
-LITERALLIST & LITERAL LITERALLISTPRIME & \{`intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}  \\
+LITERALLIST & LITERAL LITERALLISTPRIME & \{`intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}  \\
 \hline
 \multirow{2}{*}{LITERALLISTPRIME} & `' & \{`:'\}  \\ \cline{2-3}
 & `,' LITERALLIST & \{`,'\}\\
@@ -151,10 +151,10 @@ FORBLOCK & `for' `id' FORBLOCKPRIME & \{`for'\}\\
 \multirow{2}{*}{FORBLOCKPRIME} & VARIABLE `:=' EXPR `to' EXPR `step' EXPR `do' STMT & \{`[', `-$>$'\}\\ \cline{2-3}
 & `:=' EXPR `to' EXPR `step' EXPR `do' STMT & \{`:='\}\\
 \hline
-EXPR & CONJ DISJ & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+EXPR & CONJ DISJ & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
 \hline
 \multirow{3}{*}{FINAL\_TERM} & `id' FINAL\_TERMPRIME & \{`id'\}\\ \cline{2-3}
-& LITERAL & \{`intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\ \cline{2-3}
+& LITERAL & \{`intliteral',`boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\ \cline{2-3}
 & `(' EXPR `)' & \{`('\}\\
 \hline
 \multirow{3}{*}{FINAL\_TERMPRIME} & VARIABLE & \{`[', `-$>$'\}\\ \cline{2-3}
@@ -164,15 +164,15 @@ EXPR & CONJ DISJ & \{`id', `(', `!', `intliteral', `realliteral', `charliteral',
 \multirow{2}{*}{DISJ} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `write', `writeln', `read', `readln'\}\\ \cline{2-3}
 & `$\mid \mid$' CONJ & \{`$\mid \mid$'\}\\
 \hline
-CONJ & COMP CONJPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+CONJ & COMP CONJPRIME & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
 \hline
 \multirow{2}{*}{CONJPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `write', `writeln', `read', `readln'\} \\
 \cline{2-3}
 & `\&\&' COMP & \{`\&\&'\} \\
 \hline
-COMP & RELATIONAL COMPPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+COMP & RELATIONAL COMPPRIME & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
 \hline
-RELATIONAL & SUM RELATIONALPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+RELATIONAL & SUM RELATIONALPRIME & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
 \hline
 \multirow{2}{*}{RELATIONALPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `==', `!=', `\&\&', `write', `writeln', `read', `readln'\} \\
 \cline{2-3}
@@ -182,17 +182,17 @@ RELATIONAL & SUM RELATIONALPRIME & \{`id', `(', `!', `intliteral', `realliteral'
 \cline{2-3}
 & EQUALITY\_OP RELATIONAL & \{`==', `!='\} \\
 \hline
-SUM & NEG SUMPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+SUM & NEG SUMPRIME & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
 \hline
 \multirow{2}{*}{SUMPRIME} & '' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$\mid \mid$', `==', `!=' `\&\&', `$<$', `$<$=', `$>$', `=$>$', `write', `writeln', `read', `readln'\} \\
 \cline{2-3}
 & ADD\_OP NEG SUMPRIME & \{`+', `-'\} \\
 \hline
-\multirow{2}{*}{NEG} & MUL & \{`id', `(', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+\multirow{2}{*}{NEG} & MUL & \{`id', `(', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
 \cline{2-3}
 & '!' MUL & \{`!'\} \\
 \hline
-MUL & FINAL\_TERM MULPRIME & \{`id', `(', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
+MUL & FINAL\_TERM MULPRIME & \{`id', `(', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\}\\
 \hline
 \multirow{2}{*}{MULPRIME} & `' & \{`id', `;', `]', `of', `,', `)', `end', `begin', `label', `exitwhen', `return', `if', `else', `loop', `case', `goto', `for', `to', `step', `do', `$||$', `$+$', `$-$', `==', `!=', `$<$', `$<=$', `$>$', `$>=$', `\&\&', `write', `writeln', `read', `readln'\} \\
 \cline{2-3}
@@ -223,7 +223,9 @@ MUL & FINAL\_TERM MULPRIME & \{`id', `(', `intliteral', `realliteral', `charlite
 \cline{2-3}
 & `$>=$' & \{`$>=$'\} \\
 \hline
-\multirow{5}{*}{LITERAL} & `intliteral' & \{`intliteral'\} \\
+\multirow{6}{*}{LITERAL} & `intliteral' & \{`intliteral'\} \\
+\cline{2-3}
+& `boolliteral' & \{`boolliteral'\} \\
 \cline{2-3}
 & `realliteral' & \{`realliteral'\} \\
 \cline{2-3}
@@ -235,9 +237,9 @@ MUL & FINAL\_TERM MULPRIME & \{`id', `(', `intliteral', `realliteral', `charlite
 \hline
 \multirow{2}{*}{EXPRLIST} & `' & \{`)'\} \\
 \cline{2-3}
-& EXPRLISTPLUS & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+& EXPRLISTPLUS & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
 \hline
-EXPRLISTPLUS & EXPR EXPRLISTPLUSPRIME & \{`id', `(', `!', `intliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
+EXPRLISTPLUS & EXPR EXPRLISTPLUSPRIME & \{`id', `(', `!', `intliteral', `boolliteral', `realliteral', `charliteral', `stringliteral', `subrangeliteral'\} \\
 \hline
 \multirow{2}{*}{EXPRLISTPLUSPRIME} & `' & \{`]', `)'\} \\
 \cline{2-3}

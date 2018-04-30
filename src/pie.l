@@ -22,6 +22,7 @@ void update_token(int id, int row, int col, char* lexeme) {
 LETTER          [a-zA-Z]
 DIGIT           [0-9]
 INTLITERAL      ("-"|"+")?{DIGIT}+
+BOOLLITERAL  "true"|"false"
 EXPONENT        ([E|e]("+"|"-")?({DIGIT}+))
 R               ([0-9]*[.])?[0-9]+
 R2 	 		    ([0-9]*[.])?[0-9]+{EXPONENT}?
@@ -74,8 +75,6 @@ array      		{ update_token(ARRAY_TOKEN, num_line, num_column, NULL); update_col
 record     		{ update_token(RECORD_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 subrange   		{ update_token(SUBRANGELITERAL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 set        		{ update_token(SET_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
-true			{ update_token(TRUE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
-false			{ update_token(FALSE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 ref				{ update_token(REF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 "+"             { update_token('+', num_line, num_column, NULL); update_column(yyleng); return 0; }
@@ -111,6 +110,7 @@ nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyl
 {LINECOMMENT}	  { num_line++; num_column = 1; }
 {NEW_LINE}        { num_line++; num_column = 1; }
 {INTLITERAL}      { update_token(INTLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
+{BOOLLITERAL}  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
 {REALLITERAL}     { update_token(REALLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
 {STRINGLITERAL}   { update_token(STRINGLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
 {SUBRANGELITERAL} { update_token(SUBRANGELITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
