@@ -25,7 +25,7 @@ int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
 %token FOR_TOKEN TO_TOKEN DO_TOKEN STEP_TOKEN IN_TOKEN OF_TOKEN LOOP_TOKEN EXITWHEN_TOKEN CASE_TOKEN WRITE_TOKEN WRITELN_TOKEN READ_TOKEN READLN_TOKEN
 %token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SUBRANGE_TOKEN SET_TOKEN TRUE_TOKEN FALSE_TOKEN
 %token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN LABEL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN
-%token REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN
+%token REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN BOOLLITERAL_TOKEN
 
 %start program
 
@@ -48,7 +48,7 @@ types : ID_TOKEN typesprime
 	  | primtypes
 	  ;
 typesprime :
-		   | SUBRANGE_TOKEN subrangetype
+		   | RANGE_TOKEN subrangetype
 		   ;
 primtypes : INT_TOKEN typesprime
 		  | REAL_TOKEN
@@ -63,11 +63,11 @@ primtypes : INT_TOKEN typesprime
 arraytype : ARRAY_TOKEN '[' subrangelist ']' OF_TOKEN types
 		  ;
 subrangelist : ID_TOKEN subrangeprime
-			 | INT_TOKEN SUBRANGE_TOKEN subrangetype subrangelistprime
-			 | CHAR_TOKEN SUBRANGE_TOKEN subrangetype subrangelistprime
+			 | INT_TOKEN RANGE_TOKEN subrangetype subrangelistprime
+			 | CHAR_TOKEN RANGE_TOKEN subrangetype subrangelistprime
 			 ;
 subrangeprime : subrangelistprime
-			  | SUBRANGE_TOKEN subrangetype subrangelistprime
+			  | RANGE_TOKEN subrangetype subrangelistprime
 			  ;
 subrangelistprime :
 				  | ',' subrangelist
@@ -234,6 +234,7 @@ relationalop : '<'
 			 | GE_TOKEN
 			 ;
 literal : INTLITERAL_TOKEN
+    	| BOOLLITERAL_TOKEN
 		| REALLITERAL_TOKEN
 		| CHARLITERAL_TOKEN
 		| STRINGLITERAL_TOKEN

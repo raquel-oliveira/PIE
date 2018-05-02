@@ -100,7 +100,8 @@ extern int yydebug;
     ERROR_TOKEN = 310,
     RANGE_TOKEN = 311,
     REF_TOKEN = 312,
-    ENDOFFILE_TOKEN = 313
+    ENDOFFILE_TOKEN = 313,
+    BOOLLITERAL_TOKEN = 314
   };
 #endif
 /* Tokens.  */
@@ -160,6 +161,7 @@ extern int yydebug;
 #define RANGE_TOKEN 311
 #define REF_TOKEN 312
 #define ENDOFFILE_TOKEN 313
+#define BOOLLITERAL_TOKEN 314
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -173,7 +175,7 @@ union YYSTYPE
   int col;
   char* lexeme;
 
-#line 177 "y.tab.h" /* yacc.c:1915  */
+#line 179 "y.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

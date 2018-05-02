@@ -850,6 +850,7 @@ void caseblockprime() {
 void caselist() {
 	switch(token.id){
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -867,6 +868,7 @@ void caselist() {
 void literallist() {
 	switch (token.id) {
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -947,6 +949,7 @@ void expr() {
 		case '!':
 		case CHARLITERAL_TOKEN:
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
 		case SUBRANGELITERAL_TOKEN:
@@ -1001,6 +1004,7 @@ void final_term() {
 			final_termprime();
 			break;
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1136,6 +1140,7 @@ void conj() {
 		case '(':
 		case '!':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1191,6 +1196,7 @@ void comp() {
 		case '(':
 		case '!':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1249,6 +1255,7 @@ void relational() {
 		case '(':
 		case '!':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1310,6 +1317,7 @@ void sum() {
 		case '(':
 		case '!':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1374,6 +1382,7 @@ void neg() {
 		case ID_TOKEN:
 		case '(':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1394,6 +1403,7 @@ void mul() {
 		case ID_TOKEN:
 		case '(':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1460,6 +1470,9 @@ void literal() {
 		case INTLITERAL_TOKEN:
 			eat(INTLITERAL_TOKEN);
 			break;
+		case BOOLLITERAL_TOKEN:
+			eat(BOOLLITERAL_TOKEN);
+			break;
 		case REALLITERAL_TOKEN:
 			eat(REALLITERAL_TOKEN);
 			break;
@@ -1485,6 +1498,7 @@ void exprlist() {
 		case '(':
 		case '!':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
@@ -1502,6 +1516,7 @@ void exprlist_plus() {
 		case '(':
 		case '!':
 		case INTLITERAL_TOKEN:
+		case BOOLLITERAL_TOKEN:
 		case REALLITERAL_TOKEN:
 		case CHARLITERAL_TOKEN:
 		case STRINGLITERAL_TOKEN:
