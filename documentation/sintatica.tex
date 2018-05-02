@@ -35,21 +35,23 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={typesprime}, language=pie]
-<typesprime> ::= `'                  |
-                 `..' <subrangetype>
+<typesprime> ::= `'                         |
+                 <subrangepart>             |
+                 <variable> <subrangepart>
 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={primtypes}, language=pie]
-<primtypes> ::= int <typesprime>  |
-                real              |
-                bool              |
-                char <typesprime> |
-                string            |
-                <arraytype>       |
-                <settype>         |
-                <enumtype>        |
-                <recordtype>
+<primtypes> ::= int                               |
+                real                              |
+                bool                              |
+                char                              |
+                string                            |
+                <arraytype>                       |
+                <settype>                         |
+                <enumtype>                        |
+                <recordtype>                      |
+                <subrangetypeprime> <subrangepart>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={arraytype}, language=pie]
@@ -57,25 +59,30 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangelist}, language=pie]
-<subrangelist> ::= id <subrangeprime>                           |
-                   int `..' <subrangetype> <subrangelistprime>  |
-                   char `..' <subrangetype> <subrangelistprime>
+<subrangelist> ::= <subrangetype> <subrangepart> <subrangelistprime>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, label={subrangeprime}, language=pie]
-<subrangeprime> ::= <subrangelistprime>                    |
-                   `..' <subrangetype> <subrangelistprime>
+\begin{lstlisting}[frame=single, label={subrangepart}, language=pie]
+<subrangepart> ::= `..' <subrangetype> 
 \end{lstlisting}
-
 
 \begin{lstlisting}[frame=single, label={subrangelistprime}, language=pie]
 <subrangelistprime> ::=  `'                 |
 	                 `,' <subrangelist>
 \end{lstlisting}
+
 \begin{lstlisting}[frame=single, label={subrangetype}, language=pie]
-<subrangetype> ::= id   |
-                   int  |
-                   char
+<subrangetype> ::= id  <subrangevarpart> |
+		   <subrangetypeprime>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangetypeprime}, language=pie]
+<subrangetypeprime> ::= `intliteral' | 
+		        `charliteral'
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangevarpart}, language=pie]
+<subrangevarpart> ::= `' |   <variable>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={settype}, language=pie]
@@ -352,7 +359,6 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
               realiteral        |
               charliteral       |
               stringliteral     |
-              <subrangeliteral>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={exprlist}, language=pie]
