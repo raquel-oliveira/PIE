@@ -72,9 +72,9 @@ proc split_merge(TVector vec; int first, last);
 begin
     read_arr(vector);
     split_merge(vector, FIRST, LAST);
-    writeln('Sorted vector: ');
+    writeln("Sorted vector: ");
     for index := FIRST to LAST step 1 do
         begin
-           write(vector[index] + ' ')
+           write(vector[index] + "")
         end
 end.
