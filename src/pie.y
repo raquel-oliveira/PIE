@@ -1,38 +1,48 @@
 %{
-#include <iostream>
-#include "../include/utils.h"
+#include "include/utils.h"
+#include <stdio.h>
 
-bool yydebug = false;
+extern int yylex();
+extern void init_lexer(char* arg);
+
+int tabs = 0;
+void printTabs() {
+	for(int i = 0; i < tabs; i++) {
+		printf("\t");
+	}
+}
+int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
 %}
 %union {
   int id;
   int row;
   int col;
   char* lexeme;
-}
+} 
 
+%token <lexeme> ID_TOKEN
 %token PROGRAM_TOKEN PROC_TOKEN BEGIN_TOKEN END_TOKEN FUNC_TOKEN CONST_TOKEN TYPE_TOKEN VAR_TOKEN IF_TOKEN ELSE_TOKEN GOTO_TOKEN
 %token FOR_TOKEN TO_TOKEN DO_TOKEN STEP_TOKEN IN_TOKEN OF_TOKEN LOOP_TOKEN EXITWHEN_TOKEN CASE_TOKEN WRITE_TOKEN WRITELN_TOKEN READ_TOKEN READLN_TOKEN
 %token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SUBRANGE_TOKEN SET_TOKEN TRUE_TOKEN FALSE_TOKEN
 %token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN LABEL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN
-%token REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN ID_TOKEN ERROR_TOKEN RANGE_TOKEN REF_TOKEN
+%token REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN
 
 %start program
 
 %%
-program : PROGRAM_TOKEN ID_TOKEN ';' decl block '.'
+program : PROGRAM_TOKEN ID_TOKEN ';' { printf("program %s\n", $2); } decl block '.' { printf(".\n"); }
 		;
 decl : consts usertypes vars subprograms
 	 ;
 consts :
-	   | CONST_TOKEN listconst
+	   | CONST_TOKEN { printTabs(); printf("const\n"); tabs++; } listconst { tabs--; }
 	   ;
 listconst : constdecl listconstprime
 		  ;
 listconstprime :
 			   | listconst
 			   ;
-constdecl : ID_TOKEN '=' expr ';'
+constdecl : ID_TOKEN '=' { printf("%s=\n", $1); } expr ';' 
 		  ;
 types : ID_TOKEN typesprime
 	  | primtypes
@@ -83,19 +93,19 @@ listusertypesprime :
 usertype : ID_TOKEN '=' types ';'
 		 ;
 vars :
-	 | VAR_TOKEN varlistlist
+	 | VAR_TOKEN { printTabs(); printf("var\n"); tabs++; } varlistlist { tabs--; }
 	 ;
 varlistlist : varlist varlistlistprime
 			;
 varlistlistprime :
 				 | varlistlist
 				 ;
-varlist : types idlist ';'
+varlist : { printTabs(); } types idlist ';' { printf(";\n"); }
 		;
-idlist : ID_TOKEN idattr idlistprime
+idlist : ID_TOKEN { printf($1); } idattr idlistprime
 	   ;
 idlistprime :
-			| ',' idlist
+			| ',' { printf(","); } idlist
 			;
 idattr :
 	   | '=' expr
@@ -106,7 +116,7 @@ variable : ACCESS_TOKEN ID_TOKEN variableprime
 variableprime :
 			  | variable
 			  ;
-block : BEGIN_TOKEN stmts END_TOKEN
+block : { printTabs(); } BEGIN_TOKEN { printf("begin\n"); tabs++; } stmts END_TOKEN { printf("end"); }
 	  ;
 stmts : stmt stmtlistprime
 	  ;
@@ -268,10 +278,12 @@ readlnstmt : READLN_TOKEN '(' ID_TOKEN variableprime ')'
 		   ;
 %%
 
-#include "lex.yy.c"
-
-main() {
+int main(int argc, char *argv[]) {
+	if(argc < 2) {
+		printf("Not enough arguments.");
+		return 0;
+	}
+	init_lexer(argv[1]);
 	yyparse();
+	return 0;
 }
-
-int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
