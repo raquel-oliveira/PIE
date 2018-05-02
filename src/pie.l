@@ -110,7 +110,7 @@ nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyl
 {LINECOMMENT}	  { num_line++; num_column = 1; }
 {NEW_LINE}        { num_line++; num_column = 1; }
 {INTLITERAL}      { update_token(INTLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
-{BOOLLITERAL}  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
+{BOOLLITERAL}  	  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
 {REALLITERAL}     { update_token(REALLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
 {STRINGLITERAL}   { update_token(STRINGLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
 {SUBRANGELITERAL} { update_token(SUBRANGELITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
