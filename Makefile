@@ -1,4 +1,4 @@
-parser: lex2 syntax bottomup
+parser: lex2 syntax bottomup clean
 
 lex: src/pie.l
 	lex src/pie.l
@@ -17,3 +17,6 @@ recursive:  src/recursive_parser.cpp src/tokens.cpp
 
 table: src/table_parser.cpp src/tokens.cpp
 	g++ -std=c++14 -o table src/table_parser.cpp src/tokens.cpp -ll
+
+clean:
+	rm y.tab.c lex.yy.c y.tab.h
