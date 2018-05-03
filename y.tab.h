@@ -13,7 +13,7 @@
 
  #line 8 "/usr/share/bison++/bison.h"
 
-#line 16 "src/pie.y"
+#line 18 "src/pie.y"
 typedef union {
   int id;
   int row;
@@ -234,21 +234,19 @@ typedef
 #define	RECORD_TOKEN	297
 #define	SUBRANGE_TOKEN	298
 #define	SET_TOKEN	299
-#define	TRUE_TOKEN	300
-#define	FALSE_TOKEN	301
-#define	NIL_TOKEN	302
-#define	LE_TOKEN	303
-#define	GE_TOKEN	304
-#define	EQUAL_TOKEN	305
-#define	DIFF_TOKEN	306
-#define	AND_TOKEN	307
-#define	OR_TOKEN	308
-#define	ATTR_TOKEN	309
-#define	ACCESS_TOKEN	310
-#define	ERROR_TOKEN	311
-#define	RANGE_TOKEN	312
-#define	REF_TOKEN	313
-#define	ENDOFFILE_TOKEN	314
+#define	NIL_TOKEN	300
+#define	LE_TOKEN	301
+#define	GE_TOKEN	302
+#define	EQUAL_TOKEN	303
+#define	DIFF_TOKEN	304
+#define	AND_TOKEN	305
+#define	OR_TOKEN	306
+#define	ATTR_TOKEN	307
+#define	ACCESS_TOKEN	308
+#define	ERROR_TOKEN	309
+#define	RANGE_TOKEN	310
+#define	REF_TOKEN	311
+#define	ENDOFFILE_TOKEN	312
 
 
 #line 169 "/usr/share/bison++/bison.h"
@@ -339,8 +337,6 @@ static const int ARRAY_TOKEN;
 static const int RECORD_TOKEN;
 static const int SUBRANGE_TOKEN;
 static const int SET_TOKEN;
-static const int TRUE_TOKEN;
-static const int FALSE_TOKEN;
 static const int NIL_TOKEN;
 static const int LE_TOKEN;
 static const int GE_TOKEN;
@@ -404,21 +400,19 @@ static const int ENDOFFILE_TOKEN;
 	,RECORD_TOKEN=297
 	,SUBRANGE_TOKEN=298
 	,SET_TOKEN=299
-	,TRUE_TOKEN=300
-	,FALSE_TOKEN=301
-	,NIL_TOKEN=302
-	,LE_TOKEN=303
-	,GE_TOKEN=304
-	,EQUAL_TOKEN=305
-	,DIFF_TOKEN=306
-	,AND_TOKEN=307
-	,OR_TOKEN=308
-	,ATTR_TOKEN=309
-	,ACCESS_TOKEN=310
-	,ERROR_TOKEN=311
-	,RANGE_TOKEN=312
-	,REF_TOKEN=313
-	,ENDOFFILE_TOKEN=314
+	,NIL_TOKEN=300
+	,LE_TOKEN=301
+	,GE_TOKEN=302
+	,EQUAL_TOKEN=303
+	,DIFF_TOKEN=304
+	,AND_TOKEN=305
+	,OR_TOKEN=306
+	,ATTR_TOKEN=307
+	,ACCESS_TOKEN=308
+	,ERROR_TOKEN=309
+	,RANGE_TOKEN=310
+	,REF_TOKEN=311
+	,ENDOFFILE_TOKEN=312
 
 
 #line 215 "/usr/share/bison++/bison.h"

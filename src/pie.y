@@ -5,10 +5,12 @@
 extern int yylex();
 extern void init_lexer(char* arg);
 
+FILE *f = fopen("saida.txt", "w");
+
 int tabs = 0;
 void printTabs() {
 	for(int i = 0; i < tabs; i++) {
-		printf("\t");
+		fprintf(f, "\t");
 	}
 }
 int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
@@ -23,108 +25,108 @@ int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
 %token <lexeme> ID_TOKEN REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN LABEL_TOKEN BOOLLITERAL_TOKEN
 %token PROGRAM_TOKEN PROC_TOKEN BEGIN_TOKEN END_TOKEN FUNC_TOKEN CONST_TOKEN TYPE_TOKEN VAR_TOKEN IF_TOKEN ELSE_TOKEN GOTO_TOKEN
 %token FOR_TOKEN TO_TOKEN DO_TOKEN STEP_TOKEN IN_TOKEN OF_TOKEN LOOP_TOKEN EXITWHEN_TOKEN CASE_TOKEN WRITE_TOKEN WRITELN_TOKEN READ_TOKEN READLN_TOKEN
-%token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SUBRANGE_TOKEN SET_TOKEN TRUE_TOKEN FALSE_TOKEN
+%token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SUBRANGE_TOKEN SET_TOKEN 
 %token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN 
 %token ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN
 
 %start program
 
 %%
-program : PROGRAM_TOKEN ID_TOKEN { printf("program %s", $2); } ';' { printf(";\n\n"); }  decl { printf("\n"); printTabs(); } block '.' { printf(".\n"); }
+program : PROGRAM_TOKEN ID_TOKEN { fprintf(f, "program %s", $2); } ';' { fprintf(f, ";\n\n"); }  decl { fprintf(f, "\n"); printTabs(); } block '.' { printf(".\n"); }
 		;
 decl : consts usertypes vars subprograms
 	 ;
 consts :
-	   | CONST_TOKEN { printTabs(); printf("const\n"); tabs++; } listconst { tabs--; }
+	   | CONST_TOKEN { printTabs(); fprintf(f, "const\n"); tabs++; } listconst { tabs--; }
 	   ;
 listconst : constdecl listconstprime
 		  ;
 listconstprime :
 			   | listconst
 			   ;
-constdecl : ID_TOKEN { printTabs(); printf("%s", $1); } '=' { printf(" = "); } expr ';' { printf(";\n"); }
+constdecl : ID_TOKEN { printTabs(); fprintf(f, "%s", $1); } '=' { fprintf(f, " = "); } expr ';' { fprintf(f, ";\n"); }
 		  ;
-types : ID_TOKEN { printf("%s", $1); } typesprime
+types : ID_TOKEN { fprintf(f, "%s", $1); } typesprime
 	  | primtypes
 	  ;
 typesprime :
-		   | RANGE_TOKEN { printf(".."); } subrangetype
+		   | RANGE_TOKEN { fprintf(f, ".."); } subrangetype
 		   ;
-primtypes : INT_TOKEN { printf("int"); } typesprime 
-		  | REAL_TOKEN { printf("real"); }
-		  | BOOL_TOKEN { printf("bool"); }
-		  | CHAR_TOKEN { printf("char"); } typesprime
-		  | STRING_TOKEN { printf("string"); }
+primtypes : INT_TOKEN { fprintf(f, "int"); } typesprime 
+		  | REAL_TOKEN { fprintf(f, "real"); }
+		  | BOOL_TOKEN { fprintf(f, "bool"); }
+		  | CHAR_TOKEN { fprintf(f, "char"); } typesprime
+		  | STRING_TOKEN { fprintf(f, "string"); }
 		  | arraytype
 		  | settype
 		  | enumtype
 		  | recordtype
 		  ;
-arraytype : ARRAY_TOKEN '[' { printf("array ["); } subrangelist ']' OF_TOKEN { printf("] of "); } types
+arraytype : ARRAY_TOKEN '[' { fprintf(f, "array ["); } subrangelist ']' OF_TOKEN { fprintf(f, "] of "); } types
 		  ;
-subrangelist : ID_TOKEN { printf("%s", $1); } subrangeprime
-			 | INT_TOKEN RANGE_TOKEN { printf(""); } subrangetype subrangelistprime
+subrangelist : ID_TOKEN { fprintf(f, "%s", $1); } subrangeprime
+			 | INT_TOKEN RANGE_TOKEN { fprintf(f, ""); } subrangetype subrangelistprime
 			 | CHAR_TOKEN RANGE_TOKEN subrangetype subrangelistprime
 			 ;
 subrangeprime : subrangelistprime
 			  | RANGE_TOKEN subrangetype subrangelistprime
 			  ;
 subrangelistprime :
-				  | ',' { printf(", "); } subrangelist
+				  | ',' { fprintf(f, ", "); } subrangelist
 				  ;
 subrangetype : ID_TOKEN
 			 | INT_TOKEN
 			 | CHAR_TOKEN
 			 ;
-settype : SET_TOKEN OF_TOKEN { printf("set of "); } types
+settype : SET_TOKEN OF_TOKEN { fprintf(f, "set of "); } types
 		;
-enumtype : '(' { printf("("); } idlist ')' { printf(")"); }
+enumtype : '(' { fprintf(f, "("); } idlist ')' { fprintf(f, ")"); }
 		 ;
-recordtype : RECORD_TOKEN { printf("record\n"); tabs++; } varlistlist END_TOKEN { printf("end"); tabs--; }
+recordtype : RECORD_TOKEN { fprintf(f, "record\n"); tabs++; } varlistlist END_TOKEN { fprintf(f, "end"); tabs--; }
 		   ;
 usertypes :
-		  | TYPE_TOKEN { printTabs(); printf("type\n"); tabs++; } listusertypes { tabs--; }
+		  | TYPE_TOKEN { printTabs(); fprintf(f, "type\n"); tabs++; } listusertypes { tabs--; }
 		  ;
 listusertypes : usertype listusertypesprime
 			  ;
 listusertypesprime :
 				   | listusertypes
 				   ;
-usertype : ID_TOKEN { printTabs(); printf("%s", $1); } '=' { printTabs(); printf(" = "); } types ';' { printf(";\n"); }
+usertype : ID_TOKEN { printTabs(); fprintf(f, "%s", $1); } '=' { printTabs(); fprintf(f, " = "); } types ';' { fprintf(f, ";\n"); }
 		 ;
 vars :
-	 | VAR_TOKEN { printTabs(); printf("var\n"); tabs++; } varlistlist { tabs--; }
+	 | VAR_TOKEN { printTabs(); fprintf(f, "var\n"); tabs++; } varlistlist { tabs--; }
 	 ;
 varlistlist : varlist varlistlistprime
 			;
 varlistlistprime :
 				 | varlistlist
 				 ;
-varlist : { printTabs(); } types { printf(" "); } idlist ';' { printf(";\n"); }
+varlist : { printTabs(); } types { fprintf(f, " "); } idlist ';' { fprintf(f, ";\n"); }
 		;
-idlist : ID_TOKEN { printf($1); } idattr idlistprime
+idlist : ID_TOKEN { fprintf(f, $1); } idattr idlistprime
 	   ;
 idlistprime :
-			| ',' { printf(", "); } idlist
+			| ',' { fprintf(f, ", "); } idlist
 			;
 idattr :
-	   | '=' { printf("= "); } expr
+	   | '=' { fprintf(f, "= "); } expr
 	   ;
-variable : ACCESS_TOKEN ID_TOKEN { printf("->%s", $2); } variableprime
-		 | '[' { printf("["); } exprlistplus ']' { printf("]"); } variableprime
+variable : ACCESS_TOKEN ID_TOKEN { fprintf(f, "->%s", $2); } variableprime
+		 | '[' { fprintf(f, "["); } exprlistplus ']' { fprintf(f, "]"); } variableprime
 		 ;
 variableprime :
 			  | variable
 			  ;
-block : BEGIN_TOKEN { printf("begin\n"); tabs++; } stmts END_TOKEN { printf("\n"); tabs--; printTabs(); printf("end"); }
+block : BEGIN_TOKEN { fprintf(f, "begin\n"); tabs++; } stmts END_TOKEN { fprintf(f, "\n"); tabs--; printTabs(); fprintf(f, "end"); }
 	  ;
 stmts : { printTabs(); } stmt stmtlistprime
 	  ;
 stmtlistprime :
-			  | ';' { printf(";\n"); } stmts
+			  | ';' { fprintf(f, ";\n"); } stmts
 			  ;
 stmt :
-	 | LABEL_TOKEN { printf("%s ", $1); } stmt
+	 | LABEL_TOKEN { fprintf(f, "%s ", $1); } stmt
 	 | block
 	 | writestmt
 	 | writelnstmt
@@ -135,65 +137,65 @@ stmt :
 	 | forblock
 	 | caseblock
 	 | gotostmt
-	 | ID_TOKEN { printf("%s", $1); } stmtprime
+	 | ID_TOKEN { fprintf(f, "%s", $1); } stmtprime
 	 | exitstmt
 	 | returnstmt
 	 ;
 stmtprime : attrstmt
 		  | subprogcall
 		  ;
-subprogcall : '(' { printf("("); } exprlist ')' { printf(")"); }
+subprogcall : '(' { fprintf(f, "("); } exprlist ')' { fprintf(f, ")"); }
 			;
-exitstmt : EXITWHEN_TOKEN { printf("exitwhen "); } expr
+exitstmt : EXITWHEN_TOKEN { fprintf(f, "exitwhen "); } expr
 		 ;
-returnstmt : RETURN_TOKEN { printf("return "); } expr
+returnstmt : RETURN_TOKEN { fprintf(f, "return "); } expr
 		   ;
-attrstmt : variable { printf(" "); } ATTR_TOKEN { printf(":= "); } expr
-		 | { printf(" "); } ATTR_TOKEN { printf(":= "); } expr
+attrstmt : variable { fprintf(f, " "); } ATTR_TOKEN { fprintf(f, ":= "); } expr
+		 | { fprintf(f, " "); } ATTR_TOKEN { fprintf(f, ":= "); } expr
 		 ;
-ifblock : IF_TOKEN { printf("if "); } expr { printf("\n"); tabs++; printTabs(); } stmt { printf("\n"); tabs--; } elseblock
+ifblock : IF_TOKEN { fprintf(f, "if "); } expr { fprintf(f, "\n"); tabs++; printTabs(); } stmt { fprintf(f, "\n"); tabs--; } elseblock
 		;
 elseblock :
-		  | ELSE_TOKEN { printTabs(); printf("else\n"); tabs++; printTabs(); } stmt { tabs--; }
+		  | ELSE_TOKEN { printTabs(); fprintf(f, "else\n"); tabs++; printTabs(); } stmt { tabs--; }
 		  ;
-loopblock : LOOP_TOKEN { printf("loop\n"); tabs++; printTabs(); } stmt { tabs--; }
+loopblock : LOOP_TOKEN { fprintf(f, "loop\n"); tabs++; printTabs(); } stmt { tabs--; }
 		  ;
-caseblock : CASE_TOKEN { printf("case "); } expr OF_TOKEN { printf("of "); tabs++; } caselist  { tabs--; } caseblockprime
+caseblock : CASE_TOKEN { fprintf(f, "case "); } expr OF_TOKEN { fprintf(f, "of "); tabs++; } caselist  { tabs--; } caseblockprime
 		  ;
-caseblockprime :  { printTabs(); } END_TOKEN { printf("end"); }
-			   | { tabs++; printTabs(); } ELSE_TOKEN { printf("else\n"); tabs++; printTabs(); } stmt END_TOKEN { tabs-=2; printTabs(); printf("end"); }
+caseblockprime :  { printTabs(); } END_TOKEN { fprintf(f, "end"); }
+			   | { tabs++; printTabs(); } ELSE_TOKEN { fprintf(f, "else\n"); tabs++; printTabs(); } stmt END_TOKEN { tabs-=2; printTabs(); fprintf(f, "end"); }
 			   ;
-caselist : { printTabs(); } literallist ':' { printf(":\n"); tabs++; printTabs(); } stmt ';' { printf(";\n"); tabs--; }
+caselist : { printTabs(); } literallist ':' { fprintf(f, ":\n"); tabs++; printTabs(); } stmt ';' { fprintf(f,";\n"); tabs--; }
 		 ;
 literallist : literal literallistprime
 			;
 literallistprime :
-				 | ',' { printf(", "); } literallist
+				 | ',' { fprintf(f, ", "); } literallist
 				 ;
-gotostmt : GOTO_TOKEN LABEL_TOKEN { printf("goto %s", $2); }
+gotostmt : GOTO_TOKEN LABEL_TOKEN { fprintf(f, "goto %s", $2); }
 		 ;
 forblock : FOR_TOKEN ID_TOKEN { printf("for %s", $2); } forblockprime
 		 ;
-forblockprime : variable ATTR_TOKEN { printf(" := "); } expr TO_TOKEN { printf(" to "); } expr STEP_TOKEN { printf(" step "); } expr DO_TOKEN { printf(" do\n"); tabs++; printTabs(); } stmt { tabs--; }
-			  | ATTR_TOKEN { printf(" := "); } expr TO_TOKEN { printf(" to "); } expr STEP_TOKEN { printf(" step "); } expr DO_TOKEN { printf(" do\n"); tabs++; printTabs(); } stmt { tabs--; }
+forblockprime : variable ATTR_TOKEN { fprintf(f, " := "); } expr TO_TOKEN { fprintf(f," to "); } expr STEP_TOKEN { fprintf(f, " step "); } expr DO_TOKEN { fprintf(f, " do\n"); tabs++; printTabs(); } stmt { tabs--; }
+			  | ATTR_TOKEN { fprintf(f, " := "); } expr TO_TOKEN { fprintf(f, " to "); } expr STEP_TOKEN { fprintf(f, " step "); } expr DO_TOKEN { fprintf(f, " do\n"); tabs++; printTabs(); } stmt { tabs--; }
 			  ;
 expr : conj disj
 	 ;
-finalterm : ID_TOKEN { printf("%s", $1); } finaltermprime
+finalterm : ID_TOKEN { fprintf(f, "%s", $1); } finaltermprime
 		  | literal
-		  | '(' { printf("("); } expr ')' { printf(")"); } 
+		  | '(' { fprintf(f, "("); } expr ')' { fprintf(f, ")"); } 
 		  ;
 finaltermprime :
 			   | variable
 			   | subprogcall
 			   ;
 disj :
-	 | OR_TOKEN { printf(" || "); } conj
+	 | OR_TOKEN { fprintf(f, " || "); } conj
 	 ;
 conj : comp conjprime
 	 ;
 conjprime :
-		  | AND_TOKEN { printf(" && "); } comp
+		  | AND_TOKEN { fprintf(f, " && "); } comp
 		  ;
 comp : relational compprime
 	 ;
@@ -211,52 +213,52 @@ sumprime :
 		 | addop neg sumprime
 		 ;
 neg : mul
-	| '!' { printf("!"); } mul
+	| '!' { fprintf(f, "!"); } mul
 	;
 mul : finalterm mulprime
 	;
 mulprime :
 		 | mulop finalterm mulprime
 		 ;
-addop : '+' { printf(" + "); } 
-	  | '-' { printf(" - "); } 
+addop : '+' { fprintf(f, " + "); } 
+	  | '-' { fprintf(f, " - "); } 
 	  ;
-mulop : '*' { printf(" * "); } 
-	  | '/' { printf(" / "); } 
-	  | '%' { printf(" % "); } 
+mulop : '*' { fprintf(f, " * "); } 
+	  | '/' { fprintf(f, " / "); } 
+	  | '%' { fprintf(f, " % "); } 
 	  ;
-equalityop : EQUAL_TOKEN { printf(" == "); } 
-		   | DIFF_TOKEN { printf(" != "); } 
+equalityop : EQUAL_TOKEN { fprintf(f, " == "); } 
+		   | DIFF_TOKEN { fprintf(f, " != "); } 
 		   ;
-relationalop : '<' { printf(" < "); } 
-			 | LE_TOKEN { printf(" <= "); } 
-			 | '>' { printf(" > "); } 
-			 | GE_TOKEN { printf(" >= "); } 
+relationalop : '<' { fprintf(f, " < "); } 
+			 | LE_TOKEN { fprintf(f, " <= "); } 
+			 | '>' { fprintf(f, " > "); } 
+			 | GE_TOKEN { fprintf(f, " >= "); } 
 			 ;
-literal : INTLITERAL_TOKEN { printf("%s", $1); } 
-    	| BOOLLITERAL_TOKEN { printf("%s", $1); } 
-		| REALLITERAL_TOKEN { printf("%s", $1); } 
-		| CHARLITERAL_TOKEN { printf("%s", $1); } 
-		| STRINGLITERAL_TOKEN { printf("%s", $1); } 
-		| SUBRANGELITERAL_TOKEN { printf("%s", $1); } 
+literal : INTLITERAL_TOKEN { fprintf(f, "%s", $1); } 
+    	| BOOLLITERAL_TOKEN { fprintf(f, "%s", $1); } 
+		| REALLITERAL_TOKEN { fprintf(f, "%s", $1); } 
+		| CHARLITERAL_TOKEN { fprintf(f, "%s", $1); } 
+		| STRINGLITERAL_TOKEN { fprintf(f, "%s", $1); } 
+		| SUBRANGELITERAL_TOKEN { fprintf(f, "%s", $1); } 
 		;
 exprlist :
 		 | exprlistplus
 exprlistplus : expr exprlistplusprime
 			 ;
 exprlistplusprime :
-				  | ',' { printf(", "); } exprlistplus
+				  | ',' { fprintf(f, ", "); } exprlistplus
 				  ;
 subprograms :
 			| procedure subprogramsprime
 			| function subprogramsprime
 			;
 subprogramsprime :
-				 | ';' { printf(";\n"); } subprograms
+				 | ';' { fprintf(f, ";\n"); } subprograms
 				 ;
-procedure : PROC_TOKEN ID_TOKEN { printf("\nproc %s", $2); } '(' { printf("("); } param ')' ';' { printf(");\n"); tabs++; } decl { printTabs(); } block { tabs--; }
+procedure : PROC_TOKEN ID_TOKEN { fprintf(f, "\nproc %s", $2); } '(' { fprintf(f, "("); } param ')' ';' { fprintf(f,");\n"); tabs++; } decl { printTabs(); } block { tabs--; }
 		  ;
-function : FUNC_TOKEN { printf("\nfunc "); } types ID_TOKEN { printf(" %s", $4); } '(' { printf("("); } param ')' ';'{  printf(");\n"); tabs++; }  decl { printTabs(); } block { tabs--; }
+function : FUNC_TOKEN { fprintf(f, "\nfunc "); } types ID_TOKEN { fprintf(f, " %s", $4); } '(' { fprintf(f,"("); } param ')' ';'{  fprintf(f, ");\n"); tabs++; }  decl { printTabs(); } block { tabs--; }
 		 ;
 param :
 	  | paramlistlist
@@ -264,18 +266,18 @@ param :
 paramlistlist : paramlist paramlistlistprime
 			  ;
 paramlistlistprime :
-				   | ';' { printf("; "); }  paramlistlist
+				   | ';' { fprintf(f, "; "); }  paramlistlist
 				   ;
-paramlist : REF_TOKEN { printf("ref "); } types { printf(" "); } idlist
-          | types { printf(" "); } idlist
+paramlist : REF_TOKEN { fprintf(f, "ref "); } types { fprintf(f, " "); } idlist
+          | types { fprintf(f, " "); } idlist
           ;
-writestmt : WRITE_TOKEN '(' { printf("write("); } expr ')' { printf(")"); } 
+writestmt : WRITE_TOKEN '(' { fprintf(f, "write("); } expr ')' { fprintf(f, ")"); } 
 		  ;
-writelnstmt : WRITELN_TOKEN '(' { printf("writeln("); } expr ')' { printf(")"); }
+writelnstmt : WRITELN_TOKEN '(' { fprintf(f, "writeln("); } expr ')' { fprintf(f, ")"); }
 		    ;
-readstmt : READ_TOKEN '(' ID_TOKEN { printf("read(%s", $3); } variableprime ')' { printf(")"); }
+readstmt : READ_TOKEN '(' ID_TOKEN { fprintf(f, "read(%s", $3); } variableprime ')' { fprintf(f, ")"); }
 		 ;
-readlnstmt : READLN_TOKEN '(' ID_TOKEN { printf("readln(%s", $3); } variableprime ')' { printf(")"); }
+readlnstmt : READLN_TOKEN '(' ID_TOKEN { fprintf(f, "readln(%s", $3); } variableprime ')' { fprintf(f, ")"); }
 		   ;
 %%
 
