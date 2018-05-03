@@ -212,6 +212,7 @@ LITERAL -> 'boolliteral'
 LITERAL -> 'realliteral'
 LITERAL -> 'charliteral'
 LITERAL -> 'stringliteral'
+LITERAL -> 'nilliteral'
 
 EXPRLIST -> ''
 EXPRLIST -> EXPRLISTPLUS
