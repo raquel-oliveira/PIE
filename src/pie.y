@@ -163,10 +163,10 @@ returnstmt : RETURN_TOKEN { fprintf(f, "return "); } expr
 attrstmt : variable { fprintf(f, " "); } ATTR_TOKEN { fprintf(f, ":= "); } expr
 		 | { fprintf(f, " "); } ATTR_TOKEN { fprintf(f, ":= "); } expr
 		 ;
-ifblock : IF_TOKEN { fprintf(f, "if "); } expr { fprintf(f, "\n"); tabs++; printTabs(); } stmt { fprintf(f, "\n"); tabs--; } elseblock
+ifblock : IF_TOKEN { fprintf(f, "if "); } expr { fprintf(f, "\n"); tabs++; printTabs(); } stmt { tabs--; } elseblock
 		;
 elseblock :
-		  | ELSE_TOKEN { printTabs(); fprintf(f, "else\n"); tabs++; printTabs(); } stmt { tabs--; }
+		  | ELSE_TOKEN { fprintf(f, "\n"); printTabs(); fprintf(f, "else\n"); tabs++; printTabs(); } stmt { tabs--; }
 		  ;
 loopblock : LOOP_TOKEN { fprintf(f, "loop\n"); tabs++; printTabs(); } stmt { tabs--; }
 		  ;
@@ -266,9 +266,9 @@ subprograms :
 subprogramsprime :
 				 | ';' { fprintf(f, ";\n"); } subprograms
 				 ;
-procedure : PROC_TOKEN ID_TOKEN { fprintf(f, "\nproc %s", $2); } '(' { fprintf(f, "("); } param ')' ';' { fprintf(f,");\n"); tabs++; } decl { printTabs(); } block { tabs--; }
+procedure : PROC_TOKEN ID_TOKEN { fprintf(f, "\n"); printTabs(); fprintf(f, "proc %s", $2); } '(' { fprintf(f, "("); } param ')' ';' { fprintf(f,");\n"); tabs++; } decl { fprintf(f, "\n"); printTabs(); }  block { tabs--; }
 		  ;
-function : FUNC_TOKEN { fprintf(f, "\nfunc "); } types ID_TOKEN { fprintf(f, " %s", $4); } '(' { fprintf(f,"("); } param ')' ';'{  fprintf(f, ");\n"); tabs++; }  decl { printTabs(); } block { tabs--; }
+function : FUNC_TOKEN { fprintf(f, "\n"); printTabs(); fprintf(f, "func "); } types ID_TOKEN { fprintf(f, " %s", $4); } '(' { fprintf(f,"("); } param ')' ';' { fprintf(f, ");\n"); tabs++; }  decl { fprintf(f, "\n"); printTabs(); } block { tabs--; }
 		 ;
 param :
 	  | paramlistlist
