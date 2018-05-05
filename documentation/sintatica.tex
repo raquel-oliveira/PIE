@@ -51,7 +51,7 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
                 <settype>                         |
                 <enumtype>                        |
                 <recordtype>                      |
-                <subrangetypeprime> <subrangepart>
+                <subrangetype2> <subrangepart>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={arraytype}, language=pie]
@@ -59,11 +59,22 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangelist}, language=pie]
-<subrangelist> ::= <subrangetype> <subrangepart> <subrangelistprime>
+<subrangelist> ::= <subrangetype2> <subrangepart> <subrangelistprime> |
+                   <subrangetype1> <subrangelisttype1>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangelisttype1}, language=pie]
+<subrangelisttype1> ::= <subrangepart> <subrangelistprime> |
+                        <subrangelistprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangepart}, language=pie]
-<subrangepart> ::= `..' <subrangetype> 
+<subrangepart> ::= `..' <subrangepartprime> 
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, label={subrangepartprime}, language=pie]
+<subrangepartprime> ::= <subrangetype1> |
+                        <subrangetype2>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangelistprime}, language=pie]
@@ -72,12 +83,11 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangetype}, language=pie]
-<subrangetype> ::= id  <subrangevarpart> |
-		   <subrangetypeprime>
+<subrangetype1> ::= id  <subrangevarpart>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={subrangetypeprime}, language=pie]
-<subrangetypeprime> ::= `intliteral' | 
+<subrangetype2> ::= `intliteral' | 
 		        `charliteral'
 \end{lstlisting}
 
