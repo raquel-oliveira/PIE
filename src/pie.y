@@ -32,7 +32,7 @@ int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
 %start program
 
 %%
-program : PROGRAM_TOKEN ID_TOKEN { fprintf(f, "program %s", $2); } ';' { fprintf(f, ";\n\n"); }  decl { fprintf(f, "\n"); printTabs(); } block '.' { printf(".\n"); }
+program : PROGRAM_TOKEN ID_TOKEN { fprintf(f, "program %s", $2); } ';' { fprintf(f, ";\n\n"); }  decl { fprintf(f, "\n"); printTabs(); } block '.' { fprintf(f, ".\n"); }
 		;
 decl : consts usertypes vars subprograms
 	 ;
@@ -50,34 +50,44 @@ types : ID_TOKEN { fprintf(f, "%s", $1); } typesprime
 	  | primtypes
 	  ;
 typesprime :
-		   | RANGE_TOKEN { fprintf(f, ".."); } subrangetype
+		   | subrangepart
+		   | variable subrangepart
 		   ;
-primtypes : INT_TOKEN { fprintf(f, "int"); } typesprime 
+primtypes : INT_TOKEN { fprintf(f, "int"); } 
 		  | REAL_TOKEN { fprintf(f, "real"); }
 		  | BOOL_TOKEN { fprintf(f, "bool"); }
-		  | CHAR_TOKEN { fprintf(f, "char"); } typesprime
+		  | CHAR_TOKEN { fprintf(f, "char"); }
 		  | STRING_TOKEN { fprintf(f, "string"); }
 		  | arraytype
 		  | settype
 		  | enumtype
 		  | recordtype
+		  | subrangetype2 subrangepart
 		  ;
 arraytype : ARRAY_TOKEN '[' { fprintf(f, "array ["); } subrangelist ']' OF_TOKEN { fprintf(f, "] of "); } types
 		  ;
-subrangelist : ID_TOKEN { fprintf(f, "%s", $1); } subrangeprime
-			 | INT_TOKEN RANGE_TOKEN { fprintf(f, ""); } subrangetype subrangelistprime
-			 | CHAR_TOKEN RANGE_TOKEN subrangetype subrangelistprime
+subrangelist : subrangetype2 subrangepart subrangelistprime
+			 | subrangetype1 subrangelisttype1
 			 ;
-subrangeprime : subrangelistprime
-			  | RANGE_TOKEN subrangetype subrangelistprime
-			  ;
+subrangelisttype1 : subrangepart subrangelistprime
+				  | subrangelistprime
+				  ;
+subrangepart : RANGE_TOKEN { fprintf(f, ".."); } subrangepartprime
+			 ;
+subrangepartprime : subrangetype1
+				  | subrangetype2
+				  ;
 subrangelistprime :
 				  | ',' { fprintf(f, ", "); } subrangelist
 				  ;
-subrangetype : ID_TOKEN
-			 | INT_TOKEN
-			 | CHAR_TOKEN
+subrangetype1 : ID_TOKEN { fprintf(f, "%s", $1); } subrangetvarpart
 			 ;
+subrangetype2 : INTLITERAL_TOKEN { fprintf(f, "%s", $1); }
+				  | CHARLITERAL_TOKEN { fprintf(f, "%s", $1); }
+				  ;
+subrangetvarpart : 
+				 | variable
+				 ;
 settype : SET_TOKEN OF_TOKEN { fprintf(f, "set of "); } types
 		;
 enumtype : '(' { fprintf(f, "("); } idlist ')' { fprintf(f, ")"); }
@@ -174,7 +184,7 @@ literallistprime :
 				 ;
 gotostmt : GOTO_TOKEN LABEL_TOKEN { fprintf(f, "goto %s", $2); }
 		 ;
-forblock : FOR_TOKEN ID_TOKEN { printf("for %s", $2); } forblockprime
+forblock : FOR_TOKEN ID_TOKEN { fprintf(f, "for %s", $2); } forblockprime
 		 ;
 forblockprime : variable ATTR_TOKEN { fprintf(f, " := "); } expr TO_TOKEN { fprintf(f," to "); } expr STEP_TOKEN { fprintf(f, " step "); } expr DO_TOKEN { fprintf(f, " do\n"); tabs++; printTabs(); } stmt { tabs--; }
 			  | ATTR_TOKEN { fprintf(f, " := "); } expr TO_TOKEN { fprintf(f, " to "); } expr STEP_TOKEN { fprintf(f, " step "); } expr DO_TOKEN { fprintf(f, " do\n"); tabs++; printTabs(); } stmt { tabs--; }
