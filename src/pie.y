@@ -2,7 +2,6 @@
 #include "include/utils.h"
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 
 extern int yylex();
 extern void init_lexer(char* arg);
@@ -28,10 +27,10 @@ char*  getPathFile (char *arg){
 	if (file == NULL ) file = folder;
 	char * file_name = strcat(strtok (file,"."), ".txt");
 
-	char *path_name = NULL;
-	path_name = (char*) malloc (strlen("pretty_printing/") + strlen(file_name) + 1);
+	char path_name[512] = "pretty_printing/";
+	//path_name = (char*) malloc (strlen("pretty_printing/") + strlen(file_name) + 1);
 
-	strcpy(path_name, "pretty_printing/");	
+	//strcpy(path_name, "pretty_printing/");	
 	strcat(path_name, file_name);
 	char * out = path_name;
 	return out;
