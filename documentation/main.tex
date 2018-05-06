@@ -87,8 +87,12 @@ O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textb
 \input{regras.tex}
 
 \newpage
-\chapter{Analisador Sintático (Parser)}
-\input{parser.tex}
+\chapter{Analisadores Sintáticos Descendentes}
+\input{descendentes.tex}
+
+\newpage
+\chapter{Analisador Sintático Ascendente}
+\input{ascendente.tex}
 
 \newpage
 \chapter{Forma de uso}
@@ -99,20 +103,15 @@ O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 \end{verbatim}
 
 \section{Execução}
-\subsection{Parser recursivo}
+\subsection{Parser ascendente}
 \begin{verbatim}
-    ./recursive pathtofile.pie
-\end{verbatim}
-
-\subsection{Parser por tabela}
-\begin{verbatim}
-    ./table pathtofile.pie
+    ./pie pathtofile.pie
 \end{verbatim}
 
 \section{Exemplo}
 \begin{verbatim}
     make
-    ./recursive codesamples/mergesort.pie
+    ./pie codesamples/mergesort.pie
 \end{verbatim}
 
 \newpage
