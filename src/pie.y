@@ -5,7 +5,7 @@
 extern int yylex();
 extern void init_lexer(char* arg);
 
-FILE *f = fopen("saida.txt", "w");
+FILE *f = fopen("pretty_printing/pretty_printing_file.txt", "w");
 
 int tabs = 0;
 void printTabs() {
