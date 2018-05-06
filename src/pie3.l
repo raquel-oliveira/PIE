@@ -3,6 +3,9 @@
 #include <math.h>
 #include "y.tab.h"
 int num_line = 1, num_column = 1;
+char* lex;
+
+extern YYSTYPE yylval;
 
 void update_column(int yyleng) {
 	num_column += yyleng;
@@ -13,6 +16,7 @@ void update_token(int id, int row, int col, char* lexeme) {
 	yylval.row = row;
 	yylval.col = col;
 	yylval.lexeme = lexeme;
+	lex = lexeme;
 }
 
 %}
@@ -39,67 +43,67 @@ UNACCEPTABLE    .
 %%
 <<EOF>>     	{ update_token(ENDOFFILE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return 0; }
 
-program    		{ update_token(PROGRAM_TOKEN, num_line, num_column, NULL); update_column(yyleng); return PROGRAM_TOKEN; }
-proc       		{ update_token(PROC_TOKEN, num_line, num_column, NULL); update_column(yyleng); return PROC_TOKEN; }
-begin      		{ update_token(BEGIN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return BEGIN_TOKEN; }
-end        		{ update_token(END_TOKEN, num_line, num_column, NULL); update_column(yyleng); return END_TOKEN; }
-func       		{ update_token(FUNC_TOKEN, num_line, num_column, NULL); update_column(yyleng); return FUNC_TOKEN; }
-const      		{ update_token(CONST_TOKEN, num_line, num_column, NULL); update_column(yyleng); return CONST_TOKEN; }
-type       		{ update_token(TYPE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return TYPE_TOKEN; }
-var        		{ update_token(VAR_TOKEN, num_line, num_column, NULL); update_column(yyleng); return VAR_TOKEN; }
-if         		{ update_token(IF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return IF_TOKEN; }
-else       		{ update_token(ELSE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ELSE_TOKEN; }
-goto       		{ update_token(GOTO_TOKEN, num_line, num_column, NULL); update_column(yyleng); return GOTO_TOKEN; }
-for        		{ update_token(FOR_TOKEN, num_line, num_column, NULL); update_column(yyleng); return FOR_TOKEN; }
-to         		{ update_token(TO_TOKEN, num_line, num_column, NULL); update_column(yyleng); return TO_TOKEN; }
-do         		{ update_token(DO_TOKEN, num_line, num_column, NULL); update_column(yyleng); return DO_TOKEN; }
-step       		{ update_token(STEP_TOKEN, num_line, num_column, NULL); update_column(yyleng); return STEP_TOKEN; }
-of         		{ update_token(OF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return OF_TOKEN; }
-loop       		{ update_token(LOOP_TOKEN, num_line, num_column, NULL); update_column(yyleng); return LOOP_TOKEN; }
-exitwhen   		{ update_token(EXITWHEN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return EXITWHEN_TOKEN; }
-case       		{ update_token(CASE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return CASE_TOKEN; }
-write      		{ update_token(WRITE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return WRITE_TOKEN; }
-writeln    		{ update_token(WRITELN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return WRITELN_TOKEN; }
-read       		{ update_token(READ_TOKEN, num_line, num_column, NULL); update_column(yyleng); return READ_TOKEN; }
-readln     		{ update_token(READLN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return READLN_TOKEN; }
-return     		{ update_token(RETURN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return RETURN_TOKEN; }
-int        		{ update_token(INT_TOKEN, num_line, num_column, NULL); update_column(yyleng); return INT_TOKEN; }
-bool       		{ update_token(BOOL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return BOOL_TOKEN; }
-real       		{ update_token(REAL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return REAL_TOKEN; }
-char       		{ update_token(CHAR_TOKEN, num_line, num_column, NULL); update_column(yyleng); return CHAR_TOKEN; }
-string     		{ update_token(STRING_TOKEN, num_line, num_column, NULL); update_column(yyleng); return STRING_TOKEN; }
-array      		{ update_token(ARRAY_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ARRAY_TOKEN; }
-record     		{ update_token(RECORD_TOKEN, num_line, num_column, NULL); update_column(yyleng); return RECORD_TOKEN; }
-set        		{ update_token(SET_TOKEN, num_line, num_column, NULL); update_column(yyleng); return SET_TOKEN; }
-ref				{ update_token(REF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return REF_TOKEN; }
-nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return NIL_TOKEN; }
-"+"             { update_token('+', num_line, num_column, NULL); update_column(yyleng); return '+'; }
-"-"         	{ update_token('-', num_line, num_column, NULL); update_column(yyleng); return '-'; }
-"*"         	{ update_token('*', num_line, num_column, NULL); update_column(yyleng); return '*'; }
-"/"        		{ update_token('/', num_line, num_column, NULL); update_column(yyleng); return '/'; }
-"%"        		{ update_token('%', num_line, num_column, NULL); update_column(yyleng); return '%'; }
-"<="        	{ update_token(LE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return LE_TOKEN; }
-"<"         	{ update_token('<', num_line, num_column, NULL); update_column(yyleng); return '<'; }
-">"         	{ update_token('>', num_line, num_column, NULL); update_column(yyleng); return '>'; }
-">="        	{ update_token(GE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return GE_TOKEN; }
-"=="        	{ update_token(EQUAL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return EQUAL_TOKEN; }
-"!="        	{ update_token(DIFF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return DIFF_TOKEN; }
-"&&"        	{ update_token(AND_TOKEN, num_line, num_column, NULL); update_column(yyleng); return AND_TOKEN; }
-"||"        	{ update_token(OR_TOKEN, num_line, num_column, NULL); update_column(yyleng); return OR_TOKEN; }
-"!"        		{ update_token('!', num_line, num_column, NULL); update_column(yyleng); return '!'; }
-"="         	{ update_token('=', num_line, num_column, NULL); update_column(yyleng); return '='; }
-":="         	{ update_token(ATTR_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ATTR_TOKEN; }
-"->"         	{ update_token(ACCESS_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ACCESS_TOKEN; }
-";"         	{ update_token(';', num_line, num_column, NULL); update_column(yyleng); return ';'; }
-","         	{ update_token(',', num_line, num_column, NULL); update_column(yyleng); return ','; }
-"."         	{ update_token('.', num_line, num_column, NULL); update_column(yyleng); return '.'; }
-"("         	{ update_token('(', num_line, num_column, NULL); update_column(yyleng); return '('; }
-")"         	{ update_token(')', num_line, num_column, NULL); update_column(yyleng); return ')'; }
-"["         	{ update_token('[', num_line, num_column, NULL); update_column(yyleng); return '['; }
-"]"         	{ update_token(']', num_line, num_column, NULL); update_column(yyleng); return ']'; }
-"{"         	{ update_token('{', num_line, num_column, NULL); update_column(yyleng); return '{'; }
-"}"         	{ update_token('}', num_line, num_column, NULL); update_column(yyleng); return '}'; }
-".."         	{ update_token(RANGE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return RANGE_TOKEN; }
+program    		{ update_token(PROGRAM_TOKEN, num_line, num_column, "program"); update_column(yyleng); return PROGRAM_TOKEN; }
+proc       		{ update_token(PROC_TOKEN, num_line, num_column, "proc"); update_column(yyleng); return PROC_TOKEN; }
+begin      		{ update_token(BEGIN_TOKEN, num_line, num_column, "begin"); update_column(yyleng); return BEGIN_TOKEN; }
+end        		{ update_token(END_TOKEN, num_line, num_column, "end"); update_column(yyleng); return END_TOKEN; }
+func       		{ update_token(FUNC_TOKEN, num_line, num_column, "func"); update_column(yyleng); return FUNC_TOKEN; }
+const      		{ update_token(CONST_TOKEN, num_line, num_column, "const"); update_column(yyleng); return CONST_TOKEN; }
+type       		{ update_token(TYPE_TOKEN, num_line, num_column, "type"); update_column(yyleng); return TYPE_TOKEN; }
+var        		{ update_token(VAR_TOKEN, num_line, num_column, "var"); update_column(yyleng); return VAR_TOKEN; }
+if         		{ update_token(IF_TOKEN, num_line, num_column, "if"); update_column(yyleng); return IF_TOKEN; }
+else       		{ update_token(ELSE_TOKEN, num_line, num_column, "else"); update_column(yyleng); return ELSE_TOKEN; }
+goto       		{ update_token(GOTO_TOKEN, num_line, num_column, "goto"); update_column(yyleng); return GOTO_TOKEN; }
+for        		{ update_token(FOR_TOKEN, num_line, num_column, "for"); update_column(yyleng); return FOR_TOKEN; }
+to         		{ update_token(TO_TOKEN, num_line, num_column, "to"); update_column(yyleng); return TO_TOKEN; }
+do         		{ update_token(DO_TOKEN, num_line, num_column, "do"); update_column(yyleng); return DO_TOKEN; }
+step       		{ update_token(STEP_TOKEN, num_line, num_column, "step"); update_column(yyleng); return STEP_TOKEN; }
+of         		{ update_token(OF_TOKEN, num_line, num_column, "of"); update_column(yyleng); return OF_TOKEN; }
+loop       		{ update_token(LOOP_TOKEN, num_line, num_column, "loop"); update_column(yyleng); return LOOP_TOKEN; }
+exitwhen   		{ update_token(EXITWHEN_TOKEN, num_line, num_column, "exitwhen"); update_column(yyleng); return EXITWHEN_TOKEN; }
+case       		{ update_token(CASE_TOKEN, num_line, num_column, "case"); update_column(yyleng); return CASE_TOKEN; }
+write      		{ update_token(WRITE_TOKEN, num_line, num_column, "write"); update_column(yyleng); return WRITE_TOKEN; }
+writeln    		{ update_token(WRITELN_TOKEN, num_line, num_column, "writeln"); update_column(yyleng); return WRITELN_TOKEN; }
+read       		{ update_token(READ_TOKEN, num_line, num_column, "read"); update_column(yyleng); return READ_TOKEN; }
+readln     		{ update_token(READLN_TOKEN, num_line, num_column, "readln"); update_column(yyleng); return READLN_TOKEN; }
+return     		{ update_token(RETURN_TOKEN, num_line, num_column, "return"); update_column(yyleng); return RETURN_TOKEN; }
+int        		{ update_token(INT_TOKEN, num_line, num_column, "int"); update_column(yyleng); return INT_TOKEN; }
+bool       		{ update_token(BOOL_TOKEN, num_line, num_column, "bool"); update_column(yyleng); return BOOL_TOKEN; }
+real       		{ update_token(REAL_TOKEN, num_line, num_column, "real"); update_column(yyleng); return REAL_TOKEN; }
+char       		{ update_token(CHAR_TOKEN, num_line, num_column, "char"); update_column(yyleng); return CHAR_TOKEN; }
+string     		{ update_token(STRING_TOKEN, num_line, num_column, "string"); update_column(yyleng); return STRING_TOKEN; }
+array      		{ update_token(ARRAY_TOKEN, num_line, num_column, "array"); update_column(yyleng); return ARRAY_TOKEN; }
+record     		{ update_token(RECORD_TOKEN, num_line, num_column, "record"); update_column(yyleng); return RECORD_TOKEN; }
+set        		{ update_token(SET_TOKEN, num_line, num_column, "set"); update_column(yyleng); return SET_TOKEN; }
+ref				{ update_token(REF_TOKEN, num_line, num_column, "ref"); update_column(yyleng); return REF_TOKEN; }
+nil  			{ update_token(NIL_TOKEN, num_line, num_column, "nil"); update_column(yyleng); return NIL_TOKEN; }
+"+"             { update_token('+', num_line, num_column, "+"); update_column(yyleng); return '+'; }
+"-"         	{ update_token('-', num_line, num_column, "-"); update_column(yyleng); return '-'; }
+"*"         	{ update_token('*', num_line, num_column, "*"); update_column(yyleng); return '*'; }
+"/"        		{ update_token('/', num_line, num_column, "/"); update_column(yyleng); return '/'; }
+"%"        		{ update_token('%', num_line, num_column, "%" ); update_column(yyleng); return '%'; }
+"<="        	{ update_token(LE_TOKEN, num_line, num_column, "<="); update_column(yyleng); return LE_TOKEN; }
+"<"         	{ update_token('<', num_line, num_column, "<"); update_column(yyleng); return '<'; }
+">"         	{ update_token('>', num_line, num_column, ">"); update_column(yyleng); return '>'; }
+">="        	{ update_token(GE_TOKEN, num_line, num_column, ">="); update_column(yyleng); return GE_TOKEN; }
+"=="        	{ update_token(EQUAL_TOKEN, num_line, num_column, "=="); update_column(yyleng); return EQUAL_TOKEN; }
+"!="        	{ update_token(DIFF_TOKEN, num_line, num_column, "!="); update_column(yyleng); return DIFF_TOKEN; }
+"&&"        	{ update_token(AND_TOKEN, num_line, num_column, "&&"); update_column(yyleng); return AND_TOKEN; }
+"||"        	{ update_token(OR_TOKEN, num_line, num_column, "||"); update_column(yyleng); return OR_TOKEN; }
+"!"        		{ update_token('!', num_line, num_column, "!" ); update_column(yyleng); return '!'; }
+"="         	{ update_token('=', num_line, num_column, "="); update_column(yyleng); return '='; }
+":="         	{ update_token(ATTR_TOKEN, num_line, num_column, ":=" ); update_column(yyleng); return ATTR_TOKEN; }
+"->"         	{ update_token(ACCESS_TOKEN, num_line, num_column, "->"); update_column(yyleng); return ACCESS_TOKEN; }
+";"         	{ update_token(';', num_line, num_column, ";"); update_column(yyleng); return ';'; }
+","         	{ update_token(',', num_line, num_column, "," ); update_column(yyleng); return ','; }
+"."         	{ update_token('.', num_line, num_column, "." ); update_column(yyleng); return '.'; }
+"("         	{ update_token('(', num_line, num_column, "("); update_column(yyleng); return '('; }
+")"         	{ update_token(')', num_line, num_column, ")"); update_column(yyleng); return ')'; }
+"["         	{ update_token('[', num_line, num_column, "["); update_column(yyleng); return '['; }
+"]"         	{ update_token(']', num_line, num_column, "]" ); update_column(yyleng); return ']'; }
+"{"         	{ update_token('{', num_line, num_column, "{"); update_column(yyleng); return '{'; }
+"}"         	{ update_token('}', num_line, num_column, "}"); update_column(yyleng); return '}'; }
+".."         	{ update_token(RANGE_TOKEN, num_line, num_column, ".."); update_column(yyleng); return RANGE_TOKEN; }
 
 {LABEL}			  { update_token(LABEL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return LABEL_TOKEN; }
 {CHARLITERAL}	  { update_token(CHARLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return CHARLITERAL_TOKEN; }

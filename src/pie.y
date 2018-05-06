@@ -5,6 +5,10 @@
 extern int yylex();
 extern void init_lexer(char* arg);
 
+extern int num_column;
+extern int num_line;
+extern char* lex;
+
 FILE *f = fopen("pretty_printing/pretty_printing_file.txt", "w");
 
 int tabs = 0;
@@ -13,7 +17,7 @@ void printTabs() {
 		fprintf(f, "\t");
 	}
 }
-int yyerror( char *s ) { fprintf( stderr, "%s\n", s); }
+int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
 %}
 %union {
   int id;
@@ -251,7 +255,7 @@ literal : INTLITERAL_TOKEN { fprintf(f, "%s", $1); }
 		| CHARLITERAL_TOKEN { fprintf(f, "%s", $1); } 
 		| STRINGLITERAL_TOKEN { fprintf(f, "%s", $1); } 
 		| SUBRANGELITERAL_TOKEN { fprintf(f, "%s", $1); } 
-		| NIL_TOKEN { fprintf(f, "nil");}
+		| NIL_TOKEN {fprintf(f, "nil"); }
 		;
 exprlist :
 		 | exprlistplus
