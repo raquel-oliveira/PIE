@@ -20,7 +20,7 @@ void update_token(int id, int row, int col, char* lexeme) {
 LETTER          [a-zA-Z]
 DIGIT           [0-9]
 INTLITERAL      ("-"|"+")?{DIGIT}+
-BOOLLITERAL  "true"|"false"
+BOOLLITERAL  	"true"|"false"
 EXPONENT        ([E|e]("+"|"-")?({DIGIT}+))
 R               ([0-9]*[.])?[0-9]+
 R2 	 		    ([0-9]*[.])?[0-9]+{EXPONENT}?
@@ -108,7 +108,7 @@ nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyl
 {LINECOMMENT}	  { num_line++; num_column = 1; }
 {NEW_LINE}        { num_line++; num_column = 1; }
 {INTLITERAL}      { update_token(INTLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return INTLITERAL_TOKEN; }
-{BOOLLITERAL}  	  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return 0; }
+{BOOLLITERAL}  	  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return BOOLLITERAL_TOKEN; }
 {REALLITERAL}     { update_token(REALLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return REALLITERAL_TOKEN; }
 {STRINGLITERAL}   { update_token(STRINGLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return STRINGLITERAL_TOKEN; }
 {SUBRANGELITERAL} { update_token(SUBRANGELITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return SUBRANGELITERAL_TOKEN; }
