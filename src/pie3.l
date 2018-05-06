@@ -23,12 +23,12 @@ void update_token(int id, int row, int col, char* lexeme) {
 
 LETTER          [a-zA-Z]
 DIGIT           [0-9]
-INTLITERAL      ("-"|"+")?{DIGIT}+
+INTLITERAL      {DIGIT}+
 BOOLLITERAL  	"true"|"false"
-EXPONENT        ([E|e]("+"|"-")?({DIGIT}+))
+EXPONENT        ([E|e]({DIGIT}+))
 R               ([0-9]*[.])?[0-9]+
 R2 	 		    ([0-9]*[.])?[0-9]+{EXPONENT}?
-REALLITERAL     (("-"|"+")?{R}|("-"|"+")?{R2})
+REALLITERAL     ({R}|{R2})
 NEW_LINE        (\n)
 TAB             [ \t]+
 STRINGLITERAL   \"[^"\n]*\"

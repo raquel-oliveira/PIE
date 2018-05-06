@@ -318,7 +318,8 @@ As regras sintáticas da linguagem foram construídas utilizando uma gramática 
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={sum}, language=pie]
-<sum> ::= <neg> <sumprime>
+<sum> ::= <neg> <sumprime> |
+          <add_op> <neg> <sumprime>
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single, label={sumprime}, language=pie]

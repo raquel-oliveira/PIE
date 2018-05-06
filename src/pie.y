@@ -222,6 +222,7 @@ compprime :
 		  | equalityop relational
 		  ;
 sum : neg sumprime
+	| addop neg sumprime
 	;
 sumprime :
 		 | addop neg sumprime
