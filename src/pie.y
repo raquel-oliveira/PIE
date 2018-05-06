@@ -1,6 +1,8 @@
 %{
 #include "include/utils.h"
 #include <stdio.h>
+#include <string.h>
+#include <malloc.h>
 
 extern int yylex();
 extern void init_lexer(char* arg);
@@ -8,8 +10,9 @@ extern void init_lexer(char* arg);
 extern int num_column;
 extern int num_line;
 extern char* lex;
+extern char* file_path;
 
-FILE *f = fopen("pretty_printing/pretty_printing_file.txt", "w");
+FILE *f;
 
 int tabs = 0;
 void printTabs() {
@@ -17,6 +20,23 @@ void printTabs() {
 		fprintf(f, "\t");
 	}
 }
+
+char*  getPathFile (char *arg){
+	char * file_input = arg;
+	char * folder = strtok (file_input,"/");
+	char * file = strtok (NULL,"/");
+	if (file == NULL ) file = folder;
+	char * file_name = strcat(strtok (file,"."), ".txt");
+
+	char *path_name = NULL;
+	path_name = (char*) malloc (strlen("pretty_printing/") + strlen(file_name) + 1);
+
+	strcpy(path_name, "pretty_printing/");	
+	strcat(path_name, file_name);
+	char * out = path_name;
+	return out;
+}
+
 int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
 %}
 %union {
@@ -306,7 +326,10 @@ int main(int argc, char *argv[]) {
 		printf("Not enough arguments.");
 		return 0;
 	}
+	
 	init_lexer(argv[1]);
+	f = fopen(getPathFile(argv[1]), "w");
+	
 	yyparse();
 	return 0;
 }
