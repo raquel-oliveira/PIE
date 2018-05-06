@@ -1,12 +1,9 @@
 %{
 //https://github.com/jinankjain/Lexical-Analyzer-for-C/blob/master/analyzer.l
 #include <math.h>
-#include <stdio.h>
-#include <string.h>
 #include "y.tab.h"
 int num_line = 1, num_column = 1;
 char* lex;
-char * file_path;
 
 extern YYSTYPE yylval;
 
@@ -129,17 +126,4 @@ void next_token() {
 
 void init_lexer(char* arg) {
 	yyin = fopen(arg, "r");
-
-/*	char * folder = strtok (arg,"/");
-	char * file = strtok (NULL,"/");
-	if (file == NULL ) file = folder;
-	
-	char * file_name = strcat(strtok (file,"."), ".txt");
-	char * path_name = "pretty_printing/";
-
-
-
-	strcat(s, file_name);
-	printf ("FILE_NAME == %s\n", file_name);*/
-
 }
