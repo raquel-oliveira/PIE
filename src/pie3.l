@@ -54,7 +54,6 @@ for        		{ update_token(FOR_TOKEN, num_line, num_column, NULL); update_colum
 to         		{ update_token(TO_TOKEN, num_line, num_column, NULL); update_column(yyleng); return TO_TOKEN; }
 do         		{ update_token(DO_TOKEN, num_line, num_column, NULL); update_column(yyleng); return DO_TOKEN; }
 step       		{ update_token(STEP_TOKEN, num_line, num_column, NULL); update_column(yyleng); return STEP_TOKEN; }
-in         		{ update_token(IN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return IN_TOKEN; }
 of         		{ update_token(OF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return OF_TOKEN; }
 loop       		{ update_token(LOOP_TOKEN, num_line, num_column, NULL); update_column(yyleng); return LOOP_TOKEN; }
 exitwhen   		{ update_token(EXITWHEN_TOKEN, num_line, num_column, NULL); update_column(yyleng); return EXITWHEN_TOKEN; }
@@ -71,7 +70,6 @@ char       		{ update_token(CHAR_TOKEN, num_line, num_column, NULL); update_colu
 string     		{ update_token(STRING_TOKEN, num_line, num_column, NULL); update_column(yyleng); return STRING_TOKEN; }
 array      		{ update_token(ARRAY_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ARRAY_TOKEN; }
 record     		{ update_token(RECORD_TOKEN, num_line, num_column, NULL); update_column(yyleng); return RECORD_TOKEN; }
-#subrange   		{ update_token(SUBRANGE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return SUBRANGE_TOKEN; }
 set        		{ update_token(SET_TOKEN, num_line, num_column, NULL); update_column(yyleng); return SET_TOKEN; }
 ref				{ update_token(REF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return REF_TOKEN; }
 nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return NIL_TOKEN; }
