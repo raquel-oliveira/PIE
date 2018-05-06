@@ -251,6 +251,7 @@ literal : INTLITERAL_TOKEN { fprintf(f, "%s", $1); }
 		| CHARLITERAL_TOKEN { fprintf(f, "%s", $1); } 
 		| STRINGLITERAL_TOKEN { fprintf(f, "%s", $1); } 
 		| SUBRANGELITERAL_TOKEN { fprintf(f, "%s", $1); } 
+		| NIL_TOKEN { fprintf(f, "nil");}
 		;
 exprlist :
 		 | exprlistplus

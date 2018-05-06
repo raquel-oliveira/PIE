@@ -71,7 +71,7 @@ char       		{ update_token(CHAR_TOKEN, num_line, num_column, NULL); update_colu
 string     		{ update_token(STRING_TOKEN, num_line, num_column, NULL); update_column(yyleng); return STRING_TOKEN; }
 array      		{ update_token(ARRAY_TOKEN, num_line, num_column, NULL); update_column(yyleng); return ARRAY_TOKEN; }
 record     		{ update_token(RECORD_TOKEN, num_line, num_column, NULL); update_column(yyleng); return RECORD_TOKEN; }
-subrange   		{ update_token(SUBRANGE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return SUBRANGE_TOKEN; }
+#subrange   		{ update_token(SUBRANGE_TOKEN, num_line, num_column, NULL); update_column(yyleng); return SUBRANGE_TOKEN; }
 set        		{ update_token(SET_TOKEN, num_line, num_column, NULL); update_column(yyleng); return SET_TOKEN; }
 ref				{ update_token(REF_TOKEN, num_line, num_column, NULL); update_column(yyleng); return REF_TOKEN; }
 nil  			{ update_token(NIL_TOKEN, num_line, num_column, NULL); update_column(yyleng); return NIL_TOKEN; }
