@@ -49,6 +49,7 @@ listconstprime :
 			   | listconst
 			   ;
 constdecl : ID_TOKEN { printTabs(); fprintf(f, "%s", $1); } '=' { fprintf(f, " = "); } expr ';' { fprintf(f, ";\n"); }
+		  | error ';' { fprintf(f, ";\n"); }
 		  ;
 types : ID_TOKEN { fprintf(f, "%s", $1); } typesprime
 	  | primtypes
@@ -107,6 +108,7 @@ listusertypesprime :
 				   | listusertypes
 				   ;
 usertype : ID_TOKEN { printTabs(); fprintf(f, "%s", $1); } '=' { printTabs(); fprintf(f, " = "); } types ';' { fprintf(f, ";\n"); }
+		 | error ';' { fprintf(f, ";\n"); }
 		 ;
 vars :
 	 | VAR_TOKEN { printTabs(); fprintf(f, "var\n"); tabs++; } varlistlist { tabs--; }
@@ -117,6 +119,7 @@ varlistlistprime :
 				 | varlistlist
 				 ;
 varlist : { printTabs(); } types { fprintf(f, " "); } idlist ';' { fprintf(f, ";\n"); }
+		| error ';' { fprintf(f, ";\n"); }
 		;
 idlist : ID_TOKEN { fprintf(f, $1); } idattr idlistprime
 	   ;
@@ -138,6 +141,7 @@ stmts : { printTabs(); } stmt stmtlistprime
 	  ;
 stmtlistprime :
 			  | ';' { fprintf(f, ";\n"); } stmts
+			  | error ';' { fprintf(f, ";\n"); } stmts
 			  ;
 stmt :
 	 | LABEL_TOKEN { fprintf(f, "%s ", $1); } stmt
