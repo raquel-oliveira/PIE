@@ -33,7 +33,7 @@ A expressão regular que gera um identificador correto é:
 
 \section{int}
 \begin{verbatim}
-   intliteral :  (("-"|"+")?[0-9]+)
+   intliteral :  ([0-9]+)
 \end{verbatim}
 
 \section{bool}
@@ -43,10 +43,10 @@ A expressão regular que gera um identificador correto é:
 
 \section{real}
 \begin{verbatim}
-   exponent : ([E|e]("+"|"-")?({DIGIT}+))
+   exponent : ([E|e]({DIGIT}+))
    real : ([0-9]*[.])?[0-9]+
    realexponent : ([0-9]*[.])?[0-9]+{exponent}?
-   realliteral :  (("-"|"+")?{real}|("-"|"+")?{realexponent})
+   realliteral :  ({real}|{realexponent})
 \end{verbatim}
 
 \section{Precedência}
