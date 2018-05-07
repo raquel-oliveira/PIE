@@ -3,8 +3,8 @@ parser: lex2 syntax bottomup clean
 lex: src/pie.l
 	lex src/pie.l
 
-lex2: src/pie3.l
-	lex src/pie3.l
+lex2: src/bottomup_lex.l
+	lex src/bottomup_lex.l
 
 syntax: src/pie.y
 	yacc -d src/pie.y

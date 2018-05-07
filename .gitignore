@@ -369,3 +369,8 @@ TSWLatexianTemp*
 *.pdf
 name
 pie
+
+.y.output.*
+y.output
+
+pretty_printing/*
