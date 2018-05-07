@@ -1,0 +1,44 @@
+##
+# Example of everything defined in the grammar
+##
+
+
+program all;
+  const
+    ACONSTANT = ((200%100)*4+3-1)/3;
+    FIRST = 0;
+    LAST = 9;
+  type
+    TRange = FIRST..LAST;
+    TVector = array [TRange] of int;
+    Alphabet = 'a'..'z';
+
+  var
+      TVector vector;
+      TRange index;
+      int a;
+      real b;
+      bool c;
+      chat d;
+      string e;
+      set of int f;
+      (monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday) g;
+      record
+        int x, y;
+        char c;
+      end record_var, record_var2;
+
+  begin
+
+    begin
+      a := 4;
+      write("");
+      writeln("");
+      read(vector);
+      readln(f);
+
+    end
+
+  end
+
+.
