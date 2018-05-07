@@ -198,10 +198,10 @@ elseblock :
 		  ;
 loopblock : LOOP_TOKEN { fprintf(f, "loop\n"); tabs++; printTabs(); } stmt { tabs--; }
 		  ;
-caseblock : CASE_TOKEN { fprintf(f, "case "); } expr OF_TOKEN { fprintf(f, "of "); tabs++; } caselist  { tabs--; } caseblockprime
+caseblock : CASE_TOKEN { fprintf(f, "case "); } expr OF_TOKEN { fprintf(f, " of\n"); tabs++; } caselist  { tabs--; } caseblockprime
 		  ;
 caseblockprime :  { printTabs(); } END_TOKEN { fprintf(f, "end"); }
-			   | { tabs++; printTabs(); } ELSE_TOKEN { fprintf(f, "else\n"); tabs++; printTabs(); } stmt END_TOKEN { tabs-=2; printTabs(); fprintf(f, "end"); }
+			   | { tabs++; printTabs(); } ELSE_TOKEN { fprintf(f, "else\n"); tabs++; printTabs(); } stmt END_TOKEN { fprintf(f, "\n"); tabs-=2; printTabs(); fprintf(f, "end"); }
 			   ;
 caselist : { printTabs(); } literallist ':' { fprintf(f, ":\n"); tabs++; printTabs(); } stmt ';' { fprintf(f,";\n"); tabs--; }
 		 ;

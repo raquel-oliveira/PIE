@@ -104,6 +104,7 @@ nil  			{ update_token(NIL_TOKEN, num_line, num_column, (char*) "nil"); update_c
 "{"         	{ update_token('{', num_line, num_column, (char*) "{"); update_column(yyleng); return '{'; }
 "}"         	{ update_token('}', num_line, num_column, (char*) "}"); update_column(yyleng); return '}'; }
 ".."         	{ update_token(RANGE_TOKEN, num_line, num_column, (char*) ".."); update_column(yyleng); return RANGE_TOKEN; }
+":"         	{ update_token(':', num_line, num_column, (char*) ":"); update_column(yyleng); return ':'; }
 
 {LABEL}			  { update_token(LABEL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return LABEL_TOKEN; }
 {CHARLITERAL}	  { update_token(CHARLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return CHARLITERAL_TOKEN; }
