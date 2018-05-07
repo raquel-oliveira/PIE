@@ -37,19 +37,19 @@ program all;
           vector[0] := 2;
           vector[1] := vector[0] + a;
           matrix[0,0][0] := 1;
-        	record_var->x := 0;
-        	record_var->y := record_var->x + vector[0]
+          record_var->x := 0;
+          record_var->y := record_var->x + vector[0]
       end;
 
   func int func_name(int a; ref int b);
-  	type
-      	range = record_var->x..vector[0];
+    type
+        range = record_var->x..vector[0];
       begin
-      	return 3
+        return 3
       end
 
   begin
-  	begin
+    begin
     end;
 
     begin
@@ -61,22 +61,22 @@ program all;
       a := func_name(3, a) * func_name(3, a);
       proc_name();
 
-			if 1 && 0 || !0
-      	a := 2;
+      if 1 && 0 || !0
+        a := 2;
 
       if 2 == 3
         writeln("2 ==3");
-
+        
       if 3 >= 2 && 0 <= 2
         writeln("2 está entre os números 0 e 3");
-
+        
       if (3 != 3) || (5 < 2)
-      	begin
-        	writeln("3 !=3 or 5 < 2");
+        begin   
+          writeln("3 !=3 or 5 < 2");
         end
       else
-      	writeln("5 >= 2");
-
+        writeln("5 >= 2");
+        
       if (5 >= 4) || (5 <= 5)
         begin
           writln(" 5>=5 e 4, viu?");
@@ -90,18 +90,27 @@ program all;
         begin
           a:= m + 1
         end;
-
+        
       for record_var->x := a to 20 step 1 do
         begin
           a:= m + 1
         end;
-
-
+      
+      
       loop
             begin
               write("I am in a loop");
               exitwhen 2<3 || 2>3
-            end
+            end;
+            case a of
+      0: write("é 0");
+
+    end;
+    case a of
+    1, 2: write("é posivito menor que 3");
+      else write("é maior ou igual a 3")
+      end
+
 
     end
 

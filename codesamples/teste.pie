@@ -1,0 +1,29 @@
+##
+# PIE Factorial 
+# Pascal version: http://rextester.com/UXP1971.
+##
+
+program factorial;
+
+type 
+	point = record
+		int x,y;
+	end;
+
+var
+    int num, sum, i;
+    record
+    	int x, y;
+    	char c;
+    end v1, v2;
+    point p1,p2;
+
+begin
+    writeln("Please Input an Integer");
+    readln(num);
+    sum := 1;
+    for i := 1 to num step 1 do
+        sum := sum * i;
+    write('Result: ');
+    write(sum)
+end.
