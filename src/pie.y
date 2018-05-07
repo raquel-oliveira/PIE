@@ -117,7 +117,7 @@ settype : SET_TOKEN OF_TOKEN { fprintf(f, "set of "); } types
 		;
 enumtype : '(' { fprintf(f, "("); } idlist ')' { fprintf(f, ")"); }
 		 ;
-recordtype : RECORD_TOKEN { fprintf(f, "record\n"); tabs++; } varlistlist END_TOKEN { fprintf(f, "end"); tabs--; }
+recordtype : RECORD_TOKEN { fprintf(f, "record\n"); tabs++; } varlistlist END_TOKEN { tabs--; printTabs(); fprintf(f, "end"); }
 		   ;
 usertypes :
 		  | TYPE_TOKEN { printTabs(); fprintf(f, "type\n"); tabs++; } listusertypes { tabs--; }
@@ -127,7 +127,7 @@ listusertypes : usertype listusertypesprime
 listusertypesprime :
 				   | listusertypes
 				   ;
-usertype : ID_TOKEN { printTabs(); fprintf(f, "%s", $1); } '=' { printTabs(); fprintf(f, " = "); } types ';' { fprintf(f, ";\n"); }
+usertype : ID_TOKEN { printTabs(); fprintf(f, "%s", $1); } '=' { fprintf(f, " = "); } types ';' { fprintf(f, ";\n"); }
 		 | error ';' { fprintf(f, ";\n"); }
 		 ;
 vars :
