@@ -23,7 +23,7 @@ program all;
       int a, m;
       real b;
       bool c;
-      chat d;
+      char d;
       string e;
       set of int f;
       (monday = 1, tuesday, wednesday, thursday, friday, saturday, sunday) g;
@@ -66,37 +66,37 @@ program all;
 
       if 2 == 3
         writeln("2 ==3");
-        
+
       if 3 >= 2 && 0 <= 2
         writeln("2 está entre os números 0 e 3");
-        
+
       if (3 != 3) || (5 < 2)
-        begin   
+        begin
           writeln("3 !=3 or 5 < 2");
         end
       else
         writeln("5 >= 2");
-        
+
       if (5 >= 4) || (5 <= 5)
         begin
-          writln(" 5>=5 e 4, viu?");
+          writeln(" 5>=5 e 4, viu?");
           return(5>=4);
-          writln("eu nao deveria estar sendo impresso");
+          writeln("eu nao deveria estar sendo impresso");
         end
       else
-        writln("5 < 4, ok?");
+        writeln("5 < 4, ok?");
 
       for m := a to 40 step 1 do
         begin
           a:= m + 1
         end;
-        
+
       for record_var->x := a to 20 step 1 do
         begin
           a:= m + 1
         end;
-      
-      
+
+
       loop
             begin
               write("I am in a loop");

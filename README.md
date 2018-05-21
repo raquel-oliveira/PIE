@@ -11,15 +11,8 @@ make
 ```
 ### Running
 
-#### Recursive parser
-
 ```bash
-./recursive pathtofile.pie
-```
-#### Table parser
-
-```bash
-./table pathtofile.pie
+./pie pathtofile.pie
 ```
 ### Example
 ```bash
