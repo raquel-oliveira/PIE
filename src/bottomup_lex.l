@@ -1,6 +1,7 @@
 %{
 //https://github.com/jinankjain/Lexical-Analyzer-for-C/blob/master/analyzer.l
 #include <math.h>
+#include "include/utils.h"
 #include "y.tab.h"
 int num_line = 1, num_column = 1;
 char* lex;

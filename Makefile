@@ -1,4 +1,4 @@
-parser: lex2 syntax bottomup clean
+parser: lex2 codegenerator bottomup clean
 
 lex: src/pie.l
 	lex src/pie.l
@@ -9,8 +9,11 @@ lex2: src/bottomup_lex.l
 syntax: src/pie.y
 	yacc -d src/pie.y
 
+codegenerator: src/pie_c.y
+	yacc -d src/pie_c.y
+
 bottomup: y.tab.c lex.yy.c
-	g++ -o pie y.tab.c lex.yy.c -ll
+	g++ -std=c++14 -o pie y.tab.c lex.yy.c -ll
 
 recursive:  src/recursive_parser.cpp src/tokens.cpp
 	g++ -std=c++14 -o recursive src/recursive_parser.cpp src/tokens.cpp -ll
