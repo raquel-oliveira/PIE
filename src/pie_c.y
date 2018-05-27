@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream>
 
 extern int yylex();
 extern void init_lexer(char* arg);
@@ -30,12 +31,13 @@ char*  getPathFile (char *arg){
 	return out;
 }
 
-bool io = false;
+bool io = true;
 
 std::string includes() {
 	std::string str = "";
 	if (io) {
-		str += "include <stdio.h>\n\n";
+		str += "#include <stdio.h>\n\n";
+		io = false;
 	}
 	return str;
 }
@@ -164,7 +166,7 @@ idlist : ID_TOKEN idattr idlistprime { $$.cs = $1 + $3.cs; }
 idlistprime :
 			| ',' idlist { $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
 			;
-idattr : 
+idattr : { $$.cs = ""; }
 	   | '=' expr  
 	   ;
 variable : ACCESS_TOKEN ID_TOKEN variableprime
@@ -173,14 +175,14 @@ variable : ACCESS_TOKEN ID_TOKEN variableprime
 variableprime :
 			  | variable
 			  ;
-block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n"; }
+block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
 	  ;
-stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
+stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; std::cout << $$.cs  << std::endl;}
 	  ;
-stmtlistprime :
+stmtlistprime : { $$.cs = ""; }
 			  | ';' stmts
 			  ;
-stmt :
+stmt : { $$.cs = ""; }
 	 | LABEL_TOKEN stmt
 	 | block
 	 | writestmt
@@ -192,7 +194,7 @@ stmt :
 	 | forblock
 	 | caseblock
 	 | gotostmt
-	 | ID_TOKEN stmtprime {$$.cs = $1 + $2.cs;}
+	 | ID_TOKEN stmtprime {$$.cs = $1 + $2.cs; } 
 	 | exitstmt
 	 | returnstmt
 	 ;
@@ -236,8 +238,8 @@ forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN 
 			  ;
 expr : conj disj 
 	 ;
-finalterm : ID_TOKEN finaltermprime
-		  | literal
+finalterm : ID_TOKEN finaltermprime 
+		  | literal 
 		  | '(' expr ')'
 		  ;
 finaltermprime :
@@ -291,11 +293,11 @@ relationalop : '<' {$$.cs = " < ";}
 			 | '>' {$$.cs = " > ";}
 			 | GE_TOKEN {$$.cs = " >= ";}
 			 ;
-literal : INTLITERAL_TOKEN
-    	| BOOLLITERAL_TOKEN
-		| REALLITERAL_TOKEN
-		| CHARLITERAL_TOKEN
-		| STRINGLITERAL_TOKEN
+literal : INTLITERAL_TOKEN    { $$.cs = $1; }
+    	| BOOLLITERAL_TOKEN   { $$.cs = $1; }
+		| REALLITERAL_TOKEN   { $$.cs = $1; }
+		| CHARLITERAL_TOKEN   { $$.cs = $1; }
+		| STRINGLITERAL_TOKEN { $$.cs = $1; }
 		| SUBRANGELITERAL_TOKEN
 		| NIL_TOKEN
 		;
@@ -328,9 +330,9 @@ paramlistlistprime :
 paramlist : REF_TOKEN types idlist
           | types idlist
           ;
-writestmt : WRITE_TOKEN '(' expr ')' {$$.cs = "printf(\"" + $3.cs + "\");\n" ;}
+writestmt : WRITE_TOKEN '(' expr ')' {$$.cs = "printf(" + $3.cs + ");\n" ;}
 		  ;
-writelnstmt : WRITELN_TOKEN '(' expr ')' {$$.cs = "printf(\"" + $3.cs + "\\n\");\n" ;}
+writelnstmt : WRITELN_TOKEN '(' expr ')' {$3.cs.erase(0,1);$3.cs.erase($3.cs.size() - 1);$$.cs = "printf(\"" + $3.cs + "\\n\");\n" ;}
 		    ;
 readstmt : READ_TOKEN '(' ID_TOKEN variableprime ')'
 		 ;
