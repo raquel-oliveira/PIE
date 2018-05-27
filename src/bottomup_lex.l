@@ -107,18 +107,18 @@ nil  			{ update_token(NIL_TOKEN, num_line, num_column, (char*) "nil"); update_c
 ".."         	{ update_token(RANGE_TOKEN, num_line, num_column, (char*) ".."); update_column(yyleng); return RANGE_TOKEN; }
 ":"         	{ update_token(':', num_line, num_column, (char*) ":"); update_column(yyleng); return ':'; }
 
-{LABEL}			  { update_token(LABEL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return LABEL_TOKEN; }
-{CHARLITERAL}	  { update_token(CHARLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return CHARLITERAL_TOKEN; }
+{LABEL}			  { update_token(LABEL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return LABEL_TOKEN; }
+{CHARLITERAL}	  { update_token(CHARLITERAL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return CHARLITERAL_TOKEN; }
 {LINECOMMENT}	  { num_line++; num_column = 1; }
 {NEW_LINE}        { num_line++; num_column = 1; }
-{INTLITERAL}      { update_token(INTLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return INTLITERAL_TOKEN; }
-{BOOLLITERAL}  	  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return BOOLLITERAL_TOKEN; }
-{REALLITERAL}     { update_token(REALLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return REALLITERAL_TOKEN; }
-{STRINGLITERAL}   { update_token(STRINGLITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return STRINGLITERAL_TOKEN; }
-{SUBRANGELITERAL} { update_token(SUBRANGELITERAL_TOKEN, num_line, num_column, yytext); update_column(yyleng); return SUBRANGELITERAL_TOKEN; }
-{ID}              { update_token(ID_TOKEN, num_line, num_column, yytext); update_column(yyleng); return ID_TOKEN; }
+{INTLITERAL}      { update_token(INTLITERAL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return INTLITERAL_TOKEN; }
+{BOOLLITERAL}  	  { update_token(BOOLLITERAL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return BOOLLITERAL_TOKEN; }
+{REALLITERAL}     { update_token(REALLITERAL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return REALLITERAL_TOKEN; }
+{STRINGLITERAL}   { update_token(STRINGLITERAL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return STRINGLITERAL_TOKEN; }
+{SUBRANGELITERAL} { update_token(SUBRANGELITERAL_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return SUBRANGELITERAL_TOKEN; }
+{ID}              { update_token(ID_TOKEN, num_line, num_column, strdup(yytext)); update_column(yyleng); return ID_TOKEN; }
 {WHITESPACE}      { update_column(yyleng); }
-{UNACCEPTABLE}	  { update_token(ERROR_TOKEN, num_line, num_column, yytext); return ERROR_TOKEN; }
+{UNACCEPTABLE}	  { update_token(ERROR_TOKEN, num_line, num_column, strdup(yytext)); return ERROR_TOKEN; }
 
 %%
 
