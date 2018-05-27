@@ -25,7 +25,7 @@ char*  getPathFile (char *arg){
 	char *path_name = NULL;
 	path_name = (char*) malloc (strlen("generated_code/") + strlen(file_name) + 1);
 
-	strcpy(path_name, "generated_code/");	
+	strcpy(path_name, "generated_code/");
 	strcat(path_name, file_name);
 	char * out = path_name;
 	return out;
@@ -67,14 +67,14 @@ int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s
   Attributes attrs;
 }}
 
-%token <lexeme> ID_TOKEN REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN LABEL_TOKEN BOOLLITERAL_TOKEN 
+%token <lexeme> ID_TOKEN REALLITERAL_TOKEN STRINGLITERAL_TOKEN SUBRANGELITERAL_TOKEN CHARLITERAL_TOKEN INTLITERAL_TOKEN LABEL_TOKEN BOOLLITERAL_TOKEN
 %token CONST_TOKEN PROGRAM_TOKEN PROC_TOKEN BEGIN_TOKEN END_TOKEN FUNC_TOKEN TYPE_TOKEN VAR_TOKEN IF_TOKEN ELSE_TOKEN GOTO_TOKEN
 %token FOR_TOKEN TO_TOKEN DO_TOKEN STEP_TOKEN OF_TOKEN LOOP_TOKEN EXITWHEN_TOKEN CASE_TOKEN WRITE_TOKEN WRITELN_TOKEN READ_TOKEN READLN_TOKEN
-%token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SET_TOKEN 
-%token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN 
+%token RETURN_TOKEN INT_TOKEN BOOL_TOKEN REAL_TOKEN CHAR_TOKEN STRING_TOKEN ARRAY_TOKEN RECORD_TOKEN SET_TOKEN
+%token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN
 %token ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN
 
-%type <attrs> program decl consts listconst listconstprime constdecl types typesprime primtypes arraytype subrangelist subrangelisttype1 subrangepart subrangepartprime subrangelistprime subrangetype1 subrangetype2 subrangetvarpart settype enumtype recordtype usertypes listusertypes listusertypesprime usertype vars varlistlist varlistlistprime varlist idlist idlistprime idattr variable variableprime block stmts stmtlistprime stmt stmtprime subprogcall exitstmt returnstmt attrstmt ifblock elseblock loopblock caseblock caseblockprime caselist literallist literallistprime gotostmt forblock forblockprime expr finalterm finaltermprime disj conj conjprime comp relational relationalprime compprime sum sumprime neg mul mulprime addop mulop equalityop relationalop literal exprlist exprlistplus exprlistplusprime subprograms subprogramsprime procedure function param paramlistlist paramlistlistprime paramlist writestmt writelnstmt readstmt readlnstmt 
+%type <attrs> program decl consts listconst listconstprime constdecl types typesprime primtypes arraytype subrangelist subrangelisttype1 subrangepart subrangepartprime subrangelistprime subrangetype1 subrangetype2 subrangetvarpart settype enumtype recordtype usertypes listusertypes listusertypesprime usertype vars varlistlist varlistlistprime varlist idlist idlistprime idattr variable variableprime block stmts stmtlistprime stmt stmtprime subprogcall exitstmt returnstmt attrstmt ifblock elseblock loopblock caseblock caseblockprime caselist literallist literallistprime gotostmt forblock forblockprime expr finalterm finaltermprime disj conj conjprime comp relational relationalprime compprime sum sumprime neg mul mulprime addop mulop equalityop relationalop literal exprlist exprlistplus exprlistplusprime subprograms subprogramsprime procedure function param paramlistlist paramlistlistprime paramlist writestmt writelnstmt readstmt readlnstmt
 
 %start program
 
@@ -83,7 +83,7 @@ program : PROGRAM_TOKEN ID_TOKEN ';' decl block '.' { $$.cs = includes() + $4.cs
 		;
 decl : consts usertypes vars subprograms { $$.sts = st_union($1.sts, st_union($2.sts, $3.sts)); $$.cs = $1.cs + $2.cs + $3.cs; }
 	 ;
-consts : 
+consts :
 	   | CONST_TOKEN listconst { $$.sts = $2.sts; $$.cs = $2.cs; }
 	   ;
 listconst : constdecl listconstprime { $$.sts = st_union($1.sts, $2.sts); $$.cs = $1.cs + $2.cs; }
@@ -129,17 +129,17 @@ subrangelistprime :
 				  ;
 subrangetype1 : ID_TOKEN subrangetvarpart
 			 ;
-subrangetype2 : INTLITERAL_TOKEN 
-				  | CHARLITERAL_TOKEN 
+subrangetype2 : INTLITERAL_TOKEN
+				  | CHARLITERAL_TOKEN
 				  ;
-subrangetvarpart : 
+subrangetvarpart :
 				 | variable
 				 ;
 settype : SET_TOKEN OF_TOKEN types
 		;
 enumtype : '(' idlist ')'
 		 ;
-recordtype : RECORD_TOKEN varlistlist END_TOKEN 
+recordtype : RECORD_TOKEN varlistlist END_TOKEN
 		   ;
 usertypes :
 		  | TYPE_TOKEN listusertypes { $$.sts = $2.sts; $$.cs = $2.cs; }
@@ -167,7 +167,7 @@ idlistprime :
 			| ',' idlist { $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
 			;
 idattr : { $$.cs = ""; }
-	   | '=' expr  
+	   | '=' expr
 	   ;
 variable : ACCESS_TOKEN ID_TOKEN variableprime
 		 | '[' exprlistplus ']' variableprime
@@ -180,13 +180,13 @@ block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts 
 stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; std::cout << $$.cs  << std::endl;}
 	  ;
 stmtlistprime : { $$.cs = ""; }
-			  | ';' stmts
+			  | ';' stmts { $$.cs = $2.cs; }
 			  ;
 stmt : { $$.cs = ""; }
 	 | LABEL_TOKEN stmt
 	 | block
 	 | writestmt
-	 | writelnstmt 
+	 | writelnstmt
 	 | readstmt
 	 | readlnstmt
 	 | loopblock
@@ -194,20 +194,20 @@ stmt : { $$.cs = ""; }
 	 | forblock
 	 | caseblock
 	 | gotostmt
-	 | ID_TOKEN stmtprime {$$.cs = $1 + $2.cs; } 
+	 | ID_TOKEN stmtprime {$$.cs = $1 + $2.cs; }
 	 | exitstmt
 	 | returnstmt
 	 ;
-stmtprime : attrstmt 
+stmtprime : attrstmt
 		  | subprogcall
 		  ;
-subprogcall : '(' exprlist ')' 
+subprogcall : '(' exprlist ')'
 			;
 exitstmt : EXITWHEN_TOKEN expr
 		 ;
 returnstmt : RETURN_TOKEN expr
 		   ;
-attrstmt : variable ATTR_TOKEN expr 
+attrstmt : variable ATTR_TOKEN expr
 		 | ATTR_TOKEN expr {$$.cs = " = " + $2.cs + ";\n"; }
 		 ;
 ifblock : IF_TOKEN  expr stmt elseblock
@@ -236,10 +236,10 @@ forblock : FOR_TOKEN ID_TOKEN forblockprime
 forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt
 			  | ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt
 			  ;
-expr : conj disj 
+expr : conj disj
 	 ;
-finalterm : ID_TOKEN finaltermprime 
-		  | literal 
+finalterm : ID_TOKEN finaltermprime
+		  | literal
 		  | '(' expr ')'
 		  ;
 finaltermprime :
@@ -345,15 +345,15 @@ int main(int argc, char *argv[]) {
 		printf("Not enough arguments.");
 		return 0;
 	}
-	
+
 	char * argFile = NULL;
 	argFile = (char*) malloc (strlen(argv[1]) + 1);
 	strcpy (argFile, argv[1]);
 	f = fopen(getPathFile(argFile), "w");
 
 	init_lexer(argv[1]);
-	
-	
+
+
 	yyparse();
 	return 0;
 }
