@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 extern int yylex();
 extern void init_lexer(char* arg);
 
@@ -176,7 +175,7 @@ variableprime :
 			  ;
 block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n"; }
 	  ;
-stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = ""; }
+stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
 	  ;
 stmtlistprime :
 			  | ';' stmts
@@ -185,7 +184,7 @@ stmt :
 	 | LABEL_TOKEN stmt
 	 | block
 	 | writestmt
-	 | writelnstmt
+	 | writelnstmt 
 	 | readstmt
 	 | readlnstmt
 	 | loopblock
@@ -193,11 +192,11 @@ stmt :
 	 | forblock
 	 | caseblock
 	 | gotostmt
-	 | ID_TOKEN stmtprime
+	 | ID_TOKEN stmtprime {$$.cs = $1 + $2.cs;}
 	 | exitstmt
 	 | returnstmt
 	 ;
-stmtprime : attrstmt
+stmtprime : attrstmt 
 		  | subprogcall
 		  ;
 subprogcall : '(' exprlist ')' 
@@ -207,7 +206,7 @@ exitstmt : EXITWHEN_TOKEN expr
 returnstmt : RETURN_TOKEN expr
 		   ;
 attrstmt : variable ATTR_TOKEN expr 
-		 | ATTR_TOKEN expr {$$.cs = " = Not_FINISHED";}
+		 | ATTR_TOKEN expr {$$.cs = " = " + $2.cs + ";\n"; }
 		 ;
 ifblock : IF_TOKEN  expr stmt elseblock
 		;
@@ -329,9 +328,9 @@ paramlistlistprime :
 paramlist : REF_TOKEN types idlist
           | types idlist
           ;
-writestmt : WRITE_TOKEN '(' expr ')'
+writestmt : WRITE_TOKEN '(' expr ')' {$$.cs = "printf(\"" + $3.cs + "\");\n" ;}
 		  ;
-writelnstmt : WRITELN_TOKEN '(' expr ')'
+writelnstmt : WRITELN_TOKEN '(' expr ')' {$$.cs = "printf(\"" + $3.cs + "\\n\");\n" ;}
 		    ;
 readstmt : READ_TOKEN '(' ID_TOKEN variableprime ')'
 		 ;
