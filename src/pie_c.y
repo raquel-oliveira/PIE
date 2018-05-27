@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 extern int yylex();
 extern void init_lexer(char* arg);
 
@@ -162,10 +163,10 @@ varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); $$.cs = $1.cs + $
 idlist : ID_TOKEN idattr idlistprime { $$.cs = $1 + $3.cs; }
 	   ;
 idlistprime :
-			| ',' idlist { $$.sts = $2.sts; $$.cs = "," + $2.cs; }
+			| ',' idlist { $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
 			;
-idattr :
-	   | '=' expr
+idattr : 
+	   | '=' expr  
 	   ;
 variable : ACCESS_TOKEN ID_TOKEN variableprime
 		 | '[' exprlistplus ']' variableprime
@@ -205,8 +206,8 @@ exitstmt : EXITWHEN_TOKEN expr
 		 ;
 returnstmt : RETURN_TOKEN expr
 		   ;
-attrstmt : variable ATTR_TOKEN expr
-		 | ATTR_TOKEN expr
+attrstmt : variable ATTR_TOKEN expr 
+		 | ATTR_TOKEN expr {$$.cs = " = Not_FINISHED";}
 		 ;
 ifblock : IF_TOKEN  expr stmt elseblock
 		;
@@ -234,7 +235,7 @@ forblock : FOR_TOKEN ID_TOKEN forblockprime
 forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt
 			  | ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt
 			  ;
-expr : conj disj
+expr : conj disj 
 	 ;
 finalterm : ID_TOKEN finaltermprime
 		  | literal
@@ -276,20 +277,20 @@ mul : finalterm mulprime
 mulprime :
 		 | mulop finalterm mulprime
 		 ;
-addop : '+'
-	  | '-'
+addop : '+' {$$.cs = " + ";}
+	  | '-' {$$.cs = " - ";}
 	  ;
-mulop : '*'
-	  | '/'
-	  | '%'
+mulop : '*' {$$.cs = " * ";}
+	  | '/' {$$.cs = " / ";}
+	  | '%' {$$.cs = " % ";}
 	  ;
 equalityop : EQUAL_TOKEN
 		   | DIFF_TOKEN
 		   ;
-relationalop : '<'
-			 | LE_TOKEN
-			 | '>'
-			 | GE_TOKEN
+relationalop : '<' {$$.cs = " < ";}
+			 | LE_TOKEN {$$.cs = " <= ";}
+			 | '>' {$$.cs = " > ";}
+			 | GE_TOKEN {$$.cs = " >= ";}
 			 ;
 literal : INTLITERAL_TOKEN
     	| BOOLLITERAL_TOKEN
