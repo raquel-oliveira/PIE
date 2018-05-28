@@ -14,6 +14,7 @@ extern int num_line;
 extern char* lex;
 extern char* file_path;
 int lastlabel = 0;
+int lastenum = 0;
 
 FILE *f;
 
@@ -86,6 +87,12 @@ std::string generateNewLabel() {
  	return newLabel;
 }
 
+std::string generateNewEnum() {
+ 	lastenum += 1;
+	std::string newEnum = "enum_$" + std::to_string(lastenum);
+ 	return newEnum;
+}
+
 std::string forOutput(std::string variable, std::string from, std::string to, int step, std::string content){
 	std::string output = "\n";
 	output += variable + "=" + from + ";\n";
@@ -128,7 +135,7 @@ program : PROGRAM_TOKEN ID_TOKEN ';' decl block '.' { $$.cs = includes() + $4.cs
 decl : consts usertypes vars subprograms { $$.sts = st_union($1.sts, st_union($2.sts, $3.sts)); $$.cs = $1.cs + $2.cs + $3.cs; }
 	 ;
 consts : { $$.cs = ""; }
-	   | CONST_TOKEN listconst { $$.sts = $2.sts; $$.cs = $2.cs; }
+	   | CONST_TOKEN listconst { $$.sts = $2.sts; $$.cs = "\n" + $2.cs; }
 	   ;
 listconst : constdecl listconstprime { $$.sts = st_union($1.sts, $2.sts); $$.cs = $1.cs + $2.cs; }
 		  ;
@@ -137,22 +144,22 @@ listconstprime : { $$.cs = ""; }
 			   ;
 constdecl : ID_TOKEN '=' expr ';' { $$.sts[$1] = $3.type; $$.cs = "const " + $3.type + " " + $1 + " = " + $3.cs + ";\n"; }
 		  ;
-types : ID_TOKEN typesprime
+types : ID_TOKEN typesprime { $$.type = $1; $$.cs = ""; }
 	  | primtypes { $$.type = $1.type; $$.cs = $1.cs; }
 	  ;
 typesprime : { $$.cs = ""; }
-		   | subrangepart
-		   | variable subrangepart
+		   | subrangepart { $$.cs = $1.cs; }
+		   | variable subrangepart { $$.cs = $1.cs + $2.cs; }
 		   ;
-primtypes : INT_TOKEN { $$.type = "int"; $$.cs = "int "; }
-		  | REAL_TOKEN { $$.type = "float"; $$.cs = "float "; }
-		  | BOOL_TOKEN { $$.type = "bool"; $$.cs = "bool "; }
-		  | CHAR_TOKEN { $$.type = "char"; $$.cs = "char "; }
-		  | STRING_TOKEN { $$.type = "char*"; $$.cs = "char* "; }
-		  | arraytype
-		  | settype
-		  | enumtype
-		  | recordtype
+primtypes : INT_TOKEN { $$.type = "int"; $$.cs = ""; }
+		  | REAL_TOKEN { $$.type = "float"; $$.cs = ""; }
+		  | BOOL_TOKEN { $$.type = "bool"; $$.cs = ""; }
+		  | CHAR_TOKEN { $$.type = "char"; $$.cs = ""; }
+		  | STRING_TOKEN { $$.type = "char*"; $$.cs = ""; }
+		  | arraytype { $$.type = $1.cs; $$.cs = ""; }
+		  | settype { $$.type = $1.cs; $$.cs = ""; }
+		  | enumtype { $$.type = $1.cs; $$.cs = ""; }
+		  | recordtype { $$.type = $1.cs; $$.cs = ""; }
 		  | subrangetype2 subrangepart
 		  ;
 arraytype : ARRAY_TOKEN '[' subrangelist ']' OF_TOKEN types
@@ -179,11 +186,15 @@ subrangetype2 : INTLITERAL_TOKEN
 subrangetvarpart : { $$.cs = ""; }
 				 | variable
 				 ;
-settype : SET_TOKEN OF_TOKEN types
+settype : SET_TOKEN OF_TOKEN types { $$.cs = $3.type + std::string("*"); }
 		;
-enumtype : '(' idlist ')'
+enumtype : '(' idlist ')' {
+				$$.cs = "enum " + generateNewEnum() + "{" + $2.cs + "}";
+			}
 		 ;
-recordtype : RECORD_TOKEN varlistlist END_TOKEN
+recordtype : RECORD_TOKEN varlistlist END_TOKEN {
+					$$.cs = "struct {\n" + $2.cs + "\n}";
+				}
 		   ;
 usertypes : { $$.cs = ""; }
 		  | TYPE_TOKEN listusertypes { $$.sts = $2.sts; $$.cs = $2.cs; }
@@ -203,9 +214,9 @@ varlistlist : varlist varlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.c
 varlistlistprime : { $$.cs = ""; }
 				 | varlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 				 ;
-varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); $$.cs = $1.cs + $2.cs + ";\n"; }
+varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); $$.cs = $1.type + std::string(" ") + $2.cs + $1.cs + ";\n"; }
 		;
-idlist : ID_TOKEN idattr idlistprime { $$.cs = $1 + $3.cs; }
+idlist : ID_TOKEN idattr idlistprime { $$.cs = $1 + $2.cs + $3.cs; }
 	   ;
 idlistprime : { $$.cs = ""; }
 			| ',' idlist { $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
@@ -230,7 +241,7 @@ stmt : {  $$.cs = ""; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } LABEL_TOKEN A stmt { std::string label = $2; label[0] = '_'; $$.cs = label + ":\n" + $4.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } block { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } writestmt { $$.cs = $2.cs; }
-	 | { $<attrs>$.sti = $<attrs>0.sti; } writelnstmt { $$.cs = $2.cs; } 
+	 | { $<attrs>$.sti = $<attrs>0.sti; } writelnstmt { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } readstmt { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } readlnstmt { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } loopblock { $$.cs = $2.cs; }
