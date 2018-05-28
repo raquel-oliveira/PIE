@@ -29,6 +29,7 @@ struct Attributes {
 	std::vector<std::string> ids; //ids of idlist
 	Id_list idlh; //ids herdados
 	std::string afterlabel;
+  std::string id_token;
 };
 
 #endif

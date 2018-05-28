@@ -34,6 +34,11 @@ char*  getPathFile (char *arg){
 
 bool io = false;
 
+std::string removeSpace(std::string &str){
+    str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
+      return str;
+}
+
 std::string includes() {
 	std::string str = "";
 	if (io) {
@@ -78,6 +83,21 @@ std::string generateNewLabel() {
  	lastlabel += 1;
 	std::string newLabel = "_$" + std::to_string(lastlabel);
  	return newLabel;
+}
+
+std::string forOutput(std::string variable, std::string from, std::string to, int step, std::string content){
+	std::string output = "\n";
+	output += variable + "=" + from + ";\n";
+
+	bool downto = step < 0;
+	std::string label1 = generateNewLabel();
+	std::string label2 = generateNewLabel();
+	output += label1 + ":\nif ("+ variable;
+	output += downto ? "<" : ">";
+	output += to + ") goto " + label2 + ";\n";
+	output += content + "\n" + variable + "+=" + std::to_string(step) + ";\ngoto " + label1 + "; \n" + label2 + ": ";
+
+	return output;
 }
 
 int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
@@ -192,11 +212,11 @@ idlistprime : { $$.cs = ""; }
 idattr : { $$.cs = ""; }
 	   | '=' expr
 	   ;
-variable : ACCESS_TOKEN ID_TOKEN variableprime
-		 | '[' exprlistplus ']' variableprime
+variable : ACCESS_TOKEN ID_TOKEN variableprime { $$.cs = "." + std::string($2) + $3.cs; }
+		 | '[' exprlistplus ']' variableprime { $$.cs = "[" + $2.cs + "]" + $4.cs;}
 		 ;
 variableprime : { $$.cs = ""; }
-			  | variable
+			  | variable { $$.cs = $1.cs; }
 			  ;
 block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
 	  ;
@@ -209,19 +229,19 @@ stmt : {  $$.cs = ""; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } LABEL_TOKEN A stmt { std::string label = $2; label[0] = '_'; $$.cs = label + ":\n" + $4.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } block { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } writestmt { $$.cs = $2.cs; }
-	 | { $<attrs>$.sti = $<attrs>0.sti; } writelnstmt { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } writelnstmt { $$.cs = $2.cs; } 
 	 | { $<attrs>$.sti = $<attrs>0.sti; } readstmt { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } readlnstmt { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } loopblock { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } ifblock { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } forblock { $$.cs = $2.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } caseblock { $$.cs = $2.cs; }
-	 | gotostmt
+	 | gotostmt { $$.cs = $1.cs; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } ID_TOKEN stmtprime { $$.cs = $2 + $3.cs; }
 	 | { $<attrs>$.afterlabel = $<attrs>0.afterlabel; } exitstmt { $$.cs = $2.cs; }
 	 | returnstmt { $$.cs = $1.cs; }
 	 ;
-A : { $<attrs>$.sti = $<attrs>-1.sti; } 
+A : { $<attrs>$.sti = $<attrs>-1.sti; }
   ;
 stmtprime : attrstmt
 		  | subprogcall
@@ -261,11 +281,11 @@ literallistprime : { $$.cs = ""; }
 				 ;
 gotostmt : GOTO_TOKEN LABEL_TOKEN {}
 		 ;
-forblock : FOR_TOKEN ID_TOKEN forblockprime
-		 ;
-forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN C stmt
-			  | ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN D stmt
-			  ;
+		 forblock : FOR_TOKEN ID_TOKEN forblockprime {$$.cs = $3.cs;}
+		 		 ;
+		 forblockprime : { $<attrs>$.id_token = $<lexeme>0; } variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN C stmt { $$.cs = forOutput($$.id_token+$2.cs, $4.cs, $6.cs, std::stoi(removeSpace($8.cs)), $11.cs); }
+		 			  | { $<attrs>$.id_token = $<lexeme>0; } ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN D stmt {$$.cs = forOutput($$.id_token, $3.cs, $5.cs, std::stoi(removeSpace($7.cs)),  $10.cs);}
+		 			  ;
 C : { $<attrs>$.sti = $<attrs>-8.sti; }
   ;
 D : { $<attrs>$.sti = $<attrs>-7.sti; }
@@ -460,11 +480,14 @@ writelnstmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITELN_TOKEN '(' B expr ')' { 
 		    ;
 readstmt : { $<attrs>$.sti = $<attrs>0.sti; } READ_TOKEN '(' ID_TOKEN variableprime ')' { io = true;
 				if (!$$.sti.empty()) {
-					if (!$$.sti.empty() && $$.sti[$4].compare("char*")) {
+					if ($$.sti[$4].compare("char*")) {
 						$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + ") , stdin);\n";
 					} else {
 						$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", " + std::string($4) + ");\n";
 					}
+				}
+				else {
+					$$.cs = "";
 				}
 		  }
 		 ;
@@ -475,6 +498,9 @@ readlnstmt : { $<attrs>$.sti = $<attrs>0.sti; } READLN_TOKEN '(' ID_TOKEN variab
 						} else {
 							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\\n\", " + std::string($4) + ");\n";
 						}
+					}
+					else {
+						$$.cs = "";
 					}
 			  }
 		   ;
