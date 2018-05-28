@@ -125,15 +125,19 @@ int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s
 %token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN
 %token ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN
 
-%type <attrs> program decl consts listconst listconstprime constdecl types typesprime primtypes arraytype subrangelist subrangelisttype1 subrangepart subrangepartprime subrangelistprime subrangetype1 subrangetype2 subrangetvarpart settype enumtype recordtype usertypes listusertypes listusertypesprime usertype vars varlistlist varlistlistprime varlist idlist idlistprime idattr variable variableprime block stmts stmtlistprime stmt stmtprime subprogcall exitstmt returnstmt attrstmt ifblock elseblock loopblock caseblock caseblockprime caselist literallist literallistprime gotostmt forblock forblockprime expr finalterm finaltermprime disj conj conjprime comp relational relationalprime compprime sum sumprime neg mul mulprime addop mulop equalityop relationalop literal exprlist exprlistplus exprlistplusprime subprograms subprogramsprime procedure function param paramlistlist paramlistlistprime paramlist writestmt writelnstmt readstmt readlnstmt A B C D E
+%type <attrs> program decl consts listconst listconstprime constdecl types typesprime primtypes arraytype subrangelist subrangelisttype1 subrangepart subrangepartprime subrangelistprime subrangetype1 subrangetype2 subrangetvarpart settype enumtype recordtype usertypes listusertypes listusertypesprime usertype vars varlistlist varlistlistprime varlist idlist idlistprime idattr variable variableprime block stmts stmtlistprime stmt stmtprime subprogcall exitstmt returnstmt attrstmt ifblock elseblock loopblock caseblock caseblockprime caselist literallist literallistprime gotostmt forblock forblockprime expr finalterm finaltermprime disj conj conjprime comp relational relationalprime compprime sum sumprime neg mul mulprime addop mulop equalityop relationalop literal exprlist exprlistplus exprlistplusprime subprograms subprogramsprime procedure function param paramlistlist paramlistlistprime paramlist writestmt writelnstmt readstmt readlnstmt A B C D E F G H I J K L
 
 %start program
 
 %%
-program : PROGRAM_TOKEN ID_TOKEN ';' decl block '.' { $$.cs = includes() + $4.cs + "int main() " + $5.cs; $$.cs = $$.cs.substr(0, $$.cs.size()-3); $$.cs = $$.cs + "\nreturn 1;\n}\n"; fprintf(f, "%s", $$.cs.c_str()); }
+program : PROGRAM_TOKEN ID_TOKEN ';' decl I block '.' { $$.cs = includes() + $4.cs + "int main() {\n" + $6.cs + "\nreturn 0;\n}\n"; fprintf(f, "%s", $$.cs.c_str()); }
 		;
-decl : consts usertypes vars subprograms { $$.sts = st_union($1.sts, st_union($2.sts, $3.sts)); $$.cs = $1.cs + $2.cs + $3.cs; }
+I : { $<attrs>$.sti = $<attrs>0.sts; }
+  ;
+decl : consts usertypes vars F subprograms { $$.sts = st_union($1.sts, st_union($2.sts, $3.sts)); $$.cs = $1.cs + $2.cs + $3.cs + $5.cs; }
 	 ;
+F : { $<attrs>$.sti = st_union($<attrs>0.sts, st_union($<attrs>-1.sts, $<attrs>-2.sts)); }
+  ;
 consts : { $$.cs = ""; }
 	   | CONST_TOKEN listconst { $$.sts = $2.sts; $$.cs = $2.cs; }
 	   ;
@@ -144,7 +148,7 @@ listconstprime : { $$.cs = ""; }
 			   ;
 constdecl : ID_TOKEN '=' expr ';' { $$.sts[$1] = $3.type; $$.cs = "const " + $3.type + " " + $1 + " = " + $3.cs + ";\n"; }
 		  ;
-types : ID_TOKEN typesprime { $$.type = $1; $$.cs = ""; }
+types : ID_TOKEN typesprime { $$.type = $1; $$.cs = $1 + $2.cs; }
 	  | primtypes { $$.type = $1.type; $$.cs = $1.cs; }
 	  ;
 typesprime : { $$.cs = ""; }
@@ -214,13 +218,29 @@ varlistlist : varlist varlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.c
 varlistlistprime : { $$.cs = ""; }
 				 | varlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 				 ;
-varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); $$.cs = $1.type + std::string(" ") + $2.cs + $1.cs + ";\n"; }
+varlist : types L idlist ';' { $$.sts = addIds($1.type, $3.ids); $$.cs = $1.type + std::string(" ") + $3.cs + $1.cs + ";\n"; }
 		;
-idlist : ID_TOKEN idattr idlistprime { $$.ids = $3.ids; $$.ids.push_back($1); $$.cs = $1 + $2.cs + $3.cs; }
+L : { $<attrs>$.ids_info.ref = false; $<attrs>$.ids_info.type = "var"; }
+  ;
+idlist : { $<attrs>$.ids_info = $<attrs>0.ids_info; } ID_TOKEN idattr idlistprime { $$.ids = $4.ids; $$.ids.push_back($2); 
+			if($$.ids_info.type == "var") {
+				$$.cs = $2 + $3.cs + $4.cs; 
+			}
+			else {
+				if($$.ids_info.ref) {
+					$$.cs = $$.ids_info.type + "& " + $2 + $3.cs + $4.cs;
+				}
+				else {
+					$$.cs = $$.ids_info.type + " " + $2 + $3.cs + $4.cs;
+				}
+			}
+		}
 	   ;
 idlistprime : { $$.cs = ""; }
-			| ',' idlist { $$.ids = $2.ids; $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
+			| { $<attrs>$.ids_info = $<attrs>-2.ids_info; } ',' M idlist { $$.ids = $4.ids; $$.sts = $4.sts; $$.cs = ", " + $4.cs; }
 			;
+M : { $<attrs>$.ids_info = $<attrs>-1.ids_info; }
+  ;
 idattr : { $$.cs = ""; }
 	   | '=' expr { $$.cs = "= " + $2.cs; }
 	   ;
@@ -230,7 +250,7 @@ variable : ACCESS_TOKEN ID_TOKEN variableprime { $$.cs = "." + std::string($2) +
 variableprime : { $$.cs = ""; }
 			  | variable { $$.cs = $1.cs; }
 			  ;
-block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
+block : { $<attrs>$.sti = $<attrs>0.sti; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = $3.cs;  }
 	  ;
 stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
 	  ;
@@ -258,7 +278,7 @@ A : { $<attrs>$.sti = $<attrs>-1.sti; }
 stmtprime : { $<attrs>$.sti = $<attrs>-1.sti; } attrstmt { $$.cs = $2.cs; }
 		  | { $<attrs>$.sti = $<attrs>-1.sti; } subprogcall { $$.cs = $2.cs; }
 		  ;
-subprogcall : '(' exprlist ')'
+subprogcall : '(' exprlist ')' { $$.cs = "(" + $2.cs + ");\n"; }
 			;
 exitstmt : { $<attrs>$.sti = $<attrs>0.sti; $<attrs>$.afterlabel = $<attrs>0.afterlabel; } EXITWHEN_TOKEN expr { $$.cs = "if(" + $3.cs + ") goto " + $$.afterlabel + ";\n"; }
 		 ;
@@ -464,28 +484,36 @@ exprlistplus : expr exprlistplusprime
 exprlistplusprime : { $$.cs = ""; }
 				  | ',' exprlistplus
 				  ;
-subprograms : { $<attrs>$.sti = st_union($<attrs>0.sts, st_union($<attrs>-1.sts, $<attrs>-2.sts)); }
-			| { $<attrs>$.sti = st_union($<attrs>0.sts, st_union($<attrs>-1.sts, $<attrs>-2.sts)); } procedure subprogramsprime
-			| { $<attrs>$.sti = st_union($<attrs>0.sts, st_union($<attrs>-1.sts, $<attrs>-2.sts)); } function subprogramsprime
+subprograms : { $$.cs = ""; }
+			| { $<attrs>$.sti = $<attrs>0.sti; } procedure subprogramsprime { $$.cs = $2.cs + $3.cs; }
+			| { $<attrs>$.sti = $<attrs>0.sti; } function subprogramsprime { $$.cs = $2.cs + $3.cs; }
 			;
 subprogramsprime : { $$.cs = ""; }
-				 | ';' subprograms
+				 | { $<attrs>$.sti = $<attrs>-1.sti; } ';' A subprograms { $$.cs = $4.cs;}
 				 ;
-procedure : PROC_TOKEN ID_TOKEN '(' param ')' ';' decl block
+procedure : { $<attrs>$.sti = $<attrs>0.sti; } PROC_TOKEN ID_TOKEN '(' param ')' ';' decl G block { $$.cs = "void " + std::string($3) + "(" + $5.cs + ") {\n" + $8.cs + $10.cs + "\n}\n"; }
 		  ;
-function : FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl block
+G : { $<attrs>$.sti = st_union($<attrs>0.sts, $<attrs>-7.sti); }
+  ;
+function : { $<attrs>$.sti = $<attrs>0.sti; } FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl H block { $$.cs = $3.type + " " + $4 + "(" + $6.cs + ") {\n" + $9.cs + $11.cs + "\n}\n"; }
 		 ;
+H : { $<attrs>$.sti = st_union($<attrs>0.sts, $<attrs>-8.sti); }
+  ;
 param : { $$.cs = ""; }
-	  | paramlistlist
+	  | paramlistlist { $$.cs = $1.cs; }
 	  ;
-paramlistlist : paramlist paramlistlistprime
+paramlistlist : paramlist paramlistlistprime { $$.cs = $1.cs + $2.cs; }
 			  ;
 paramlistlistprime : { $$.cs = ""; }
-				   | ';'  paramlistlist
+				   | ';'  paramlistlist { $$.cs = ", " + $2.cs; }
 				   ;
-paramlist : REF_TOKEN types idlist
-          | types idlist
+paramlist : REF_TOKEN types J idlist { $$.cs = $4.cs; }
+          | types K idlist { $$.cs = $3.cs; }
           ;
+J : { $<attrs>$.ids_info.ref = true; $<attrs>$.ids_info.type = $<attrs>0.type; }
+  ;
+K : { $<attrs>$.ids_info.ref = false; $<attrs>$.ids_info.type = $<attrs>0.type; }
+  ;
 writestmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITE_TOKEN '(' B expr ')' {
 				io = true;
 				if ($5.type == "char*") {

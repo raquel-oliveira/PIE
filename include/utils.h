@@ -14,7 +14,7 @@ typedef struct YYLTYPE {
     int last_column;
 } YYLTYPE;
 
-struct Id_list {
+struct Ids_info {
 	bool ref;
 	std::string type;
 };
@@ -27,7 +27,7 @@ struct Attributes {
 	std::string type;
 	std::vector<int> init_idx; //initial indexes of array
 	std::vector<std::string> ids; //ids of idlist
-	Id_list idlh; //ids herdados
+	Ids_info ids_info; //ids info
 	std::string afterlabel;
   std::string id_token;
 };
