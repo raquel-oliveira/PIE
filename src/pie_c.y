@@ -82,8 +82,23 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 std::string generateNewLabel() {
 	int oneMore = lastlabel + 1;
 	lastlabel++;
-	std::string newLabel = "_$" + std::to_string(oneMore);
+	std::string newLabel = "label" + std::to_string(oneMore);
 	return newLabel ;
+}
+
+std::string forOutput(std::string variable, std::string from, std::string to, int step, std::string content){
+	std::string output = "\n";
+	output += variable + "=" + from + ";\n";
+
+	bool downto = step < 0;
+	std::string label1 = generateNewLabel();
+	std::string label2 = generateNewLabel();
+	output += label1 + ":\nif ("+ variable;
+	output += downto ? "<" : ">";
+	output += to + ") goto " + label2 + ";\n";
+	output += content + "\n" + variable + "+=" + std::to_string(step) + ";\ngoto " + label1 + "; \n" + label2 + ": ";
+
+	return output;
 }
 
 int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
@@ -198,11 +213,11 @@ idlistprime : { $$.cs = ""; }
 idattr : { $$.cs = ""; }
 	   | '=' expr
 	   ;
-variable : ACCESS_TOKEN ID_TOKEN variableprime
-		 | '[' exprlistplus ']' variableprime
+variable : ACCESS_TOKEN ID_TOKEN variableprime { $$.cs = "." + std::string($2) + $3.cs; }
+		 | '[' exprlistplus ']' variableprime { $$.cs = "[" + $2.cs + "]" + $4.cs;}
 		 ;
 variableprime : { $$.cs = ""; }
-			  | variable
+			  | variable { $$.cs = $1.cs; }
 			  ;
 block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
 	  ;
@@ -267,11 +282,11 @@ literallistprime : { $$.cs = ""; }
 				 ;
 gotostmt : GOTO_TOKEN LABEL_TOKEN {}
 		 ;
-forblock : FOR_TOKEN ID_TOKEN forblockprime
-		 ;
-forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN C stmt
-			  | ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN D stmt
-			  ;
+		 forblock : FOR_TOKEN ID_TOKEN forblockprime {$$.cs = $3.cs;}
+		 		 ;
+		 forblockprime : { $<attrs>$.id_token = $<lexeme>0; } variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt { $$.cs = forOutput($$.id_token+$2.cs, $4.cs, $6.cs, std::stoi(removeSpace($8.cs)), $10.cs); }
+		 			  | { $<attrs>$.id_token = $<lexeme>0; } ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt {$$.cs = forOutput($$.id_token, $3.cs, $5.cs, std::stoi(removeSpace($7.cs)),  $9.cs);}
+		 			  ;
 C : { $<attrs>$.sti = $<attrs>-8.sti; }
   ;
 D : { $<attrs>$.sti = $<attrs>-7.sti; }
