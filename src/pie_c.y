@@ -73,10 +73,11 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 	return ST;
 }
 
+
 std::string generateNewLabel() {
-	int oneMore = lastlabel + 1;
-	std::string newLabel = "_$" + oneMore;
-	return newLabel ;
+ 	int oneMore = lastlabel + 1;
+	std::string newLabel = "_$" + std::to_string(oneMore);
+ 	return newLabel ;
 }
 
 int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
@@ -96,7 +97,7 @@ int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s
 %token NIL_TOKEN LE_TOKEN GE_TOKEN EQUAL_TOKEN DIFF_TOKEN AND_TOKEN OR_TOKEN ATTR_TOKEN ACCESS_TOKEN
 %token ERROR_TOKEN RANGE_TOKEN REF_TOKEN ENDOFFILE_TOKEN
 
-%type <attrs> program decl consts listconst listconstprime constdecl types typesprime primtypes arraytype subrangelist subrangelisttype1 subrangepart subrangepartprime subrangelistprime subrangetype1 subrangetype2 subrangetvarpart settype enumtype recordtype usertypes listusertypes listusertypesprime usertype vars varlistlist varlistlistprime varlist idlist idlistprime idattr variable variableprime block stmts stmtlistprime stmt stmtprime subprogcall exitstmt returnstmt attrstmt ifblock elseblock loopblock caseblock caseblockprime caselist literallist literallistprime gotostmt forblock forblockprime expr finalterm finaltermprime disj conj conjprime comp relational relationalprime compprime sum sumprime neg mul mulprime addop mulop equalityop relationalop literal exprlist exprlistplus exprlistplusprime subprograms subprogramsprime procedure function param paramlistlist paramlistlistprime paramlist writestmt writelnstmt readstmt readlnstmt
+%type <attrs> program decl consts listconst listconstprime constdecl types typesprime primtypes arraytype subrangelist subrangelisttype1 subrangepart subrangepartprime subrangelistprime subrangetype1 subrangetype2 subrangetvarpart settype enumtype recordtype usertypes listusertypes listusertypesprime usertype vars varlistlist varlistlistprime varlist idlist idlistprime idattr variable variableprime block stmts stmtlistprime stmt stmtprime subprogcall exitstmt returnstmt attrstmt ifblock elseblock loopblock caseblock caseblockprime caselist literallist literallistprime gotostmt forblock forblockprime expr finalterm finaltermprime disj conj conjprime comp relational relationalprime compprime sum sumprime neg mul mulprime addop mulop equalityop relationalop literal exprlist exprlistplus exprlistplusprime subprograms subprogramsprime procedure function param paramlistlist paramlistlistprime paramlist writestmt writelnstmt readstmt readlnstmt A B C D E
 
 %start program
 
@@ -199,65 +200,76 @@ variableprime : { $$.cs = ""; }
 			  ;
 block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
 	  ;
-stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
+stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs;}
 	  ;
 stmtlistprime : { $$.cs = ""; }
-			  | ';' stmts { $$.cs = $2.cs; }
+			  | { $<attrs>$.sti = $<attrs>-2.sti; } ';' stmts { $$.cs = $3.cs; }
 			  ;
-stmt : { $$.cs = ""; }
-	 | LABEL_TOKEN stmt
-	 | block
-	 | writestmt
-	 | writelnstmt
-	 | readstmt
-	 | readlnstmt
-	 | loopblock
-	 | ifblock
-	 | forblock
-	 | caseblock
+stmt : {  $$.cs = ""; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } LABEL_TOKEN A stmt { std::string label = $2; label[0] = '_'; $$.cs = label + ":\n" + $4.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } block { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } writestmt { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } writelnstmt { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } readstmt { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } readlnstmt { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } loopblock { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } ifblock { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } forblock { $$.cs = $2.cs; }
+	 | { $<attrs>$.sti = $<attrs>0.sti; } caseblock { $$.cs = $2.cs; }
 	 | gotostmt
-	 | ID_TOKEN stmtprime { $$.cs = $1 + $2.cs; }
-	 | exitstmt
+	 | { $<attrs>$.sti = $<attrs>0.sti; } ID_TOKEN stmtprime { $$.cs = $2 + $3.cs; }
+	 | { $<attrs>$.afterlabel = $<attrs>0.afterlabel; } exitstmt
 	 | returnstmt
 	 ;
+A : { $<attrs>$.sti = $<attrs>-1.sti; } 
+  ;
 stmtprime : attrstmt
 		  | subprogcall
 		  ;
 subprogcall : '(' exprlist ')'
 			;
-exitstmt : EXITWHEN_TOKEN expr
+exitstmt : { $<attrs>$.afterlabel = $<attrs>0.afterlabel; } EXITWHEN_TOKEN expr { $$.cs = "if(" + $3.cs + ") goto " + $$.afterlabel + ";\n"; }
 		 ;
-returnstmt : RETURN_TOKEN expr
+returnstmt : RETURN_TOKEN expr { $$.cs = "return " + $2.cs + ";\n"; }
 		   ;
 attrstmt : variable ATTR_TOKEN expr
 		 | ATTR_TOKEN expr { $$.cs = " = " + $2.cs + ";\n"; }
 		 ;
-ifblock : IF_TOKEN  expr stmt elseblock
+ifblock : { $<attrs>$.sti = $<attrs>0.sti; } IF_TOKEN expr B stmt elseblock { std::string label1 = generateNewLabel(), label2 = generateNewLabel();
+ $$.cs =  "if (!(" + $3.cs + ")) goto " + label1 + ";\n" + $5.cs + "goto " + label2 + ";\n" + label1 + ":\n" + $6.cs + label2 + ":\n";}
 		;
+B : { $<attrs>$.sti = $<attrs>-2.sti; }
+  ;
 elseblock : { $$.cs = ""; }
-		  | ELSE_TOKEN stmt
+		  | { $<attrs>$.sti = $<attrs>-4.sti; } ELSE_TOKEN A stmt { $$.cs = $4.cs; }
 		  ;
-loopblock : LOOP_TOKEN stmt
+loopblock : {$<attrs>$.sti = $<attrs>0.sti; } LOOP_TOKEN E stmt { std::string label1 = generateNewLabel(); $$.cs = label1 + ":\n" + $4.cs + "\ngoto " + label1 + ";\n" + $3.afterlabel + ":\n"; }
 		  ;
+E : { $<attrs>$.sti = $<attrs>-1.sti; $<attrs>$.afterlabel = generateNewLabel(); }
+  ;
 caseblock : CASE_TOKEN expr OF_TOKEN caselist caseblockprime
 		  ;
 caseblockprime : END_TOKEN
-			   | ELSE_TOKEN stmt END_TOKEN
+			   | ELSE_TOKEN A stmt END_TOKEN
 			   ;
-caselist : literallist ':' stmt ';'
+caselist : literallist ':' B stmt ';'
 		 ;
 literallist : literal literallistprime
 			;
 literallistprime : { $$.cs = ""; }
 				 | ',' literallist
 				 ;
-gotostmt : GOTO_TOKEN LABEL_TOKEN
+gotostmt : GOTO_TOKEN LABEL_TOKEN {}
 		 ;
 forblock : FOR_TOKEN ID_TOKEN forblockprime
 		 ;
-forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt
-			  | ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN stmt
+forblockprime : variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN C stmt
+			  | ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN D stmt
 			  ;
+C : { $<attrs>$.sti = $<attrs>-8.sti; }
+  ;
+D : { $<attrs>$.sti = $<attrs>-7.sti; }
+  ;
 expr : conj disj {
 			$1.sti = $$.sti;
 			$2.sti = $$.sti;
