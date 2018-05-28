@@ -12,6 +12,7 @@ extern int num_column;
 extern int num_line;
 extern char* lex;
 extern char* file_path;
+int lastlabel = 0;
 
 FILE *f;
 
@@ -70,6 +71,12 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 		ST[ids[i]] = type;
 	}
 	return ST;
+}
+
+std::string generateNewLabel() {
+	int oneMore = lastlabel + 1;
+	std:string newLabel = "_$" + oneMore;
+	return newLabel ;
 }
 
 int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
