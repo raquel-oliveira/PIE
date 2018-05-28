@@ -75,7 +75,7 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 
 std::string generateNewLabel() {
 	int oneMore = lastlabel + 1;
-	std:string newLabel = "_$" + oneMore;
+	std::string newLabel = "_$" + oneMore;
 	return newLabel ;
 }
 
