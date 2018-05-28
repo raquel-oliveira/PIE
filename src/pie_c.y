@@ -51,7 +51,6 @@ std::string includes() {
 }
 
 std::string get_io_type(std::string s) {
-	std::cout << "get type " << s << "\n";
 	if (s == "int") {
 		return "%i";
 	} else if (s == "float") {
@@ -77,8 +76,6 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 	std::map<std::string,std::string> ST;
 	for(int i = 0; i < ids.size(); i++) {
 		ST[ids[i]] = type;
-		std::cout << ids[i] << " " << ST[ids[i]] << "\n";
-		//ST.insert(std::pair<std::string,std::string>(ids[i], type));
 	}
 	return ST;
 }
@@ -217,7 +214,7 @@ varlistlist : varlist varlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.c
 varlistlistprime : { $$.cs = ""; }
 				 | varlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 				 ;
-varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); std::cout << "STS VAZIO (1 - SIM, 0 - NAO): " << $$.sts.empty() << "\n"; $$.cs = $1.type + std::string(" ") + $2.cs + $1.cs + ";\n"; }
+varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); $$.cs = $1.type + std::string(" ") + $2.cs + $1.cs + ";\n"; }
 		;
 idlist : ID_TOKEN idattr idlistprime { $$.ids = $3.ids; $$.ids.push_back($1); $$.cs = $1 + $2.cs + $3.cs; }
 	   ;
@@ -235,10 +232,10 @@ variableprime : { $$.cs = ""; }
 			  ;
 block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
 	  ;
-stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs;}
+stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
 	  ;
 stmtlistprime : { $$.cs = ""; }
-			  | { $<attrs>$.sti = $<attrs>-2.sti; } ';' stmts { $$.cs = $3.cs; }
+			  | { $<attrs>$.sti = $<attrs>-1.sti; } ';' stmts { $$.cs = $3.cs; }
 			  ;
 stmt : {  $$.cs = ""; }
 	 | { $<attrs>$.sti = $<attrs>0.sti; } LABEL_TOKEN A stmt { std::string label = $2; label[0] = '_'; $$.cs = label + ":\n" + $4.cs; }
@@ -315,7 +312,6 @@ expr : { $<attrs>$.sti = $<attrs>0.sti; } conj disj {
 		}
 	 ;
 finalterm : { $<attrs>$.sti = $<attrs>0.sti; } ID_TOKEN finaltermprime {
-					std::cout << " sadas " << $2 << " " << $$.sti[$2] << std::endl;
 					$$.type = $$.sti[$2];
 					$$.cs = $2 + $3.cs;
 				}
@@ -492,19 +488,28 @@ paramlist : REF_TOKEN types idlist
           ;
 writestmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITE_TOKEN '(' B expr ')' {
 				io = true;
-				$$.cs = "printf(\"" + get_io_type($5.type) + "\", " + $5.cs + ");\n" ; }
+				if ($5.type == "char*") {
+					$5.cs.erase(0,1); $5.cs.erase($5.cs.size() - 1);
+					$$.cs = "printf(\"" + get_io_type($5.type) + "\", \"" + $5.cs + "\");\n";
+				} else {
+					$$.cs = "printf(\"" + get_io_type($5.type) + "\", " + $5.cs + ");\n";
+				}}
 		  ;
 writelnstmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITELN_TOKEN '(' B expr ')' {
 					io = true;
-					$5.cs.erase(0,1); $5.cs.erase($5.cs.size() - 1);
-					$$.cs = "printf(\"" + get_io_type($5.type) + "\", \"" + $5.cs + "\\n\");\n" ; }
+					if ($5.type == "char*") {
+						$5.cs.erase(0,1); $5.cs.erase($5.cs.size() - 1);
+						$$.cs = "printf(\"" + get_io_type($5.type) + "\\n\", \"" + $5.cs + "\");\n";
+					} else {
+						$$.cs = "printf(\"" + get_io_type($5.type) + "\\n\", " + $5.cs + ");\n" ;
+					}}
 		    ;
 readstmt : { $<attrs>$.sti = $<attrs>0.sti; } READ_TOKEN '(' ID_TOKEN variableprime ')' { io = true;
 				if (!$$.sti.empty()) {
 					if ($$.sti[$4] == "char*") {
 						$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + ") , stdin);\n";
 					} else {
-						$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", " + std::string($4) + ");\n";
+						$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", &" + std::string($4) + ");\n";
 					}
 				}
 				else {
@@ -515,9 +520,9 @@ readstmt : { $<attrs>$.sti = $<attrs>0.sti; } READ_TOKEN '(' ID_TOKEN variablepr
 readlnstmt : { $<attrs>$.sti = $<attrs>0.sti; } READLN_TOKEN '(' ID_TOKEN variableprime ')' { io = true;
 					if (!$$.sti.empty()) {
 						if ($$.sti[$4] == "char*") {
-							$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + "), stdin);\n + printf(\"\\n\")";
+							$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + "), stdin);\n printf(\"\\n\");\n";
 						} else {
-							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\\n\", " + std::string($4) + ");\n";
+							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", &" + std::string($4) + ");\n printf(\"\\n\");\n";
 						}
 					}
 					else {
