@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+#include <algorithm>
 
 extern int yylex();
 extern void init_lexer(char* arg);
