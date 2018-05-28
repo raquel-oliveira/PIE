@@ -34,6 +34,11 @@ char*  getPathFile (char *arg){
 
 bool io = false;
 
+std::string removeSpace(std::string &str){
+    str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
+      return str;
+}
+
 std::string includes() {
 	std::string str = "";
 	if (io) {
@@ -222,7 +227,7 @@ stmt : {  $$.cs = ""; }
 	 | { $<attrs>$.afterlabel = $<attrs>0.afterlabel; } exitstmt
 	 | returnstmt
 	 ;
-A : { $<attrs>$.sti = $<attrs>-1.sti; } 
+A : { $<attrs>$.sti = $<attrs>-1.sti; }
   ;
 stmtprime : attrstmt
 		  | subprogcall
