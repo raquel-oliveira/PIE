@@ -199,7 +199,7 @@ variableprime : { $$.cs = ""; }
 			  ;
 block : { $<attrs>$.sti = $<attrs>0.sts; } BEGIN_TOKEN stmts END_TOKEN { $$.sts = $3.sts; $$.cs = "{\n" + $3.cs + "\n}\n";  }
 	  ;
-stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; std::cout << $$.cs  << std::endl; }
+stmts : { $<attrs>$.sti = $<attrs>-1.sti; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
 	  ;
 stmtlistprime : { $$.cs = ""; }
 			  | ';' stmts { $$.cs = $2.cs; }
