@@ -51,6 +51,7 @@ std::string includes() {
 }
 
 std::string get_io_type(std::string s) {
+	std::cout << "get type " << s << "\n";
 	if (s == "int") {
 		return "%i";
 	} else if (s == "float") {
@@ -76,6 +77,8 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 	std::map<std::string,std::string> ST;
 	for(int i = 0; i < ids.size(); i++) {
 		ST[ids[i]] = type;
+		std::cout << ids[i] << " " << ST[ids[i]] << "\n";
+		//ST.insert(std::pair<std::string,std::string>(ids[i], type));
 	}
 	return ST;
 }
@@ -135,7 +138,7 @@ program : PROGRAM_TOKEN ID_TOKEN ';' decl block '.' { $$.cs = includes() + $4.cs
 decl : consts usertypes vars subprograms { $$.sts = st_union($1.sts, st_union($2.sts, $3.sts)); $$.cs = $1.cs + $2.cs + $3.cs; }
 	 ;
 consts : { $$.cs = ""; }
-	   | CONST_TOKEN listconst { $$.sts = $2.sts; $$.cs = "\n" + $2.cs; }
+	   | CONST_TOKEN listconst { $$.sts = $2.sts; $$.cs = $2.cs; }
 	   ;
 listconst : constdecl listconstprime { $$.sts = st_union($1.sts, $2.sts); $$.cs = $1.cs + $2.cs; }
 		  ;
@@ -214,15 +217,15 @@ varlistlist : varlist varlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.c
 varlistlistprime : { $$.cs = ""; }
 				 | varlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 				 ;
-varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); $$.cs = $1.type + std::string(" ") + $2.cs + $1.cs + ";\n"; }
+varlist : types idlist ';' { $$.sts = addIds($1.type, $2.ids); std::cout << "STS VAZIO (1 - SIM, 0 - NAO): " << $$.sts.empty() << "\n"; $$.cs = $1.type + std::string(" ") + $2.cs + $1.cs + ";\n"; }
 		;
-idlist : ID_TOKEN idattr idlistprime { $$.cs = $1 + $2.cs + $3.cs; }
+idlist : ID_TOKEN idattr idlistprime { $$.ids = $3.ids; $$.ids.push_back($1); $$.cs = $1 + $2.cs + $3.cs; }
 	   ;
 idlistprime : { $$.cs = ""; }
-			| ',' idlist { $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
+			| ',' idlist { $$.ids = $2.ids; $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
 			;
 idattr : { $$.cs = ""; }
-	   | '=' expr
+	   | '=' expr { $$.cs = "= " + $2.cs; }
 	   ;
 variable : ACCESS_TOKEN ID_TOKEN variableprime { $$.cs = "." + std::string($2) + $3.cs; }
 		 | '[' exprlistplus ']' variableprime { $$.cs = "[" + $2.cs + "]" + $4.cs;}
@@ -255,16 +258,16 @@ stmt : {  $$.cs = ""; }
 	 ;
 A : { $<attrs>$.sti = $<attrs>-1.sti; }
   ;
-stmtprime : attrstmt
-		  | subprogcall
+stmtprime : { $<attrs>$.sti = $<attrs>-1.sti; } attrstmt { $$.cs = $2.cs; }
+		  | { $<attrs>$.sti = $<attrs>-1.sti; } subprogcall { $$.cs = $2.cs; }
 		  ;
 subprogcall : '(' exprlist ')'
 			;
-exitstmt : { $<attrs>$.afterlabel = $<attrs>0.afterlabel; } EXITWHEN_TOKEN expr { $$.cs = "if(" + $3.cs + ") goto " + $$.afterlabel + ";\n"; }
+exitstmt : { $<attrs>$.sti = $<attrs>0.sti; $<attrs>$.afterlabel = $<attrs>0.afterlabel; } EXITWHEN_TOKEN expr { $$.cs = "if(" + $3.cs + ") goto " + $$.afterlabel + ";\n"; }
 		 ;
-returnstmt : RETURN_TOKEN expr { $$.cs = "return " + $2.cs + ";\n"; }
+returnstmt : { $<attrs>$.sti = $<attrs>0.sti; } RETURN_TOKEN expr { $$.cs = "return " + $3.cs + ";\n"; }
 		   ;
-attrstmt : variable ATTR_TOKEN expr
+attrstmt : variable ATTR_TOKEN expr { $$.cs = $1.cs + " = " + $3.cs + ";\n"; }
 		 | ATTR_TOKEN expr { $$.cs = " = " + $2.cs + ";\n"; }
 		 ;
 ifblock : { $<attrs>$.sti = $<attrs>0.sti; } IF_TOKEN expr B stmt elseblock { std::string label1 = generateNewLabel(), label2 = generateNewLabel();
@@ -279,7 +282,7 @@ loopblock : {$<attrs>$.sti = $<attrs>0.sti; } LOOP_TOKEN E stmt { std::string la
 		  ;
 E : { $<attrs>$.sti = $<attrs>-1.sti; $<attrs>$.afterlabel = generateNewLabel(); }
   ;
-caseblock : CASE_TOKEN expr OF_TOKEN caselist caseblockprime
+caseblock : { $<attrs>$.sti = $<attrs>0.sti; } CASE_TOKEN expr OF_TOKEN caselist caseblockprime
 		  ;
 caseblockprime : END_TOKEN
 			   | ELSE_TOKEN A stmt END_TOKEN
@@ -291,7 +294,7 @@ literallist : literal literallistprime
 literallistprime : { $$.cs = ""; }
 				 | ',' literallist
 				 ;
-gotostmt : GOTO_TOKEN LABEL_TOKEN {}
+gotostmt : { $<attrs>$.sti = $<attrs>0.sti; } GOTO_TOKEN LABEL_TOKEN { $$.cs = "goto " + std::string($3); }
 		 ;
 		 forblock : FOR_TOKEN ID_TOKEN forblockprime {$$.cs = $3.cs;}
 		 		 ;
@@ -303,7 +306,7 @@ C : { $<attrs>$.sti = $<attrs>-8.sti; }
 D : { $<attrs>$.sti = $<attrs>-7.sti; }
   ;
 expr : { $<attrs>$.sti = $<attrs>0.sti; } conj disj {
-			if ($3.type.compare("nobool")) {
+			if ($3.type == "nobool") {
 				$$.type = $2.type;
 			} else {
 				$$.type = $3.type;
@@ -312,6 +315,7 @@ expr : { $<attrs>$.sti = $<attrs>0.sti; } conj disj {
 		}
 	 ;
 finalterm : { $<attrs>$.sti = $<attrs>0.sti; } ID_TOKEN finaltermprime {
+					std::cout << " sadas " << $2 << " " << $$.sti[$2] << std::endl;
 					$$.type = $$.sti[$2];
 					$$.cs = $2 + $3.cs;
 				}
@@ -339,7 +343,7 @@ disj : { $$.type = "nobool"; $$.cs = ""; }
 	 }
 	 ;
 conj : { $<attrs>$.sti = $<attrs>0.sti; } comp conjprime {
-			if ($3.type.compare("nobool")) {
+			if ($3.type == "nobool") {
 				$$.type = $2.type;
 			} else {
 				$$.type = $3.type;
@@ -354,7 +358,7 @@ conjprime : { $$.type = "nobool"; $$.cs = ""; }
 			}
 		  ;
 comp : { $<attrs>$.sti = $<attrs>0.sti; } relational compprime {
-			if ($3.type.compare("nobool")) {
+			if ($3.type == "nobool") {
 				$$.type = $2.type;
 			} else {
 				$$.type = $3.type;
@@ -363,7 +367,7 @@ comp : { $<attrs>$.sti = $<attrs>0.sti; } relational compprime {
 		}
 	 ;
 relational : { $<attrs>$.sti = $<attrs>0.sti; } sum relationalprime {
-					if ($3.type.compare("nobool")) {
+					if ($3.type == "nobool") {
 						$$.type = $2.type;
 					} else {
 						$$.type = $3.type;
@@ -384,7 +388,7 @@ compprime : { $$.type = "nobool"; $$.cs = ""; }
 			}
 		  ;
 sum : { $<attrs>$.sti = $<attrs>0.sti; } neg sumprime {
-			if ($3.type.compare("nobool")) {
+			if ($3.type == "nobool") {
 				$$.type = $2.type;
 			} else {
 				$$.type = $3.type;
@@ -392,7 +396,7 @@ sum : { $<attrs>$.sti = $<attrs>0.sti; } neg sumprime {
 			$$.cs = $2.cs + $3.cs;
 		}
 	| { $<attrs>$.sti = $<attrs>0.sti; } addop A neg sumprime {
-			if ($5.type.compare("nobool")) {
+			if ($5.type == "nobool") {
 				$$.type = $4.type;
 			} else {
 				$$.type = $5.type;
@@ -416,7 +420,7 @@ neg : { $<attrs>$.sti = $<attrs>0.sti; } mul {
 	}
 	;
 mul : { $<attrs>$.sti = $<attrs>0.sti; } finalterm mulprime {
-			if ($3.type.compare("nobool")) {
+			if ($3.type == "nobool") {
 				$$.type = $2.type;
 			} else {
 				$$.type = $3.type;
@@ -426,7 +430,7 @@ mul : { $<attrs>$.sti = $<attrs>0.sti; } finalterm mulprime {
 	;
 mulprime : { $$.type = "nobool"; $$.cs = ""; }
 		 | { $<attrs>$.sti = $<attrs>-1.sti; } mulop A finalterm mulprime {
-		 			if ($5.type.compare("nobool")) {
+		 			if ($5.type == "nobool") {
 		 				$$.type = $4.type;
 		 			} else {
 		 				$$.type = $5.type;
@@ -449,13 +453,13 @@ relationalop : '<' { $$.cs = " < "; }
 			 | '>' { $$.cs = " > "; }
 			 | GE_TOKEN { $$.cs = " >= "; }
 			 ;
-literal : INTLITERAL_TOKEN    { $$.cs = $1; }
-    	| BOOLLITERAL_TOKEN     { $$.cs = $1; }
-		  | REALLITERAL_TOKEN     { $$.cs = $1; }
-		  | CHARLITERAL_TOKEN     { $$.cs = $1; }
-		  | STRINGLITERAL_TOKEN   { $$.cs = $1; }
-		  | SUBRANGELITERAL_TOKEN
-		  | NIL_TOKEN
+literal : INTLITERAL_TOKEN    { $$.type = "int"; $$.cs = $1; }
+    	| BOOLLITERAL_TOKEN     { $$.type = "bool"; $$.cs = $1; }
+		  | REALLITERAL_TOKEN     { $$.type = "real"; $$.cs = $1; }
+		  | CHARLITERAL_TOKEN     { $$.type = "char"; $$.cs = $1; }
+		  | STRINGLITERAL_TOKEN   { $$.type = "char*"; $$.cs = $1; }
+		  | SUBRANGELITERAL_TOKEN { $$.type = "null"; $$.cs = $1; }
+		  | NIL_TOKEN             { $$.type = "null"; $$.cs = "null"; }
 		  ;
 exprlist : { $$.cs = ""; }
 		 | exprlistplus
@@ -486,13 +490,18 @@ paramlistlistprime : { $$.cs = ""; }
 paramlist : REF_TOKEN types idlist
           | types idlist
           ;
-writestmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITE_TOKEN '(' B expr ')' { io = true; $$.cs = "printf(" + $5.cs + ");\n" ; }
+writestmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITE_TOKEN '(' B expr ')' {
+				io = true;
+				$$.cs = "printf(\"" + get_io_type($5.type) + "\", " + $5.cs + ");\n" ; }
 		  ;
-writelnstmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITELN_TOKEN '(' B expr ')' { io = true; $5.cs.erase(0,1); $5.cs.erase($5.cs.size() - 1); $$.cs = "printf(\"" + $5.cs + "\\n\");\n" ; }
+writelnstmt : { $<attrs>$.sti = $<attrs>0.sti; } WRITELN_TOKEN '(' B expr ')' {
+					io = true;
+					$5.cs.erase(0,1); $5.cs.erase($5.cs.size() - 1);
+					$$.cs = "printf(\"" + get_io_type($5.type) + "\", \"" + $5.cs + "\\n\");\n" ; }
 		    ;
 readstmt : { $<attrs>$.sti = $<attrs>0.sti; } READ_TOKEN '(' ID_TOKEN variableprime ')' { io = true;
 				if (!$$.sti.empty()) {
-					if ($$.sti[$4].compare("char*")) {
+					if ($$.sti[$4] == "char*") {
 						$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + ") , stdin);\n";
 					} else {
 						$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", " + std::string($4) + ");\n";
@@ -505,7 +514,7 @@ readstmt : { $<attrs>$.sti = $<attrs>0.sti; } READ_TOKEN '(' ID_TOKEN variablepr
 		 ;
 readlnstmt : { $<attrs>$.sti = $<attrs>0.sti; } READLN_TOKEN '(' ID_TOKEN variableprime ')' { io = true;
 					if (!$$.sti.empty()) {
-						if ($$.sti[$4].compare("char*")) {
+						if ($$.sti[$4] == "char*") {
 							$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + "), stdin);\n + printf(\"\\n\")";
 						} else {
 							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\\n\", " + std::string($4) + ");\n";
