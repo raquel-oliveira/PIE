@@ -75,9 +75,10 @@ std::map<std::string,std::string> addIds(std::string type, std::vector<std::stri
 
 
 std::string generateNewLabel() {
- 	int oneMore = lastlabel + 1;
+	int oneMore = lastlabel + 1;
+	lastlabel++;
 	std::string newLabel = "_$" + std::to_string(oneMore);
- 	return newLabel ;
+	return newLabel ;
 }
 
 int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s \n", s, num_line, num_column, lex); }
