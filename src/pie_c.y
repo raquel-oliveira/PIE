@@ -166,7 +166,9 @@ primtypes : INT_TOKEN { $$.type = "int"; $$.cs = $$.type; }
 		  | recordtype { $$.type = "struct"; $$.cs = $1.cs; }
 		  | subrangetype2 subrangepart
 		  ;
-arraytype : ARRAY_TOKEN '[' subrangelist ']' OF_TOKEN types
+arraytype : ARRAY_TOKEN '[' subrangelist ']' OF_TOKEN types {
+				$$.cs = $6.type;
+			}
 		  ;
 subrangelist : subrangetype2 subrangepart subrangelistprime
 			 | subrangetype1 subrangelisttype1
@@ -208,7 +210,12 @@ listusertypes : usertype listusertypesprime { $$.sts = st_union($1.sts, $2.sts);
 listusertypesprime : { $$.cs = ""; }
 				   | listusertypes { $$.sts = $1.sts; $$.cs = $1.cs; }
 				   ;
-usertype : ID_TOKEN '=' types ';' { $$.sts[$1] = $3.type; $$.cs = "typedef " + $3.cs + " " + $1 + ";\n"; }
+usertype : ID_TOKEN '=' types ';' { $$.sts[$1] = $3.type;
+			if ($3.type == "array") {
+				$$.cs = "typedef " + std::string($1) + " " + $3.cs + "[];\n";
+			} else {
+				$$.cs = "typedef " + $3.cs + " " + $1 + ";\n";
+			}}
 		 ;
 vars : { $$.cs = ""; }
 	 | VAR_TOKEN varlistlist { $$.sts = $2.sts; $$.cs = $2.cs + "\n"; }
@@ -218,13 +225,27 @@ varlistlist : varlist varlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.c
 varlistlistprime : { $$.cs = ""; }
 				 | varlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 				 ;
-varlist : types L idlist ';' { $$.sts = addIds($1.type, $3.ids); $$.cs = $1.cs + " " + $3.cs + ";\n"; }
+varlist : types L idlist ';' { $$.sts = addIds($1.type, $3.ids);
+			if ($1.type == "array") {
+				$$.cs = $1.cs + " ";
+				for(int i = 0; i < $3.ids.size(); ) {
+					$$.cs += $3.ids[i] + "[]";
+					i++;
+					if (i == $3.ids.size()) {
+						$$.cs += ";\n";
+					} else {
+						$$.cs += ", ";
+					}
+				}
+			} else {
+				$$.cs = $1.cs + " " + $3.cs + ";\n";
+			}}
 		;
 L : { $<attrs>$.ids_info.ref = false; $<attrs>$.ids_info.type = "var"; }
   ;
-idlist : { $<attrs>$.ids_info = $<attrs>0.ids_info; } ID_TOKEN idattr idlistprime { $$.ids = $4.ids; $$.ids.push_back($2); 
+idlist : { $<attrs>$.ids_info = $<attrs>0.ids_info; } ID_TOKEN idattr idlistprime { $$.ids = $4.ids; $$.ids.push_back($2);
 			if($$.ids_info.type == "var") {
-				$$.cs = $2 + $3.cs + $4.cs; 
+				$$.cs = $2 + $3.cs + $4.cs;
 			}
 			else {
 				if($$.ids_info.ref) {
@@ -550,11 +571,11 @@ readlnstmt : { $<attrs>$.sti = $<attrs>0.sti; } READLN_TOKEN '(' ID_TOKEN variab
 						if ($$.sti[$4] == "char*") {
 							$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + "), stdin);\n";
 							std::string l1 = generateNewLabel(), l2 = generateNewLabel();
-							$$.cs = $$.cs + l1 + ":\n" + "if(getchar() == '\\n') goto " + l2 + ";\n goto " + l1 + ";\n" + l2 + ":;\n"; 
+							$$.cs = $$.cs + l1 + ":\n" + "if(getchar() == '\\n') goto " + l2 + ";\n goto " + l1 + ";\n" + l2 + ":;\n";
 						} else {
 							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", &" + std::string($4) + ");\n";
 							std::string l1 = generateNewLabel(), l2 = generateNewLabel();
-							$$.cs = $$.cs + l1 + ":\n" + "if(getchar() == '\\n') goto " + l2 + ";\n goto " + l1 + ";\n" + l2 + ":;\n"; 
+							$$.cs = $$.cs + l1 + ":\n" + "if(getchar() == '\\n') goto " + l2 + ";\n goto " + l1 + ";\n" + l2 + ":;\n";
 						}
 					}
 					else {
