@@ -155,15 +155,15 @@ typesprime : { $$.cs = ""; }
 		   | subrangepart { $$.cs = $1.cs; }
 		   | variable subrangepart { $$.cs = $1.cs + $2.cs; }
 		   ;
-primtypes : INT_TOKEN { $$.type = "int"; $$.cs = ""; }
-		  | REAL_TOKEN { $$.type = "float"; $$.cs = ""; }
-		  | BOOL_TOKEN { $$.type = "bool"; $$.cs = ""; }
-		  | CHAR_TOKEN { $$.type = "char"; $$.cs = ""; }
-		  | STRING_TOKEN { $$.type = "char*"; $$.cs = ""; }
-		  | arraytype { $$.type = $1.cs; $$.cs = ""; }
-		  | settype { $$.type = $1.cs; $$.cs = ""; }
-		  | enumtype { $$.type = $1.cs; $$.cs = ""; }
-		  | recordtype { $$.type = $1.cs; $$.cs = ""; }
+primtypes : INT_TOKEN { $$.type = "int"; $$.cs = $$.type; }
+		  | REAL_TOKEN { $$.type = "float"; $$.cs = $$.type; }
+		  | BOOL_TOKEN { $$.type = "bool"; $$.cs = $$.type; }
+		  | CHAR_TOKEN { $$.type = "char"; $$.cs = $$.type; }
+		  | STRING_TOKEN { $$.type = "char*"; $$.cs = $$.type; }
+		  | arraytype { $$.type = "array"; $$.cs = $1.cs; }
+		  | settype { $$.type = "set"; $$.cs = $1.cs; }
+		  | enumtype { $$.type = "enum"; $$.cs = $1.cs; }
+		  | recordtype { $$.type = "struct"; $$.cs = $1.cs; }
 		  | subrangetype2 subrangepart
 		  ;
 arraytype : ARRAY_TOKEN '[' subrangelist ']' OF_TOKEN types
@@ -208,7 +208,7 @@ listusertypes : usertype listusertypesprime { $$.sts = st_union($1.sts, $2.sts);
 listusertypesprime : { $$.cs = ""; }
 				   | listusertypes { $$.sts = $1.sts; $$.cs = $1.cs; }
 				   ;
-usertype : ID_TOKEN '=' types ';' { $$.sts[$1] = $3.type; $$.cs = "typedef " + $3.type + " " + $1 + ";\n"; }
+usertype : ID_TOKEN '=' types ';' { $$.sts[$1] = $3.type; $$.cs = "typedef " + $3.cs + " " + $1 + ";\n"; }
 		 ;
 vars : { $$.cs = ""; }
 	 | VAR_TOKEN varlistlist { $$.sts = $2.sts; $$.cs = $2.cs + "\n"; }
@@ -218,7 +218,7 @@ varlistlist : varlist varlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.c
 varlistlistprime : { $$.cs = ""; }
 				 | varlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 				 ;
-varlist : types L idlist ';' { $$.sts = addIds($1.type, $3.ids); $$.cs = $1.type + std::string(" ") + $3.cs + $1.cs + ";\n"; }
+varlist : types L idlist ';' { $$.sts = addIds($1.type, $3.ids); $$.cs = $1.cs + " " + $3.cs + ";\n"; }
 		;
 L : { $<attrs>$.ids_info.ref = false; $<attrs>$.ids_info.type = "var"; }
   ;
