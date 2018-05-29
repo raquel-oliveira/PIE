@@ -103,7 +103,7 @@ std::string forOutput(std::string variable, std::string from, std::string to, in
 	output += label1 + ":\nif ("+ variable;
 	output += downto ? "<" : ">";
 	output += to + ") goto " + label2 + ";\n";
-	output += content + "\n" + variable + "+=" + std::to_string(step) + ";\ngoto " + label1 + "; \n" + label2 + ": ";
+	output += content + "\n" + variable + "+=" + std::to_string(step) + ";\ngoto " + label1 + "; \n" + label2 + ":;\n";
 
 	return output;
 }
@@ -130,7 +130,7 @@ int yyerror( char *s ) { fprintf( stderr, "%s\nLine: %d, column: %d at token: %s
 %start program
 
 %%
-program : PROGRAM_TOKEN ID_TOKEN ';' decl I block '.' { $$.cs = includes() + $4.cs + "int main() {\n" + $6.cs + "\nreturn 0;\n}\n"; fprintf(f, "%s", $$.cs.c_str()); }
+program : PROGRAM_TOKEN ID_TOKEN ';' decl I block '.' { $$.cs = includes() + "typedef int bool;\n#define true 1\n#define false 0\n\n" + $4.cs + "int main() {\n" + $6.cs + "\nreturn 0;\n}\n"; fprintf(f, "%s", $$.cs.c_str()); }
 		;
 I : { $<attrs>$.sti = $<attrs>0.sts; }
   ;
@@ -288,14 +288,14 @@ attrstmt : variable ATTR_TOKEN expr { $$.cs = $1.cs + " = " + $3.cs + ";\n"; }
 		 | ATTR_TOKEN expr { $$.cs = " = " + $2.cs + ";\n"; }
 		 ;
 ifblock : { $<attrs>$.sti = $<attrs>0.sti; } IF_TOKEN expr B stmt elseblock { std::string label1 = generateNewLabel(), label2 = generateNewLabel();
- $$.cs =  "if (!(" + $3.cs + ")) goto " + label1 + ";\n" + $5.cs + "goto " + label2 + ";\n" + label1 + ":\n" + $6.cs + label2 + ":\n";}
+ $$.cs =  "if (!(" + $3.cs + ")) goto " + label1 + ";\n" + $5.cs + "goto " + label2 + ";\n" + label1 + ":\n" + $6.cs + label2 + ":;\n";}
 		;
 B : { $<attrs>$.sti = $<attrs>-2.sti; }
   ;
 elseblock : { $$.cs = ""; }
 		  | ELSE_TOKEN { $<attrs>$.sti = $<attrs>-5.sti; } A stmt { $$.cs = $4.cs; }
 		  ;
-loopblock : {$<attrs>$.sti = $<attrs>0.sti; } LOOP_TOKEN E stmt { std::string label1 = generateNewLabel(); $$.cs = label1 + ":\n" + $4.cs + "\ngoto " + label1 + ";\n" + $3.afterlabel + ":\n"; }
+loopblock : {$<attrs>$.sti = $<attrs>0.sti; } LOOP_TOKEN E stmt { std::string label1 = generateNewLabel(); $$.cs = label1 + ":\n" + $4.cs + "\ngoto " + label1 + ";\n" + $3.afterlabel + ":;\n"; }
 		  ;
 E : { $<attrs>$.sti = $<attrs>-1.sti; $<attrs>$.afterlabel = generateNewLabel(); }
   ;
@@ -313,11 +313,11 @@ literallistprime : { $$.cs = ""; }
 				 ;
 gotostmt : { $<attrs>$.sti = $<attrs>0.sti; } GOTO_TOKEN LABEL_TOKEN { $$.cs = "goto " + std::string($3); }
 		 ;
-		 forblock : FOR_TOKEN ID_TOKEN forblockprime {$$.cs = $3.cs;}
-		 		 ;
-		 forblockprime : { $<attrs>$.id_token = $<lexeme>0; } variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN C stmt { $$.cs = forOutput($$.id_token+$2.cs, $4.cs, $6.cs, std::stoi(removeSpace($8.cs)), $11.cs); }
-		 			  | { $<attrs>$.id_token = $<lexeme>0; } ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN D stmt {$$.cs = forOutput($$.id_token, $3.cs, $5.cs, std::stoi(removeSpace($7.cs)),  $10.cs);}
-		 			  ;
+forblock : FOR_TOKEN ID_TOKEN forblockprime {$$.cs = $3.cs;}
+		 ;
+forblockprime : { $<attrs>$.id_token = $<lexeme>0; } variable ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN C stmt { $$.cs = forOutput($$.id_token+$2.cs, $4.cs, $6.cs, std::stoi(removeSpace($8.cs)), $11.cs); }
+		 | { $<attrs>$.id_token = $<lexeme>0; } ATTR_TOKEN expr TO_TOKEN expr STEP_TOKEN expr DO_TOKEN D stmt {$$.cs = forOutput($$.id_token, $3.cs, $5.cs, std::stoi(removeSpace($7.cs)),  $10.cs);}
+		 ;
 C : { $<attrs>$.sti = $<attrs>-8.sti; }
   ;
 D : { $<attrs>$.sti = $<attrs>-7.sti; }
@@ -478,11 +478,11 @@ literal : INTLITERAL_TOKEN    { $$.type = "int"; $$.cs = $1; }
 		  | NIL_TOKEN             { $$.type = "null"; $$.cs = "null"; }
 		  ;
 exprlist : { $$.cs = ""; }
-		 | exprlistplus
-exprlistplus : expr exprlistplusprime
+		 | exprlistplus { $$.cs = $1.cs; }
+exprlistplus : expr exprlistplusprime { $$.cs = $1.cs + $2.cs; }
 			 ;
 exprlistplusprime : { $$.cs = ""; }
-				  | ',' exprlistplus
+				  | ',' exprlistplus { $$.cs = ", " + $2.cs; }
 				  ;
 subprograms : { $$.cs = ""; }
 			| { $<attrs>$.sti = $<attrs>0.sti; } procedure subprogramsprime { $$.cs = $2.cs + $3.cs; }
@@ -493,22 +493,22 @@ subprogramsprime : { $$.cs = ""; }
 				 ;
 procedure : { $<attrs>$.sti = $<attrs>0.sti; } PROC_TOKEN ID_TOKEN '(' param ')' ';' decl G block { $$.cs = "void " + std::string($3) + "(" + $5.cs + ") {\n" + $8.cs + $10.cs + "\n}\n"; }
 		  ;
-G : { $<attrs>$.sti = st_union($<attrs>0.sts, $<attrs>-7.sti); }
+G : { $<attrs>$.sti = st_union($<attrs>-3.sts, st_union($<attrs>0.sts, $<attrs>-7.sti)); }
   ;
 function : { $<attrs>$.sti = $<attrs>0.sti; } FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl H block { $$.cs = $3.type + " " + $4 + "(" + $6.cs + ") {\n" + $9.cs + $11.cs + "\n}\n"; }
 		 ;
-H : { $<attrs>$.sti = st_union($<attrs>0.sts, $<attrs>-8.sti); }
+H : { $<attrs>$.sti = st_union($<attrs>-3.sts, st_union($<attrs>0.sts, $<attrs>-8.sti)); }
   ;
 param : { $$.cs = ""; }
-	  | paramlistlist { $$.cs = $1.cs; }
+	  | paramlistlist { $$.sts = $1.sts; $$.cs = $1.cs; }
 	  ;
-paramlistlist : paramlist paramlistlistprime { $$.cs = $1.cs + $2.cs; }
+paramlistlist : paramlist paramlistlistprime { $$.sts = st_union($1.sts, $2.sts); $$.cs = $1.cs + $2.cs; }
 			  ;
 paramlistlistprime : { $$.cs = ""; }
-				   | ';'  paramlistlist { $$.cs = ", " + $2.cs; }
+				   | ';'  paramlistlist { $$.sts = $2.sts; $$.cs = ", " + $2.cs; }
 				   ;
-paramlist : REF_TOKEN types J idlist { $$.cs = $4.cs; }
-          | types K idlist { $$.cs = $3.cs; }
+paramlist : REF_TOKEN types J idlist { $$.sts = addIds($2.type, $4.ids); $$.cs = $4.cs; }
+          | types K idlist { $$.sts = addIds($1.type, $3.ids); $$.cs = $3.cs; }
           ;
 J : { $<attrs>$.ids_info.ref = true; $<attrs>$.ids_info.type = $<attrs>0.type; }
   ;
@@ -548,9 +548,13 @@ readstmt : { $<attrs>$.sti = $<attrs>0.sti; } READ_TOKEN '(' ID_TOKEN variablepr
 readlnstmt : { $<attrs>$.sti = $<attrs>0.sti; } READLN_TOKEN '(' ID_TOKEN variableprime ')' { io = true;
 					if (!$$.sti.empty()) {
 						if ($$.sti[$4] == "char*") {
-							$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + "), stdin);\n printf(\"\\n\");\n";
+							$$.cs = "fgets(" + std::string($4) + ", sizeof(" + std::string($4) + "), stdin);\n";
+							std::string l1 = generateNewLabel(), l2 = generateNewLabel();
+							$$.cs = $$.cs + l1 + ":\n" + "if(getchar() == '\\n') goto " + l2 + ";\n goto " + l1 + ";\n" + l2 + ":;\n"; 
 						} else {
-							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", &" + std::string($4) + ");\n printf(\"\\n\");\n";
+							$$.cs = "scanf(\"" + get_io_type($$.sti[$4]) + "\", &" + std::string($4) + ");\n";
+							std::string l1 = generateNewLabel(), l2 = generateNewLabel();
+							$$.cs = $$.cs + l1 + ":\n" + "if(getchar() == '\\n') goto " + l2 + ";\n goto " + l1 + ";\n" + l2 + ":;\n"; 
 						}
 					}
 					else {
