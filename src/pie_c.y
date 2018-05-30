@@ -14,7 +14,6 @@ extern int num_line;
 extern char* lex;
 extern char* file_path;
 int lastlabel = 0;
-int lastenum = 0;
 
 FILE *f;
 
@@ -131,7 +130,7 @@ std::string getType(ST& st, std::string id) {
 	std::string type = st.st[id];
 	if(type == "")
 		return type;
-	if(type == "int" || type == "float" || type == "char" || type == "bool" || type == "char*" || type == "struct" || type == "enum" || type == "array") {
+	if(type == "int" || type == "float" || type == "char" || type == "bool" || type == "char*" || type == "struct" || type == "array") {
 		return type;
 	}
 	return getType(st, type);
@@ -201,7 +200,7 @@ primtypes : INT_TOKEN { $$.type = "int"; $$.cs = $$.type; }
 		  | STRING_TOKEN { $$.type = "char*"; $$.cs = $$.type; }
 		  | arraytype { $$.st = $1.st; $$.type = "array"; $$.arraybody = $1.arraybody; $$.cs = $1.cs; }
 		  | settype { $$.type = "set"; $$.cs = $1.cs; }
-		  | enumtype { $$.type = "enum"; $$.cs = $1.cs; }
+		  | enumtype { $$.type = "int"; $$.cs = $1.cs; }
 		  | recordtype { $$.st = $1.st; $$.type = "struct"; $$.cs = $1.cs; }
 		  | subrangetype2 subrangepart
 		  ;
@@ -260,7 +259,6 @@ usertype : ID_TOKEN '=' types ';' {
 					$$.st.array_STs = $3.st.array_STs;
 					$$.st.array_ST_idx[$1] = $$.st.array_STs.size() - 1;
 				}
-				$$.cs = "typedef " + $3.cs + " " + $1 + ";\n"; 
 				if ($3.type == "array") {
 					$$.cs = "typedef " + $3.cs + " " + $1 + $3.arraybody + ";\n";
 				} else {
@@ -336,7 +334,7 @@ variable : { $<attrs>$.st = $<attrs>0.st; $<attrs>$.id_token = $<attrs>0.id_toke
 variableprime : { $$.cs = ""; }
 			  | { $<attrs>$.st = $<attrs>0.st; $<attrs>$.id_token = $<lexeme>0; } variable { $$.type = $2.type; $$.cs = $2.cs; }
 			  ;
-block : { $<attrs>$.st = $<attrs>0.st; $<attrs>$.afterlabel = $<attrs>0.afterlabel; } BEGIN_TOKEN stmts END_TOKEN { $$.st = $3.st; $$.cs = $3.cs;  }
+block : { $<attrs>$.st = $<attrs>0.st; $<attrs>$.afterlabel = $<attrs>0.afterlabel; } BEGIN_TOKEN stmts END_TOKEN { $$.cs = $3.cs;  }
 	  ;
 stmts : { $<attrs>$.st = $<attrs>-1.st; $<attrs>$.afterlabel = $<attrs>-1.afterlabel; } stmt stmtlistprime { $$.cs = $2.cs + $3.cs; }
 	  ;

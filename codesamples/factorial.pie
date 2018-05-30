@@ -15,5 +15,5 @@ begin
     for i := 1 to num step 1 do
         sum := sum * i;
     write("Result: ");
-    write(sum)
+    writeln(sum)
 end.
