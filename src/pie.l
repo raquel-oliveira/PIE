@@ -34,7 +34,7 @@ SUBRANGELITERAL (INTLITERAL".."INTLITERAL)|(LETTER".."LETTER)
 LINECOMMENT     "#"((.)*)\n
 CHARLITERAL     \'[^']*\'
 ID              {LETTER}({LETTER}|{DIGIT}|"_")*
-LABEL           @({LETTER}|{DIGIT}|"_")*
+LABEL           @({LETTER}|{DIGIT}|"_")+
 WHITESPACE      [ \t\v\f]*
 UNACCEPTABLE    .
 
