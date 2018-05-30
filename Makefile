@@ -13,7 +13,7 @@ codegenerator: src/pie_c.y
 	yacc -d src/pie_c.y
 
 bottomup: y.tab.c lex.yy.c
-	g++ -std=c++14 -o pie y.tab.c lex.yy.c -ll
+	g++ -std=c++14 -o bake y.tab.c lex.yy.c -ll
 
 recursive:  src/recursive_parser.cpp src/tokens.cpp
 	g++ -std=c++14 -o recursive src/recursive_parser.cpp src/tokens.cpp -ll

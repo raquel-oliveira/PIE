@@ -12,12 +12,12 @@ make
 ### Running
 
 ```bash
-./pie pathtofile.pie
+./bake pathtofile.pie
 ```
 ### Example
 ```bash
 make
-./pie codesamples/mergesort.pie
+./bake codesamples/mergesort.pie
 ```
 
 ## Team
