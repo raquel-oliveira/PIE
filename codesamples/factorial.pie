@@ -1,5 +1,5 @@
 ##
-# PIE Factorial 
+# PIE Factorial
 # Pascal version: http://rextester.com/UXP1971.
 ##
 
@@ -15,5 +15,5 @@ begin
     for i := 1 to num step 1 do
         sum := sum * i;
     write("Result: ");
-    writeln(sum)
+    writeln(sum);
 end.

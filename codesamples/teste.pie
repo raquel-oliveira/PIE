@@ -1,5 +1,5 @@
 ##
-# PIE Factorial 
+# PIE Factorial
 # Pascal version: http://rextester.com/UXP1971.
 ##
 
@@ -30,16 +30,16 @@ proc procedimento(int a; int b);
     end;
 
 func int funcao(int a);
-    var 
+    var
         bool b;
-    begin 
+    begin
         b := true;
         if b
-            return 1
+            return 1;
         else
             return 0;
     end
-    
+
 begin
     i := 10;
     j := 20;

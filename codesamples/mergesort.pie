@@ -1,5 +1,5 @@
 ##
-# PIE Merge Sort 
+# PIE Merge Sort
 # Pascal version: http://rextester.com/GHRH16649.
 ##
 program merge_sort;
@@ -21,29 +21,29 @@ proc read_arr();
     begin
         writeln("Please give 10 integers as input for the array");
         for i := FIRST to LAST step 1 do
-            read(vector[i])
+            read(vector[i]);
     end;
 
 proc merge(int first, last, center);
     var
         int i, j, k;
         TVector helper;
-    begin 
+    begin
         for idx := FIRST to LAST step 1 do
             helper[idx] := vector[idx];
-        i := first; 
-        j := center + 1; 
+        i := first;
+        j := center + 1;
         k := first;
 
         loop
             begin
                 exitwhen (i > center) || (j > last);
-                if helper[i] <= helper[j] 
+                if helper[i] <= helper[j]
                     begin
                        vector[k] := helper[i];
                        i := i + 1
-                    end 
-                else 
+                    end
+                else
                     begin
                        vector[k] := helper[j];
                        j := j + 1
@@ -67,7 +67,7 @@ proc split_merge(int first, last);
                 center := (first + last) / 2;
                 split_merge(first, center);
                 split_merge(center + 1, last);
-                merge(first, last, center)
+                merge(first, last, center);
             end
     end;
 
@@ -78,7 +78,7 @@ begin
     for idx := FIRST to LAST step 1 do
         begin
            write(vector[idx]);
-           write(" ")
+           write(" ");
         end;
     write("\n");
 end.
