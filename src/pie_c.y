@@ -87,12 +87,6 @@ std::string generateNewLabel() {
  	return newLabel;
 }
 
-std::string generateNewEnum() {
- 	lastenum += 1;
-	std::string newEnum = "enum_$" + std::to_string(lastenum);
- 	return newEnum;
-}
-
 std::string forOutput(std::string variable, std::string from, std::string to, int step, std::string content){
 	std::string output = "\n";
 	output += variable + "=" + from + ";\n";
@@ -195,7 +189,7 @@ subrangetvarpart : { $$.cs = ""; }
 settype : SET_TOKEN OF_TOKEN types { $$.cs = $3.type + std::string("*"); }
 		;
 enumtype : '(' idlist ')' {
-				$$.cs = "enum " + generateNewEnum() + "{" + $2.cs + "}";
+				$$.cs = "enum {" + $2.cs + "}";
 			}
 		 ;
 recordtype : RECORD_TOKEN varlistlist END_TOKEN {
