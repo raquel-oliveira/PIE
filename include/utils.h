@@ -27,7 +27,7 @@ struct ArrayAttrs {
 
 struct RangeAttrs {
 	int init_idx;
-	int end_inx;
+	int end_idx;
 };
 
 struct ST {
@@ -48,6 +48,8 @@ struct Attributes {
 	Ids_info ids_info; //ids info
 	std::string afterlabel;
 	ST st; //symbol table
+	RangeAttrs ra;
+	std::string arraybody;
   	std::string id_token;
 };
 

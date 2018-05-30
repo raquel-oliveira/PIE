@@ -55,10 +55,11 @@
 
 
 
-\title{DIM0661-PB3}
+\title{DIM0661-PB4}
 %\subtitle{Definição da linguagem e análise léxica}
 %\subtitle{Analisadores Sintáticos Preditivos}
 %\subtitle{Analisador Sintático Ascendente}
+%\subtitle{Back-end do Compilador: análise de contexto}
 \author{Grupo 3}
 \date{\today}
 
@@ -81,9 +82,9 @@ Este relatório apresenta o manual da linguagem de programação que está sendo
 \end{itemize}
 \end{changemargin}
 
-O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textbf{P}ascal-l\textbf{I}k\textbf{E}).
+O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal Improved Experience.
 
-\chapter{Regras sintáticas}
+\chapter{Regras sintáticas}\label{ch:sintatica}
 \input{sintatica.tex}
 
 \newpage
@@ -103,7 +104,11 @@ O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal-like (\textb
 \input{ascendente.tex}
 
 \newpage
-\chapter{Forma de uso}
+\chapter{Back-end do Compilador}
+\input{backend.tex}
+
+\newpage
+\chapter{Forma de uso}\label{ch:uso}
 O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 \section{Compilação}
 \begin{verbatim}
