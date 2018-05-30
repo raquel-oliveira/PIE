@@ -1,6 +1,6 @@
 \section{Código gerado}
 Criamos um back-end do compilador para a geração do código. 
-A linguagem usada na geração do código é uma restrição da linguagem C que permite usar apenas os seguintes elementos:
+A linguagem usada na criação do código intermediário é uma restrição da linguagem C que permite usar apenas os seguintes elementos:
 \begin{itemize}
 	\item Expressões aritméticas, lógicas, relacionais e chamadas de funções.
 	\item Todos os tipos de dados da linguagem.
@@ -35,8 +35,24 @@ Ao compilar um arquivo $.pie$ (como descrito em \ref{ch:uso}), um código interm
 gcc <nomedoarquivo>.c -o <nomedoexecutavel>
 \end{verbatim}
 
+\section{Gramática de atributos}
+Os atributos sintetizados estarão em \sintetizado{azul} e os herdados em \herdado{vermelho}.
+\begin{table}[h]
+	%\small
+	\centering
+	\begin{tabular}{l|l|}
+		\cline{2-2}
+		& \multicolumn{1}{c|}{\textbf{Atributos}}                                                      \\ \hline
+		\multicolumn{1}{|l|}{\textbf{PROCEDURE}} & {\color[HTML]{333333} \begin{tabular}[c]{@{}l@{}}\herdado{st}\\ \sintetizado{cs}\end{tabular}} \\ \hline
+		\multicolumn{1}{|l|}{\textbf{PARAM}}     & \begin{tabular}[c]{@{}l@{}}\sintetizado{st}\\ \sintetizado{cs}\end{tabular}                    \\ \hline
+		\multicolumn{1}{|l|}{\textbf{DECL}}      & \begin{tabular}[c]{@{}l@{}}\sintetizado{st}\\ \sintetizado{cs}\end{tabular}                    \\ \hline
+		\multicolumn{1}{|l|}{\textbf{BLOCK}}     & \begin{tabular}[c]{@{}l@{}}\herdado{st}\\ \sintetizado{cs}\end{tabular}                        \\ \hline
+		\multicolumn{1}{|l|}{\textbf{id}}        & \sintetizado{lexeme}                                                                       \\ \hline
+	\end{tabular}
+\end{table}
+
 \section{Estratégias}
-Para a implementação da gramática de atributos, usamos a técnica/esquema de tradução dirigida pela sintaxe. Devido a este esquema, notamos a necessidade de alterar algumas regras sintáticas (descritas em \ref{ch:sintatica}) adicionando um novo não-terminal logo antes de uma regra caso ela necessite obter uma informação herdada que ela não teria acesso por padrão (no caso da abordagem \textit{bottom-up}). Isso só foi necessário no caso de não terminais que precisavam herdar informações de símbolos, que,  em regras diferentes, estavam em posições diferentes. Como por exemplo no caso do não terminal $block$ (usados nas regras sintáticas \ref{procedure} e \ref{function}  ):
+Para a implementação da gramática de atributos, usamos a técnica/esquema de tradução dirigida pela sintaxe. Devido a este esquema, notamos a necessidade de realizar mudandas nas implementações de algumas regras sintáticas (descritas em \ref{ch:sintatica}) adicionando um novo não-terminal logo antes de uma regra caso ela necessite obter uma informação herdada que ela não teria acesso por padrão (no caso da abordagem \textit{bottom-up}). Isso só foi necessário no caso de não terminais que precisavam herdar informações de símbolos, que,  em regras diferentes, estavam em posições diferentes. Como por exemplo no caso do não terminal $block$ (usados nas regras sintáticas \ref{procedure} e \ref{function}  ):
 
 \begin{lstlisting}[frame=single, language=pie]
 <procedure> ::= proc id `(' <param> `)' `;' <decl> <block>
@@ -90,5 +106,10 @@ Durante o desenvolvimento do Back-end do compilador \textbf{bake} as dificuldade
 
 \begin{itemize}
 \item Conhecer todos os recursos que o Yacc oferece;
-\item Alinhar o projeto com o desenvolvimento.
+\item O tempo, ocasionando na
+\begin{itemize}
+	\item falta de implementação de struct de struct ou de array
+	\item falta de implementação de array de struct ou de array
+	\item negligenciamento do sincronismo da atualização do relatório em relação o andamento do projeto/implementação
+\end{itemize}
 \end{itemize}
