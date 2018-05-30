@@ -5,25 +5,46 @@
 
 program factorial;
 
-type 
-	point = record
-		int x,y;
-	end;
+type
+    Point = record
+        int x, y;
+    end;
 
 var
-    int num, sum, i;
+    int i, j;
+    char ch;
+    Point p1;
     record
-    	int x, y;
-    	char c;
-    end v1, v2;
-    point p1,p2;
+        char c, d;
+    end var1;
 
+proc procedimento(int a; int b);
+    var
+        real r;
+        char i;
+    begin
+        r := 4;
+        i := 'c';
+        writeln(i);
+        writeln(a);
+    end;
+
+func int funcao(int a);
+    var 
+        bool b;
+    begin 
+        b := true;
+        if b
+            return 1
+        else
+            return 0;
+    end
+    
 begin
-    writeln("Please Input an Integer");
-    readln(num);
-    sum := 1;
-    for i := 1 to num step 1 do
-        sum := sum * i;
-    write('Result: ');
-    write(sum)
+    i := 10;
+    j := 20;
+    procedimento(i, j);
+    i := funcao(j);
+    ch := 'a';
+    writeln(ch);
 end.
