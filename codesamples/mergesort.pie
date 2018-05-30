@@ -9,26 +9,28 @@ const
     LAST = 9;
 
 type
-    TRange = FIRST..LAST;
-    TVector = array [TRange] of int;
+    TVector = array [0..9] of int;
 
 var
     TVector vector;
-    TRange index;
+    int idx;
 
-proc read_arr(TVector vec);
+proc read_arr();
     var
         int i;
     begin
         writeln("Please give 10 integers as input for the array");
         for i := FIRST to LAST step 1 do
-            read(vec[i])
+            read(vector[i])
     end;
 
-proc merge(TVector helper; ref TVector vec; int first, last, center);
+proc merge(int first, last, center);
     var
         int i, j, k;
+        TVector helper;
     begin 
+        for idx := FIRST to LAST step 1 do
+            helper[idx] := vector[idx];
         i := first; 
         j := center + 1; 
         k := first;
@@ -36,14 +38,14 @@ proc merge(TVector helper; ref TVector vec; int first, last, center);
         loop
             begin
                 exitwhen (i > center) || (j > last);
-                if helper[i] < helper[j] 
+                if helper[i] <= helper[j] 
                     begin
-                       vec[k] := helper[i];
+                       vector[k] := helper[i];
                        i := i + 1
                     end 
                 else 
                     begin
-                       vec[k] := helper[j];
+                       vector[k] := helper[j];
                        j := j + 1
                     end;
                 k := k + 1
@@ -51,30 +53,32 @@ proc merge(TVector helper; ref TVector vec; int first, last, center);
 
         for j := i to center step 1 do
             begin
-              vec[k] := helper[j];
+              vector[k] := helper[j];
               k := k + 1
             end
     end;
 
-proc split_merge(TVector vec; int first, last);
+proc split_merge(int first, last);
     var
         int center;
     begin
         if last > first
             begin
                 center := (first + last) / 2;
-                split_merge(vec, first, center);
-                split_merge(vec, center + 1, last);
-                merge(vec, vec, first, last, center)
+                split_merge(first, center);
+                split_merge(center + 1, last);
+                merge(first, last, center)
             end
     end;
 
 begin
-    read_arr(vector);
-    split_merge(vector, FIRST, LAST);
+    read_arr();
+    split_merge(FIRST, LAST);
     writeln("Sorted vector: ");
-    for index := FIRST to LAST step 1 do
+    for idx := FIRST to LAST step 1 do
         begin
-           write(vector[index] + "")
-        end
+           write(vector[idx]);
+           write(" ")
+        end;
+    write("\n");
 end.
