@@ -9,84 +9,80 @@ const
     LAST = 9;
 
 type
-    TRange = FIRST..LAST;
-    TVector = array [TRange] of int;
+    TVector = array [0..9] of int;
 
 var
     int i, j, tmp;
     TVector vector;
 
-proc read_vec(TVector vec);
+proc read_vec();
     var
         int i;
     begin
         writeln("Please give 10 integers as input for the vecay");
         for i := FIRST to LAST step 1 do
-            read(vec[i])
+            read(vector[i])
     end;
 
-proc quick_sort(TVector vec);
+func int split(int start, stop);
+    var
+        int left, right;
+        int pivot, t;
+    begin
+        # Set up the pointers for the hight and low sections, and
+        # get the pivot value
+        pivot := vector[start];
+        left := start + 1;
+        right := stop;
+        # Look for pairs out of place and swap em
+        loop
+            begin
+                exitwhen (left > right);
+                loop
+                    begin
+                        exitwhen (left > stop) || (vector[left] >= pivot);
+                        left := left + 1
+                    end;
+                loop
+                    begin
+                        exitwhen (right <= start) || (vector[right] < pivot);
+                        right := right - 1
+                    end;
+                if left < right
+                    begin
+                        t := vector[left];
+                        vector[left] := vector[right];
+                        vector[right] := t
+                    end;
+            end;
+        # Put the pivot between the halves.
+        t := vector[start];
+        vector[start] := vector[right];
+        vector[right] := t;
+        return right
+    end;
 
-    proc quick_sort_recur(int start, stop);
+proc quick_sort_recur(int start, stop);
         var
             int m;
             int splitpt; # The location separating the high and low parts
-
-        # Returns the split point
-        func int split(int start, stop);
-            var
-                int left, right;
-                int pivot;
-            proc swap(int a, b);
-                var
-                    int t;
-                begin
-                    t := a;
-                    a := b;
-                    b := t
-                end
-            begin
-                # Set up the pointers for the hight and low sections, and
-                # get the pivot value
-                pivot := vec[start];
-                left := start + 1;
-                right := stop;
-                # Look for pairs out of place and swap em
-                loop
-                    begin
-                        exitwhen (left > right);
-                        loop
-                            begin
-                                exitwhen (left > stop) || (vec[left] >= pivot);
-                                left := left + 1
-                            end;
-                        loop
-                            begin
-                                exitwhen (right <= start) || (vec[right] < pivot);
-                                right := right - 1
-                            end;
-                        if left < right
-                            swap(vec[left], vec[right]);
-                    end;
-                # Put the pivot between the halves.
-                swap(vec[start], vec[right]);
-                return right
-            end
         begin
             if start < stop 
                 begin
-                    splitpt := Split(start, stop);
+                    splitpt := split(start, stop);
                     quick_sort_recur(start, splitpt - 1);
                     quick_sort_recur(splitpt + 1, stop);
                 end
-        end
-    begin
-        quick_sort_recur(FIRST, LAST)
-    end
-
+        end;
+            
 begin
-    read_vec(vector);
-    quick_sort(vector);
-    for i := 1 to size step 1 do
-        writeln(vector[i])
+    read_vec();
+    quick_sort_recur(FIRST, LAST);
+    writeln("Sorted vector: ");
+    for i := FIRST to LAST step 1 do
+        begin
+            write(vector[i]);
+            write(" ");
+    end;
+    write("\n");
 end.
