@@ -1,0 +1,113 @@
+Os atributos que os símbolos podem ter são:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+    cs & código do programa a ser gerado\\ \hline
+    st & tabela de símbolos \\ \hline
+    type & tipo \\ \hline
+    ids & list de ids \\ \hline
+    arraybody & parte do código que fica dentro de `[' `]' quando declarando ou acessando arrays\\ \hline
+    ra & struct com índices inicial e final e de um range \\ \hline
+    ids\_info & informação auxiliar para os ids, dizendo de qual tipo são \\ \hline
+    id\_token & o token do id, que precisa ser passado para regras onde ele fica separado \\ \hline
+    afterlabel & label que vem depois de um loopblock para ser referenciadas por gotos \\ \hline
+\end{tabular}
+\end{center}
+
+
+A Tabela \ref{atributos} mostra os atributos de cada símbolos. Os atributos sintetizados estarão em \sintetizado{azul} e os herdados em \herdado{vermelho}.
+
+\begin{center}
+\begingroup
+\begin{longtable}{l|l|}
+\caption{Atributos}
+\label{atributos}\\
+ \hline
+\multicolumn{1}{|L{5cm}|}{\textbf{NÃO TERMINAIS}} & \textbf{ATRIBUTOS}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{PROGRAM}            & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{DECL}               & {\color[HTML]{000000} \sintetizado{cs}, \sintetizado{st}}  \\ \hline
+\multicolumn{1}{|L{5cm}|}{CONSTS}             & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LISTCONST}          & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LISTCONSTPRIME}     & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{CONSTDECL}          & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{TYPES}              & \sintetizado{cs}, \sintetizado{st}, \herdado{st}, \sintetizado{type}, \sintetizado{arraybody} \\ \hline
+\multicolumn{1}{|L{5cm}|}{TYPESPRIME}         & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{PRIMTYPES}          & \sintetizado{cs}, \sintetizado{type}, \sintetizado{st}, \sintetizado{arraybody}      \\ \hline
+\multicolumn{1}{|L{5cm}|}{ARRAYTYPE}          & \sintetizado{cs}, \sintetizado{st}, \sintetizado{arraybody}             \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBRANGELIST}       & \sintetizado{ra}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBRANGEPART}       & \sintetizado{ra}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBRANGEPARTPRIME}  & \sintetizado{ra}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBRANGETYPE2}      & \sintetizado{ra}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{ENUMTYPE}           & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{RECORDTYPE}         & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{USERTYPES}          & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LISTUSERTYPES}      & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LISTUSERTYPESPRIME} & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{USERTYPE}           & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{VARS}               & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{VARLISTLIST}        & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{VARLISTLISTPRIME}   & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{VARLIST}            & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{IDLIST}             & \sintetizado{cs}, \sintetizado{ids},  \herdado{ids\_info}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{IDLISTPRIME}        & \sintetizado{cs}, \sintetizado{ids},  \herdado{ids\_info}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{IDATTR}             & cs                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{VARIABLE}           & \sintetizado{cs}, \herdado{st}, \sintetizado{type},  \herdado{id\_token}      \\ \hline
+\multicolumn{1}{|L{5cm}|}{VARIABLEPRIME}      & \sintetizado{cs}, \herdado{st}, \sintetizado{type}, \herdado{id\_token}      \\ \hline
+\multicolumn{1}{|L{5cm}|}{BLOCK}              & \sintetizado{cs}, \herdado{st}, \herdado{afterlabel}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{STMTS}              & \sintetizado{cs}, \herdado{st}, \herdado{afterlabel}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{STMTLISTPRIME}      & \sintetizado{cs}, \herdado{st}, \herdado{afterlabel}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{STMT}               & \sintetizado{cs}, \herdado{st}, \herdado{afterlabel}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{STMTPRIME}          & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBPROGCALL}        & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{EXITSTMT}           & \sintetizado{cs}, \herdado{st}, \herdado{afterlabel}            \\ \hline
+\multicolumn{1}{|L{5cm}|}{RETURNSTMT}         & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{ATTRSTMT}           & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{IFBLOCK}            & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{ELSEBLOCK}          & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LOOPBLOCK}          & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{CASEBLOCK}          & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{CASEBLOCKPRIME}     & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{CASELIST}           & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LITERALLIST}        & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{LITERALLISTPRIME}   & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{GOTOSTMT}           & cs                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{FORBLOCK}           & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{FORBLOCKPRIME}      & \sintetizado{cs}, \herdado{st}, \herdado{id\_token}             \\ \hline
+\multicolumn{1}{|L{5cm}|}{EXPR}               & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{FINAL\_TERM}        & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{FINAL\_TERMPRIME}   & \sintetizado{cs}, \herdado{st}, \sintetizado{type}, \herdado{id\_token}      \\ \hline
+\multicolumn{1}{|L{5cm}|}{DISJ}               & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{CONJ}               & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{CONJPRIME}          & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{COMP}               & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{RELATIONAL}         & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{RELATIONALPRIME}    & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{COMPPRIME}          & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUM}                & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUMPRIME}           & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{NEG}                & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{MUL}                & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{MULPRIME}           & \sintetizado{cs}, \herdado{st}, \sintetizado{type}                  \\ \hline
+\multicolumn{1}{|L{5cm}|}{ADD\_OP}            & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{MUL\_OP}            & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{EQUALITY\_OP}       & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{RELATIONAL\_OP}     & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{LITERAL}            & \sintetizado{cs}, \sintetizado{type}                       \\ \hline
+\multicolumn{1}{|L{5cm}|}{EXPRLIST}           & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{EXPRLISTPLUS}       & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{EXPRLISTPLUSPRIME}  & \sintetizado{cs}                                                                      \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBPROGRAMS}        & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{SUBPROGRAMSPRIME}   & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{PROCEDURE}          & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{FUNCTION}           & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{PARAM}              & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{PARAMLISTLIST}      & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{PARAMLISTLISTPRIME} & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{PARAMLIST}          & \sintetizado{cs}, \sintetizado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{WRITESTMT}          & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{WRITELNSTMT}        & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{READSTMT}           & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\multicolumn{1}{|L{5cm}|}{READLNSTMT}         & \sintetizado{cs}, \herdado{st}                         \\ \hline
+\end{longtable}
+\endgroup
+\end{center}

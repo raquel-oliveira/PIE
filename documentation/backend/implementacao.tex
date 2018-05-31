@@ -1,0 +1,51 @@
+Para a implementação da gramática de atributos, usamos a técnica/esquema de tradução dirigida pela sintaxe. Devido a este esquema, notamos a necessidade de realizar mudanças nas implementações de algumas regras sintáticas (descritas em \ref{ch:sintatica}) adicionando um novo não-terminal logo antes de uma regra caso ela necessitasse obter uma informação herdada que ela não teria acesso por padrão (no caso da abordagem \textit{bottom-up}). Isso só foi necessário no caso de não terminais que precisavam herdar informações de símbolos, que, em regras diferentes, estavam em posições diferentes. Como por exemplo no caso do não terminal $block$ (usados nas regras sintáticas \ref{procedure} e \ref{function}  ):
+
+\begin{lstlisting}[frame=single, language=pie]
+<procedure> ::= proc id `(' <param> `)' `;' <decl> <block>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single, language=pie]
+<function> ::= func <types> id `(' <param> `)' `;' <decl> <block>
+\end{lstlisting}
+ Criamos dois símbolos não terminais, G e H, de forma que:
+ \begin{lstlisting}[frame=single, language=pie]
+ <procedure> ::= proc id `(' <param> `)' `;' <decl> G <block>
+ \end{lstlisting}
+ 
+ \begin{lstlisting}[frame=single, language=pie, basicstyle=\small ]
+ <function> ::= func <types> id `(' <param> `)' `;' <decl> H <block>
+  \end{lstlisting}
+  
+  Na implementação da gramática de atributos temos então:
+ 
+ \begin{verbatim}
+ procedure : {
+ 			 $<attrs>$.sti = $<attrs>0.sti; 
+ }
+ PROC_TOKEN ID_TOKEN '(' param ')' ';' decl G block {
+ 	  	$$.cs = "void " + std::string($3) +"("+ $5.cs + ") 
+ 		     {\n" + $8.cs + $10.cs +"\n}\n";
+ };
+  \end{verbatim}
+  \begin{verbatim}
+ G : {
+		    $<attrs>$.sti = st_union($<attrs>-3.sts,
+		                    st_union($<attrs>0.sts, $<attrs>-7.sti)); 
+  };
+  \end{verbatim}
+  \begin{verbatim}
+ function : {
+   $<attrs>$.sti = $<attrs>0.sti;
+ }
+  FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl H block
+    { $$.cs = $3.type + " " + $4 + "(" + $6.cs + ")
+      {\n" + $9.cs + $11.cs + "\n}\n"; 
+  } ;
+  \end{verbatim}
+  \begin{verbatim}
+ H : { 
+   $<attrs>$.sti = st_union($<attrs>-3.sts,
+     st_union($<attrs>0.sts, $<attrs>-8.sti)); 
+ };
+ \end{verbatim}
+pois no caso do $procedure$ a informação que o $block$ precisa está na posição -7 e no caso da $function$ a informação que o $block$ precisa está na posição -8.

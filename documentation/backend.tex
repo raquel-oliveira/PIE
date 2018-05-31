@@ -1,88 +1,40 @@
 \section{Código gerado}
-Criamos um back-end do compilador para a geração do código. 
-A linguagem usada na geração do código é uma restrição da linguagem C que permite usar apenas os seguintes elementos:
-\begin{itemize}
-	\item Expressões aritméticas, lógicas, relacionais e chamadas de funções.
-	\item Todos os tipos de dados da linguagem.
-	\item Todas as declarações da linguagem.
-	\item Apenas os seguintes comandos de C:
-	\begin{itemize}
-		\item Abertura e fechamento de blocos;
-		\item Sequenciamento de comandos;
-		\item Atribuição;
-		\item Chamadas de funções/procedimentos (incluindo de entrada e saída);
-		\item rótulos (labels) e comando goto;
-		\item Comandos return, break e exit;
-		\item Comandos de seleção APENAS da forma:
-		\begin{itemize}
-			\item \begin{verbatim}
-			if( condição ) goto l;
-			\end{verbatim}
-			\item \begin{verbatim}
-		switch ( expressão ) {
-		case valor : { … }
-		…
-		}
-		\end{verbatim}
-		\item Nenhum outro comando da linguagem deve ser usado, isto inclui comandos de iteração ou de
-		seleção estruturados	
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
+\input{backend/codigogerado.tex}
 
-Ao compilar um arquivo $.pie$ (como descrito em \ref{ch:uso}), um código intermediário é criado na pasta $generated_code$ com o mesmo nome do arquivo de input, porém com a extensão $.c$. Esse arquivo pode ser compilado através do compilador $gcc$, por exemplo:
-\begin{verbatim}
-gcc <nomedoarquivo>.c -o <nomedoexecutavel>
-\end{verbatim}
+\section{Gramática de atributos}
+\input{backend/gramaticadeatributostable.tex}
 
-\section{Estratégias}
-Para a implementação da gramática de atributos, usamos a técnica/esquema de tradução dirigida pela sintaxe. Devido a este esquema, notamos a necessidade alterar algumas regras sintáticas (descritas em \ref{ch:sintatica}) adicionando um novo não-terminal logo antes de uma regra caso ela necessite obter uma informação herdada que ela não teria acesso por padrão (no caso da abordagem \textit{bottom-up}). Isso só foi necessário no caso de não terminais que precisavam herdar informações de símbolos em posições diferentes em regras diferentes. Como por exemplo no caso do não terminal $block$ (usados nas regras sintáticas \ref{procedure} e \ref{function}  ):
+\newpage
+\subsection{Grafo de Dependência}
 
-\begin{lstlisting}[frame=single, language=pie]
-<procedure> ::= proc id `(' <param> `)' `;' <decl> <block>
+A imagem a seguir apresenta o grafo de dependência para a regra do procedimento.
+
+\begin{lstlisting}%[\scriptsize, frame=single, language=pie]
+<procedure> ::= proc id '(' <param> ')' ';' <decl> <block>
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single, language=pie]
-<function> ::= func <types> id `(' <param> `)' `;' <decl> <block>
-\end{lstlisting}
- Criamos dois símbolos não terminais, G e H, de forma que:
- \begin{lstlisting}[frame=single, language=pie]
- <procedure> ::= proc id `(' <param> `)' `;' <decl> G <block>
- \end{lstlisting}
- 
- \begin{lstlisting}[frame=single, language=pie, basicstyle=\small ]
- <function> ::= func <types> id `(' <param> `)' `;' <decl> H <block>
-  \end{lstlisting}
-  
-  Na implementação da gramática de atributos temos então:
- 
- \begin{verbatim}
- procedure : {
- 			$<attrs>$.sti = $<attrs>0.sti; 
- }
- PROC_TOKEN ID_TOKEN '(' param ')' ';' decl G block {
- 		$$.cs = "void " + std::string($3) +"("+ $5.cs + ") {\n" + $8.cs + $10.cs +"\n}\n";
- };
-  \end{verbatim}
-  \begin{verbatim}
- G : {
-		  $<attrs>$.sti = st_union($<attrs>-3.sts,
-		                  st_union($<attrs>0.sts, $<attrs>-7.sti)); 
-  };
-  \end{verbatim}
-  \begin{verbatim}
- function : {
-  $<attrs>$.sti = $<attrs>0.sti; 
-  }
-  FUNC_TOKEN types ID_TOKEN '(' param ')' ';' decl H block {
-  $$.cs = $3.type + " " + $4 + "(" + $6.cs + ") {\n" + $9.cs + $11.cs + "\n}\n"; 
-  } ;
-  \end{verbatim}
-  \begin{verbatim}
- H : { 
- $<attrs>$.sti = st_union($<attrs>-3.sts, st_union($<attrs>0.sts, $<attrs>-8.sti)); 
- };
- \end{verbatim}
-pois no caso do $procedure$ a informação que o $block$ precisa está na posição -7 e no caso da $function$ a informação que o $block$ precisa está na posição -8.
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{img/dependency_graph.png}
+  \caption{Grafo de dependência para a regra de produção de PROCEDURE}
+  \label{fig:dependencegraph}
+\end{figure}
 
+O código a seguir é a implementação da regra do procedimento baseada na gramática de atributos.
+
+\begin{verbbox}[\scriptsize]
+    {BLOCK.st =st_union(PARAM.st,st_union(DECL.st,PROCEDURE.st));
+    PROCEDURE.cs = "void " + id.lexeme + "(" + PARAM.cs + ") {\n" + DECL.cs + BLOCK.cs + "\n}\n"; }
+\end{verbbox}
+\theverbbox
+
+
+\subsubsection{Gramática de Atributos}
+\input{backend/gramaticadeatributos.tex}
+
+\newpage
+\section{Estratégias para implementação}
+\input{backend/implementacao.tex}
+
+\newpage
 \section{Dificuldades}
+\input{backend/dificuldades.tex}

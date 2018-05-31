@@ -1,8 +1,8 @@
 ##
-# PIE Quick Sort 
+# PIE Quick Sort
 # Pascal version: http://sandbox.mc.edu/~bennet/cs404/doc/qsort_pas.html.
 ##
-program quick_sort; 
+program quick_sort;
 
 const
     FIRST = 0;
@@ -21,7 +21,7 @@ proc read_vec();
     begin
         writeln("Please give 10 integers as input for the vecay");
         for i := FIRST to LAST step 1 do
-            read(vector[i])
+            read(vector[i]);
     end;
 
 func int split(int start, stop);
@@ -41,25 +41,25 @@ func int split(int start, stop);
                 loop
                     begin
                         exitwhen (left > stop) || (vector[left] >= pivot);
-                        left := left + 1
+                        left := left + 1;
                     end;
                 loop
                     begin
                         exitwhen (right <= start) || (vector[right] < pivot);
-                        right := right - 1
+                        right := right - 1;
                     end;
                 if left < right
                     begin
                         t := vector[left];
                         vector[left] := vector[right];
-                        vector[right] := t
+                        vector[right] := t;
                     end;
             end;
         # Put the pivot between the halves.
         t := vector[start];
         vector[start] := vector[right];
         vector[right] := t;
-        return right
+        return right;
     end;
 
 proc quick_sort_recur(int start, stop);
@@ -67,14 +67,14 @@ proc quick_sort_recur(int start, stop);
             int m;
             int splitpt; # The location separating the high and low parts
         begin
-            if start < stop 
+            if start < stop
                 begin
                     splitpt := split(start, stop);
                     quick_sort_recur(start, splitpt - 1);
                     quick_sort_recur(splitpt + 1, stop);
                 end
         end;
-            
+
 begin
     read_vec();
     quick_sort_recur(FIRST, LAST);
