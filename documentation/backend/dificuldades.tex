@@ -1,0 +1,16 @@
+Durante o desenvolvimento do Back-end do compilador \textbf{bake} as dificuldades encontradas foram:
+
+\begin{itemize}
+\item Conhecer todos os recursos que o Yacc oferece;
+\item negligenciamento do sincronismo da atualização do relatório em relação o andamento do projeto/implementação;
+\item pensar em uma maneira de implementar a tabela de símbolos para lidar com structs de structs/arrays e arrays de structs/arrays.
+\end{itemize}
+
+Não foram traduzidos da nossa linguagem para C:
+\begin{itemize}
+    \item subprogramas aninhados (não existem em C);
+    \item passagem de parâmetros por referência (não existe em C);
+    \item set e range(quando não é na declaração de um array) (não existem em C);
+    \item struct de struct ou de array e array de struct ou de array (faltou implementar);
+    \item case/switch (faltou implementar).
+\end{itemize}
