@@ -366,7 +366,7 @@ subprogcall : '(' exprlist ')' { $$.cs = "(" + $2.cs + ");\n"; }
 			;
 exitstmt : { $<attrs>$.st = $<attrs>0.st; $<attrs>$.afterlabel = $<attrs>0.afterlabel; } EXITWHEN_TOKEN expr { $$.cs = "if(" + $3.cs + ") goto " + $$.afterlabel + ";\n"; }
 		 ;
-returnstmt : { $<attrs>$.st = $<attrs>0.st; } RETURN_TOKEN expr { $$.cs = "return " + $3.cs + ";\n"; }
+returnstmt : RETURN_TOKEN expr { $$.cs = "return " + $2.cs + ";\n"; }
 		   ;
 attrstmt : variable ATTR_TOKEN expr { $$.cs = $1.cs + " = " + $3.cs + ";\n"; }
 		 | ATTR_TOKEN expr { $$.cs = " = " + $2.cs + ";\n"; }
@@ -395,7 +395,7 @@ literallist : literal literallistprime
 literallistprime : { $$.cs = ""; }
 				 | ',' literallist
 				 ;
-gotostmt : { $<attrs>$.st = $<attrs>0.st; } GOTO_TOKEN LABEL_TOKEN { $$.cs = "goto " + std::string($3); }
+gotostmt : GOTO_TOKEN LABEL_TOKEN { std::string label = $2; label[0] = '_'; $$.cs = "goto " + label; }
 		 ;
 forblock : { $<attrs>$.st = $<attrs>0.st; } FOR_TOKEN ID_TOKEN forblockprime {$$.cs = $4.cs;}
 		 ;
