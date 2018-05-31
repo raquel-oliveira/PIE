@@ -1,9 +1,0 @@
-program teste2;
-
-var
-	array[0..3] of int a;
-
-begin
-
-
-end.
