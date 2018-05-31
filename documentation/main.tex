@@ -8,6 +8,9 @@
 \usepackage{fancyvrb}
 \usepackage{float}
 \usepackage{txfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{verbatimbox}
 \let\iint\relax
 \let\iiint\relax
 \let\iiiint\relax
@@ -113,27 +116,39 @@ O nome escolhido para a linguagem foi PIE, um acrônimo para Pascal Improved Exp
 
 \newpage
 \chapter{Forma de uso}\label{ch:uso}
-O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
-\section{Compilação}
+O código se encontra em \url{https://github.com/raquel-oliveira/PIE}.
+\section{Compilação do compilador Bake}
 \begin{verbatim}
     make
 \end{verbatim}
 
-\section{Execução}
-\subsection{Parser ascendente}
+\section{Execução do compilador Bake (criação do código intermediário)}
 \begin{verbatim}
-    ./bake pathtofile.pie
+    ./bake <path>/<filename>.pie
+\end{verbatim}
+
+\section{Compilação do código gerado} 
+\begin{verbatim}
+    gcc -o <execname> generated_code/<filename>.c
+\end{verbatim}
+
+\section{Execução do código gerado}
+\begin{verbatim}
+    ./<execname>
 \end{verbatim}
 
 \section{Exemplo}
+
 \begin{verbatim}
     make
     ./bake codesamples/mergesort.pie
+    gcc -o mergesort generated_code/mergesort.c
+    ./mergesort
 \end{verbatim}
 
 \newpage
 \chapter{Exemplos de programas}
-\input{exemplos.tex}
+\input{examples.tex}
 
 \newpage
 \chapter{Participação}
@@ -143,11 +158,11 @@ O código se encontra em \url{https://github.com/raquel-oliveira/PIE}
 	\begin{tabular}{|l|l|r|}
 		\hline
 		\textbf{Matrícula} & \textbf{Aluno(a)} & \textbf{Participação (\%)} \\ \hline
-		20180008183        & BRENO MAURICIO DE FREITAS VIANA & 20\%                       \\ \hline
-		20170153995        & FERNANDA MENEZES PAES ISABEL    & 20\%                       \\ \hline
-		2012912517         & LUIZ ARTHUR DE LIMA FREIRE      & 20\%                       \\ \hline
-		20180008281        & RAQUEL LOPES DE OLIVEIRA        & 20\%                       \\ \hline
-		20180008316        & VÍTOR DE GODEIRO MARQUES        & 20\%                       \\ \hline
+		20180008183        & BRENO MAURICIO DE FREITAS VIANA & 21\%                       \\ \hline
+		20170153995        & FERNANDA MENEZES PAES ISABEL    & 21\%                       \\ \hline
+		2012912517         & LUIZ ARTHUR DE LIMA FREIRE      & 16\%                       \\ \hline
+		20180008281        & RAQUEL LOPES DE OLIVEIRA        & 21\%                       \\ \hline
+		20180008316        & VÍTOR DE GODEIRO MARQUES        & 21\%                       \\ \hline
 		\multicolumn{2}{|l|}{\textbf{TOTAL}}            & 100\%                      \\ \hline
 	\end{tabular}
 \end{table}

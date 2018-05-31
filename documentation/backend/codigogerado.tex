@@ -1,0 +1,36 @@
+
+Criamos um back-end do compilador para a geração do código. 
+A linguagem usada na criação do código intermediário é uma restrição da linguagem C que permite usar apenas os seguintes elementos:
+\begin{itemize}
+	\item Expressões aritméticas, lógicas, relacionais e chamadas de funções.
+	\item Todos os tipos de dados da linguagem.
+	\item Todas as declarações da linguagem.
+	\item Apenas os seguintes comandos de C:
+	\begin{itemize}
+		\item Abertura e fechamento de blocos;
+		\item Sequenciamento de comandos;
+		\item Atribuição;
+		\item Chamadas de funções/procedimentos (incluindo de entrada e saída);
+		\item Rótulos (labels) e comando goto;
+		\item Comandos return, break e exit;
+		\item Comandos de seleção APENAS da forma:
+		\begin{itemize}
+			\item \begin{verbatim}
+			if( condição ) goto l;
+			\end{verbatim}
+			\item \begin{verbatim}
+		switch ( expressão ) {
+		case valor : { … }
+		…
+		}
+		\end{verbatim}
+		\item Nenhum outro comando da linguagem deve ser usado, isto inclui comandos de iteração ou de
+		seleção estruturados.
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+Ao compilar um arquivo $.pie$ (como descrito em \ref{ch:uso}), um código intermediário é criado na pasta $generated\_code$ com o mesmo nome do arquivo de input, porém com a extensão $.c$. Esse arquivo pode ser compilado através do compilador $gcc$, por exemplo:
+\begin{verbatim}
+gcc <nomedoarquivo>.c -o <nomedoexecutavel>
+\end{verbatim}
